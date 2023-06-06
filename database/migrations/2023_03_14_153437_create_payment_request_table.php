@@ -33,6 +33,7 @@ class CreatePaymentRequestTable extends Migration
             $table->bigInteger('bank_charge')->nullable();
             $table->bigInteger('total')->nullable();
             $table->boolean('is_dolar')->nullable();
+            $table->enum('currency', ['idr', 'usd', 'sgd'])->default('idr');
             $table->timestamps();
         });
     }

@@ -65,34 +65,10 @@
                     </span>
                     <h4 class="text-section">Components</h4>
                 </li>
-                <li
-                    class="nav-item {{ $title == 'Payment Request' || $title == 'Add Payment Request' ? 'active submenu' : '' }}">
-                    <a data-toggle="collapse" href="#payment">
-                        <i class="fas fa-table"></i>
-                        <p>Payment Request</p>
-                        <span class="caret"></span>
-                    </a>
-                    <div class="collapse {{ $title == 'Payment Request' || $title == 'Add Payment Request' ? 'show' : '' }}"
-                        id="payment">
-                        <ul class="nav nav-collapse">
-                            <li class="{{ $title == 'Payment Request' ? 'active' : '' }}">
-                                <a href="{{ route('payment_request') }}">
-                                    <span class="sub-item">Data</span>
-                                </a>
-                            </li>
-                            <li class="{{ $title == 'Add Payment Request' ? 'active' : '' }}">
-                                <a href="{{ route('add_payment_request') }}">
-                                    <span class="sub-item">Add</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a href="/">
+                <li class="nav-item {{ $title == 'Payment Request' ? 'active' : '' }}">
+                    <a href="{{ route('payment_request') }}">
                         <i class="fas fa-desktop"></i>
-                        <p>Widgets</p>
-                        <span class="badge badge-success">4</span>
+                        <p>Payment Request</p>
                     </a>
                 </li>
             </ul>

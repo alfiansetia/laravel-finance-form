@@ -71,9 +71,10 @@
                                 <div class="form-group">
                                     <strong>Type Currency</strong>
                                     {{-- <input type="number" name="price[]" class="form-control mt-1">  --}}
-                                    <select class="form-control mt-1" name="is_dolar">
-                                        <option selected value="0">Rupiah</option>
-                                        <option value="1">Dolar</option>
+                                    <select class="form-control mt-1" name="currency">
+                                        <option selected value="idr">IDR</option>
+                                        <option value="usd">USD</option>
+                                        <option value="sgd">SGD</option>
                                     </select>
                                 </div>
                             </div>
@@ -129,32 +130,24 @@
                                         <span class="input-group-text" id="inputGroupPrepend">%</span>
                                     </div>
                                     <select class="custom-select" name="wht" id="inputGroupSelect01">
-                                        <option value="0" selected>Choose...</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+                                        <option value="">Select</option>
+                                        <option value="2">WHT 21</option>
+                                        <option value="3">WHT 22</option>
                                     </select>
-                                    {{-- <input type="number" class="form-control" name="wht" class="form-control mt-1" step=0.01
-                                        aria-describedby="inputGroupPrepend"> --}}
-
                                 </div>
-                                {{-- @error('wht')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror --}}
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <strong>Bank Charges</strong>
-                                    <input type="number" name="bank_charge" class="form-control mt-1">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <strong>Bank Charges</strong>
+                                        <input type="number" name="bank_charge" class="form-control mt-1">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="text-right">
-
-                            <button type="button" class="btn btn-md btn-secondary ml-auto mr-2"><i
-                                    class="fas fa-backward mr-1"></i>Back</button>
-                            <button type="submit" class="btn btn-md btn-primary float-right"><i
-                                    class="fab fa-telegram-plane mr-1"></i>Save</button>
+                            <div class="text-right">
+                                <a href="{{ route('payment_request') }}" class="btn btn-md btn-secondary ml-auto mr-2"><i
+                                        class="fas fa-backward mr-1"></i>Back</a>
+                                <button type="submit" class="btn btn-md btn-primary float-right"><i
+                                        class="fab fa-telegram-plane mr-1"></i>Save</button>
+                            </div>
                         </div>
                     </form>
                 </div>

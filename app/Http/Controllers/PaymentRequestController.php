@@ -21,6 +21,8 @@ use PDF;
 class PaymentRequestController extends Controller
 {
 
+    private $title = 'Payment Request';
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -28,7 +30,7 @@ class PaymentRequestController extends Controller
 
     public function index()
     {
-        $title = 'Payment Request';
+        $title = $this->title;
         $data = PaymentRequestModel::all();
         $desc = DescriptionModel::all();
         return view('payment_request.index', compact('data', 'desc', 'title'));
@@ -37,7 +39,7 @@ class PaymentRequestController extends Controller
 
     public function create()
     {
-        $title = 'Add Payment Request';
+        $title = $this->title;
         $countDesc = 1;
         $division = DivisionModel::all();
         return view('payment_request.add', compact('division', 'countDesc', 'title'));
@@ -45,6 +47,7 @@ class PaymentRequestController extends Controller
 
     public function edit($id)
     {
+        $title = $this->title;
         $division = DivisionModel::all();
         $data = PaymentRequestModel::find($id);
         $desc = DescriptionModel::where('id_payment_request', $data->id)->get();
@@ -54,12 +57,12 @@ class PaymentRequestController extends Controller
         foreach ($desc as $key => $value) {
             $total_description = $total_description + $value->price;
         }
-        return view('payment_request.edit', compact('division', 'data', 'desc', 'total_description'));
+        return view('payment_request.edit', compact('division', 'data', 'desc', 'total_description', 'title'));
     }
 
     public function update(Request $request)
     {
-
+        $title = $this->title;
         $dateTime = new DateTime($request->date_pr);
 
         $carbonDate = \Carbon\Carbon::instance($dateTime);
@@ -176,19 +179,20 @@ class PaymentRequestController extends Controller
 
 
         $paymentRequest = PaymentRequestModel::create([
-            'invoice_date' => $request->invoice_date,
-            'received_date' => $request->received_date,
-            "contract" => $request->contract,
-            'date_pr' => $request->date_pr,
-            "no_pr" => $counti . '/' . $division->slug . date('/m/y', strtotime($request->date_pr)),
-            "id_division" => $request->id_division,
-            "name_beneficiary" => $request->name_beneficiary,
-            "bank_account" => $request->bank_account,
-            "for" => $request->for,
-            "beneficiary_bank" =>  $request->beneficiary_bank,
-            "due_date" => $request->due_date,
-            "bank_charge" => $request->bank_charge,
-            "is_dolar" => $request->is_dolar,
+            'invoice_date'      => $request->invoice_date,
+            'received_date'     => $request->received_date,
+            "contract"          => $request->contract,
+            'date_pr'           => $request->date_pr,
+            "no_pr"             => $counti . '/' . $division->slug . date('/m/y', strtotime($request->date_pr)),
+            "id_division"       => $request->id_division,
+            "name_beneficiary"  => $request->name_beneficiary,
+            "bank_account"      => $request->bank_account,
+            "for"               => $request->for,
+            "beneficiary_bank"  =>  $request->beneficiary_bank,
+            "due_date"          => $request->due_date,
+            "bank_charge"       => $request->bank_charge,
+            "is_dolar"          => 0,
+            "currency"          => $request->currency,
         ]);
 
         $total_description = 0;
@@ -393,6 +397,6 @@ class PaymentRequestController extends Controller
 
 
         $filepath = public_path('FinanceForm.pdf');
-        return Response::download($filepath);
+        // return Response::download($filepath);
     }
 }
