@@ -37,9 +37,10 @@ class PaymentRequestController extends Controller
 
     public function create()
     {
+        $title = 'Add Payment Request';
         $countDesc = 1;
         $division = DivisionModel::all();
-        return view('payment_request.add', compact('division', 'countDesc'));
+        return view('payment_request.add', compact('division', 'countDesc', 'title'));
     }
 
     public function edit($id)
@@ -244,7 +245,7 @@ class PaymentRequestController extends Controller
     public function print($id)
     {
         $payment = PaymentRequestModel::find($id);
-        if(!$payment){
+        if (!$payment) {
             abort(404);
         }
 

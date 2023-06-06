@@ -4,12 +4,12 @@
         <div class="sidebar-content">
             <div class="user">
                 <div class="avatar-sm float-left mr-2">
-                    <img src="../../assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+                    <img src="{{ asset('assets/img/profile.jpg') }}" alt="..." class="avatar-img rounded-circle">
                 </div>
                 <div class="info">
                     <a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
                         <span>
-                            Hizrian
+                            {{ auth()->user()->name }}
                             <span class="user-level">Administrator</span>
                             <span class="caret"></span>
                         </span>
@@ -65,20 +65,22 @@
                     </span>
                     <h4 class="text-section">Components</h4>
                 </li>
-                <li class="nav-item active submenu">
+                <li
+                    class="nav-item {{ $title == 'Payment Request' || $title == 'Add Payment Request' ? 'active submenu' : '' }}">
                     <a data-toggle="collapse" href="#payment">
                         <i class="fas fa-table"></i>
                         <p>Payment Request</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse show" id="payment">
+                    <div class="collapse {{ $title == 'Payment Request' || $title == 'Add Payment Request' ? 'show' : '' }}"
+                        id="payment">
                         <ul class="nav nav-collapse">
-                            <li class="active">
+                            <li class="{{ $title == 'Payment Request' ? 'active' : '' }}">
                                 <a href="{{ route('payment_request') }}">
                                     <span class="sub-item">Data</span>
                                 </a>
                             </li>
-                            <li class="">
+                            <li class="{{ $title == 'Add Payment Request' ? 'active' : '' }}">
                                 <a href="{{ route('add_payment_request') }}">
                                     <span class="sub-item">Add</span>
                                 </a>
@@ -87,7 +89,7 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a href="../widgets.html">
+                    <a href="/">
                         <i class="fas fa-desktop"></i>
                         <p>Widgets</p>
                         <span class="badge badge-success">4</span>

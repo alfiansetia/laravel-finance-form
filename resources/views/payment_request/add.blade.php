@@ -149,8 +149,13 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="text-right">
 
-                        <button type="submit" class="btn btn-md btn-primary float-right">Save</button>
+                            <button type="button" class="btn btn-md btn-secondary ml-auto mr-2"><i
+                                    class="fas fa-backward mr-1"></i>Back</button>
+                            <button type="submit" class="btn btn-md btn-primary float-right"><i
+                                    class="fab fa-telegram-plane mr-1"></i>Save</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -160,6 +165,12 @@
 @push('js')
     @stack('js')
     <script>
+        $(document).ready(function() {
+            var today = new Date().toISOString().split('T')[0];
+            $('input[type=date]').val(today);
+        });
+
+
         let totalDesc = 1;
 
         function addDesc(count) {

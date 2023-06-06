@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\DebitNoteController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentRequestController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,7 +32,7 @@ Route::get('/tes2', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 // PAYMENT REQUEST
 Route::get('/', [PaymentRequestController::class, 'index'])->name('payment_request');
 Route::get('/add-payment-request', [PaymentRequestController::class, 'create'])->name('add_payment_request');

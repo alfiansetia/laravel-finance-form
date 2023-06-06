@@ -54,14 +54,14 @@
                                         <td class="text-center">
                                             <div class="btn-group" role="group" aria-label="Basic example">
                                                 <a href="{{ route('print_payment_request', $item->id) }}"
-                                                    class="btn btn-sm btn-secondary"><i class="fas fa-print"></i></a>
+                                                    class="btn btn-sm btn-secondary" title="Print"><i class="fas fa-print"></i></a>
                                                 <a href="{{ route('edit_payment_request', $item->id) }}"
-                                                    class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+                                                    class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
                                                 <form action="{{ route('delete_payment_request', $item->id) }}"
                                                     method="POST">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>
                                                 </form>
