@@ -17,4 +17,9 @@ class DebitNoteModel extends Model
     {
         return $this->belongsTo(DivisionModel::class, 'id_division');
     }
+
+    public function desc()
+    {
+        return $this->hasMany(DescriptionDebitModel::class, 'id_debit_note');
+    }
 }

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>{{ $title }}</title>
     <style>
         .bold-right {
             text-align: right;
@@ -70,7 +70,8 @@
                     </p>
                     <p
                         style='margin:0mm;font-size:15px;font-family:"Calibri",sans-serif;margin-top:.05pt;margin-right:0mm;margin-bottom:.0001pt;margin-left:44.65pt;'>
-                        <strong><span style="font-size:21px;">{{ $divition->name }}</span></strong><strong><span
+                        <strong><span
+                                style="font-size:21px;">{{ $payment->division->name }}</span></strong><strong><span
                                 style="font-size:19px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                 &nbsp;</span></strong><span
                             style='font-size:24px;font-family:"Times New Roman",serif;'>PAYMENT&nbsp;REQUEST</span>
@@ -149,7 +150,7 @@
                     </p>
                 </td>
             </tr>
-            @foreach ($desc as $item)
+            @foreach ($payment->desc as $item)
                 <tr>
                     <td colspan="8"
                         style="width: 423.55pt;border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0mm;height: 13pt;vertical-align: top;">
@@ -160,7 +161,8 @@
                         style="width: 76.05pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: top;">
                         <p
                             style='margin:0mm;font-size:15px;font-family:"Calibri",sans-serif;margin-top:1.5pt;margin-right:  2.75pt;margin-bottom:.0001pt;margin-left:0mm;text-align:  right;'>
-                            <span style="font-size:11px;">{{ number_format($item->price, 0, ',', ',') }}</span>
+                            <span
+                                style="font-size:11px;">{{ number_format($item->price, $payment->currency != 'idr' ? 2 : 0, ',', ',') }}</span>
                         </p>
                     </td>
                 </tr>
@@ -176,7 +178,8 @@
                         style="width: 76.05pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: top;">
                         <p
                             style='margin:0mm;font-size:15px;font-family:"Calibri",sans-serif;margin-top:1.5pt;margin-right:  2.75pt;margin-bottom:.0001pt;margin-left:0mm;text-align:  right;'>
-                            <span style="font-size:11px;">{{ $payment->result_vat }}</span>
+                            <span
+                                style="font-size:11px;">{{ number_format($payment->result_vat, $payment->currency != 'idr' ? 2 : 0, ',', ',') }}</span>
                         </p>
                     </td>
                 </tr>
@@ -192,7 +195,8 @@
                         style="width: 76.05pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: top;">
                         <p
                             style='margin:0mm;font-size:15px;font-family:"Calibri",sans-serif;margin-top:1.5pt;margin-right:  2.75pt;margin-bottom:.0001pt;margin-left:0mm;text-align:  right;'>
-                            <span style="font-size:11px;">{{ number_format($payment->result_wht, 0, ',', ',') }}</span>
+                            <span
+                                style="font-size:11px;">{{ number_format($payment->result_wht, $payment->currency != 'idr' ? 2 : 0, ',', ',') }}</span>
                         </p>
                     </td>
                 </tr>
@@ -230,7 +234,7 @@
                 </td>
                 <td class="bold-border">
                     <strong><span
-                            class="sbls-pd-rg">{{ number_format($payment->result_wht, 0, ',', ',') }}</span></strong>
+                            class="sbls-pd-rg">{{ number_format($payment->result_wht, $payment->currency != 'idr' ? 2 : 0, ',', ',') }}</span></strong>
                 </td>
             </tr>
             <tr>
@@ -258,7 +262,7 @@
                 </td>
                 <td class="bold-border">
                     <strong><span
-                            class="sbls-pd-rg">{{ number_format($payment->bank_charge, 0, ',', ',') }}</span></strong>
+                            class="sbls-pd-rg">{{ number_format($payment->bank_charge, $payment->currency != 'idr' ? 2 : 0, ',', ',') }}</span></strong>
                 </td>
             </tr>
             <tr>
@@ -268,7 +272,8 @@
                             {{ $payment->currency == 'idr' ? 'Rp' : ($payment->currency == 'usd' ? '$' : 'S$') }}</span></strong>
                 </td>
                 <td class="bold-border" style="border-bottom: 3pt solid black">
-                    <strong><span class="sbls-pd-rg">{{ number_format($payment->total, 0, ',', ',') }}</span></strong>
+                    <strong><span
+                            class="sbls-pd-rg">{{ number_format($payment->total, $payment->currency != 'idr' ? 2 : 0, ',', ',') }}</span></strong>
                 </td>
             </tr>
 
@@ -313,7 +318,7 @@
                     </p>
                     <p
                         style='margin:0mm;font-size:15px;font-family:"Calibri",sans-serif;text-indent:8.0pt;line-height:8.6pt;'>
-                        <span style="font-size:11px;">{{ $divition->name }}</span>
+                        <span style="font-size:11px;">{{ $payment->division->name }}</span>
                     </p>
                 </td>
                 <td colspan="3"

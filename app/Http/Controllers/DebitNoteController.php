@@ -25,7 +25,7 @@ class DebitNoteController extends Controller
     {
         $data = DebitNoteModel::get();
         $desc = DescriptionDebitModel::get();
-        return view('debit_note.index', compact('data','desc'))->with(['title' => $this->title]);
+        return view('debit_note.index', compact('data', 'desc'))->with(['title' => $this->title]);
     }
 
     public function create()
@@ -114,27 +114,29 @@ class DebitNoteController extends Controller
         return redirect()->route('debit_note');
     }
 
-    public function delete($id)
+    public function delete(DebitNoteModel $debit)
     {
-        DebitNoteModel::where('id', $id)->delete();
-        $descData  = DescriptionDebitModel::where('id_debit_note', $id)->get();
-
-
-        foreach ($descData as $key => $value) {
-
-            DescriptionDebitModel::where('id', $value->id)->delete();
+        if (!$debit) {
+            abort(404);
         }
-
-        return redirect()->back();
+        $debit = $debit->delete();
+        if ($debit) {
+            return redirect()->route('debit.index')->with(['success' => 'Data Berhasil dihapus!']);
+        } else {
+            return redirect()->route('debit.index')->with(['error' => 'Data Gagal dihapus!']);
+        }
     }
 
 
-    public function edit($id)
+    public function edit(DebitNoteModel $debit)
     {
-        $division = DivisionModel::all();
-        $data = DebitNoteModel::find($id);
-        $desc = DescriptionDebitModel::where('id_debit_note', $data->id)->get();
-        return view('debit_note.edit', compact('division', 'data', 'desc'))->with(['title' => $this->title]);
+        // return response()->json($debit);
+        if (!$debit) {
+            abort(404);
+        }
+        $data = $debit;
+        $division = DivisionModel::get();
+        return view('debit_note.edit', compact('division', 'data'))->with(['title' => $this->title]);
     }
 
     public function update(Request $request)

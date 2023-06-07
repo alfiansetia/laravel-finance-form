@@ -22,4 +22,5 @@ class DivisionModel extends Model
     {
         return $this->belongsTo(DebitNoteModel::class, 'id');
     }
+
 }

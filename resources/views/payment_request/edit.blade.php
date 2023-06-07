@@ -13,6 +13,7 @@
                     <form action="{{ route('payment.update', $data->id) }}" method="POST">
                         @csrf
                         @method('PUT')
+
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="id_division">Name Division</label>
@@ -74,7 +75,7 @@
                             </div>
                         </div>
                         <div class="form-row" id="add_desc_form">
-                            @foreach ($desc as $item)
+                            @foreach ($data->desc as $item)
                                 <div class="form-group col-md-6 desc_form">
                                     <label>Description</label>
                                     <input type="text" name="description[]" class="form-control" maxlength="120"
@@ -159,40 +160,35 @@
     </div>
 
     <script>
-        var data = JSON.parse("{{ $data }}");
+        var data = @json($data->desc);
 
         let totalDesc = data.length;
 
         function addDesc(count) {
-            if (totalDesc < 16) {
+            if (totalDesc < 15) {
                 totalDesc++;
                 var form = $(`
-                <div class="col-md-6" id="desc_form">
-                    <div class="form-group">
-                        <strong>Description</strong>
-                        <input type="text" name="description[]" class="form-control mt-1">
-                    </div>
-                </div>
-                <div class="col-md-6" id="price_form">
-                    <div class="form-group">
-                        <strong>Price</strong>
-                        <input type="number" name="price[]" class="form-control mt-1">
-                    </div>
-                </div>
+                            <div class="form-group col-md-6 desc_form">
+                                <label>Description</label>
+                                <input type="text" name="description[]" class="form-control" maxlength="120" required>
+                            </div>
+                            <div class="form-group col-md-6 price_form">
+                                <label>Price</label>
+                                <input type="number" name="price[]" class="form-control" min="0" required>
+                            </div>
             `);
-                $('#add_desc_form').prepend(form);
+                $('#before').before(form);
             } else {
                 alert('input description can not be more than 15');
             }
-            console.log(totalDesc);
         }
 
         function removeDesc() {
-            $('#desc_form').remove();
-            $('#price_form').remove();
-            totalDesc--;
-            console.log(totalDesc);
-
+            if (totalDesc > 1) {
+                $('#add_desc_form').find('.desc_form').last().remove()
+                $('#add_desc_form').find('.price_form').last().remove()
+                totalDesc--;
+            }
         }
     </script>
 @endsection

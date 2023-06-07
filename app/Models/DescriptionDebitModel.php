@@ -12,4 +12,9 @@ class DescriptionDebitModel extends Model
     public $table = "decription_debit";
 
     protected $guarded = ['id'];
+
+    public function debit()
+    {
+        return $this->belongsTo(DebitNoteModel::class);
+    }
 }

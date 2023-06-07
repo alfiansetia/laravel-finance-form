@@ -20,7 +20,7 @@ class CreateDebitNoteTable extends Migration
             $table->string('tax_invoice_serial_no')->nullable();
             $table->datetime('tax_invoice_date')->nullable();
             $table->string('no_debit_note')->nullable();
-            $table->foreignId('id_division')->nullable();
+            $table->unsignedBigInteger('id_division')->nullable();
             $table->string('for')->nullable();
             $table->bigInteger('result_vat')->nullable();
             $table->bigInteger('total_wht')->nullable();
@@ -33,6 +33,7 @@ class CreateDebitNoteTable extends Migration
             $table->bigInteger('total')->nullable();
             $table->boolean('is_dolar')->nullable();
             $table->timestamps();
+            $table->foreign('id_division')->references('id')->on('division')->cascadeOnUpdate()->nullOnDelete();
         });
     }
 

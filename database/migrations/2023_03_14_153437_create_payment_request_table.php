@@ -20,7 +20,7 @@ class CreatePaymentRequestTable extends Migration
             $table->string('contract')->nullable();
             $table->datetime('date_pr')->nullable();
             $table->string('no_pr')->nullable();
-            $table->foreignId('id_division')->nullable();
+            $table->unsignedBigInteger('id_division')->nullable();
             $table->string('name_beneficiary')->nullable();
             $table->string('bank_account')->nullable();
             $table->string('for')->nullable();
@@ -37,6 +37,7 @@ class CreatePaymentRequestTable extends Migration
             $table->unsignedBigInteger('wht_id')->nullable();
             $table->timestamps();
             $table->foreign('wht_id')->references('id')->on('whts')->cascadeOnUpdate()->nullOnDelete();
+            $table->foreign('id_division')->references('id')->on('division')->cascadeOnUpdate()->nullOnDelete();
         });
     }
 

@@ -22,4 +22,9 @@ class PaymentRequestModel extends Model
     {
         return $this->belongsTo(Wht::class);
     }
+
+    public function desc()
+    {
+        return $this->hasMany(DescriptionModel::class, 'id_payment_request');
+    }
 }

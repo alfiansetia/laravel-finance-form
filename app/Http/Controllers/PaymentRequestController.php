@@ -6,7 +6,7 @@ use App\Models\DescriptionModel;
 use App\Models\DivisionModel;
 use App\Models\PaymentRequestModel;
 use App\Models\Wht;
-// use Barryvdh\DomPDF\PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 use CURLFile;
 use DateTime;
 use Faker\Provider\ar_EG\Payment;
@@ -17,12 +17,10 @@ use File;
 use Response;
 use Illuminate\Support\Facades\Validator;
 use League\CommonMark\Extension\DescriptionList\Node\DescriptionTerm;
-use PDF;
 
 
 class PaymentRequestController extends Controller
 {
-
     private $title = 'Payment Request';
 
     public function __construct()
@@ -32,10 +30,8 @@ class PaymentRequestController extends Controller
 
     public function index()
     {
-        $title = $this->title;
         $data = PaymentRequestModel::all();
-        $desc = DescriptionModel::all();
-        return view('payment_request.index', compact('data', 'desc'))->with(['title' => $this->title]);
+        return view('payment_request.index', compact('data'))->with(['title' => $this->title]);
     }
 
 
@@ -51,13 +47,7 @@ class PaymentRequestController extends Controller
         if (!$payment) {
             abort(404);
         }
-        $payment = $payment;
-        if (!$payment) {
-            abort(404);
-        }
-        $desc  = DescriptionModel::where('id_payment_request', $payment->id)->get();
-        $divition  = DivisionModel::where('id', $payment->id_division)->first();
-        return view('payment_request.detail', compact('desc', 'divition', 'payment'));
+        return view('payment_request.detail', compact('payment'))->with(['title' => 'Detail ' . $payment->no_pr]);
     }
 
     public function edit(PaymentRequestModel $payment)
@@ -66,26 +56,21 @@ class PaymentRequestController extends Controller
             abort(404);
         }
         $wht = Wht::get();
-        $division = DivisionModel::all();
-        $data = PaymentRequestModel::find($payment->id);
-        $desc = DescriptionModel::where('id_payment_request', $data->id)->get();
-
-        $total_description = 0;
-
-        foreach ($desc as $key => $value) {
-            $total_description = $total_description + $value->price;
-        }
-        return view('payment_request.edit', compact('division', 'data', 'desc', 'total_description', 'wht'))->with(['title' => $this->title]);
+        $division = DivisionModel::get();
+        $data = $payment;
+        return view('payment_request.edit', compact('division', 'data', 'wht'))->with(['title' => $this->title]);
     }
 
     public function update(Request $request, PaymentRequestModel $payment)
     {
-        $title = $this->title;
+        // dd($payment);
+        if (!$payment) {
+            abort(404);
+        }
         $dateTime = new DateTime($request->date_pr);
 
         $carbonDate = \Carbon\Carbon::instance($dateTime);
         $month = $carbonDate->month;
-
 
         $carbonDate = \Carbon\Carbon::instance($dateTime);
         $year = $carbonDate->year;
@@ -97,45 +82,41 @@ class PaymentRequestController extends Controller
         //     ->count() + 1;
 
 
-        $data = PaymentRequestModel::findOrFail($request->id);
+        $data = PaymentRequestModel::findOrFail($payment->id);
 
         $division = DivisionModel::findOrFail($request->id_division);
 
 
         $data->update([
-            'contract' => $request->contract,
-            'invoice_date' => $request->invoice_date,
-            'received_date' => $request->received_date,
-            // 'date_pr' => $request->date_pr,
-            'name_beneficiary' => $request->name_beneficiary,
-            'bank_account' => $request->bank_account,
-            'beneficiary_bank' => $request->beneficiary_bank,
-            'for' => $request->for,
-            // "id_division" => $request->id_division,
-            'due_date' => $request->due_date,
-            // "no_pr" => $count . '/' . $division->slug . date('/m/Y', strtotime($request->date_pr)),
-            "is_dolar" => $request->is_dolar,
+            'contract'          => $request->contract,
+            'invoice_date'      => $request->invoice_date,
+            'received_date'     => $request->received_date,
+            // 'date_pr'        => $request->date_pr,
+            'name_beneficiary'  => $request->name_beneficiary,
+            'bank_account'      => $request->bank_account,
+            'beneficiary_bank'  => $request->beneficiary_bank,
+            'for'               => $request->for,
+            // "id_division"    => $request->id_division,
+            'due_date'          => $request->due_date,
+            // "no_pr"          => $count . '/' . $division->slug . date('/m/Y', strtotime($request->date_pr)),
+            "is_dolar"          => $request->is_dolar,
 
         ]);
 
-        $descData  = DescriptionModel::where('id_payment_request', $request->id)->get();
-
+        $descData  = DescriptionModel::where('id_payment_request', $payment->id)->get();
 
         foreach ($descData as $key => $value) {
-
             DescriptionModel::where('id', $value->id)->delete();
         }
 
         $total_description = 0;
 
         for ($i = 0; $i < count($request->description); $i++) {
-
             $total_description = $total_description + $request->price[$i];
-
             DescriptionModel::create([
-                "value" => $request->description[$i],
-                "price" => $request->price[$i],
-                "id_payment_request" => $request->id,
+                "value"                 => $request->description[$i],
+                "price"                 => $request->price[$i],
+                "id_payment_request"    => $payment->id,
             ]);
         }
 
@@ -149,12 +130,12 @@ class PaymentRequestController extends Controller
 
         $deadline = $invoice_date->addDays($request->due_date);
 
-        PaymentRequestModel::where('id', $request->id)->update([
-            'result_vat' => $vat,
-            "total_wht" =>  $wht,
-            "result_wht" => $result,
-            'deadline' => $deadline,
-            "total" => $request->bank_charge + $result
+        PaymentRequestModel::where('id', $payment->id)->update([
+            'result_vat'    => $vat,
+            "total_wht"     =>  $wht,
+            "result_wht"    => $result,
+            'deadline'      => $deadline,
+            "total"         => $request->bank_charge + $result
         ]);
 
         return redirect()->route('payment.index');
@@ -163,9 +144,13 @@ class PaymentRequestController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'vat' => 'required|in:yes,no',
+            'vat'           => 'required|in:yes,no',
+            'description'   => 'required|array|min:1',
+            'price'         => 'required|array|min:1',
+            'wht'           => 'nullable|integer|exists:whts,id',
         ]);
-        $isWhtNull = ($request->wht == '') ? 1 : 0;
+
+        $isWhtNull = $request->wht ?? 0;
 
         $division = DivisionModel::findOrFail($request->id_division);
 
@@ -173,7 +158,6 @@ class PaymentRequestController extends Controller
 
         $carbonDate = \Carbon\Carbon::instance($dateTime);
         $month = $carbonDate->month;
-
 
         $carbonDate = \Carbon\Carbon::instance($dateTime);
         $year = $carbonDate->year;
@@ -185,73 +169,62 @@ class PaymentRequestController extends Controller
             ->count() + 1;
 
         $counti = str_pad($count, 4, '0', STR_PAD_LEFT);
-
-
-        $paymentRequest = PaymentRequestModel::create([
-            'invoice_date'      => $request->invoice_date,
-            'received_date'     => $request->received_date,
-            "contract"          => $request->contract,
-            'date_pr'           => $request->date_pr,
-            "no_pr"             => $counti . '/' . $division->slug . date('/m/y', strtotime($request->date_pr)),
-            "id_division"       => $request->id_division,
-            "name_beneficiary"  => $request->name_beneficiary,
-            "bank_account"      => $request->bank_account,
-            "for"               => $request->for,
-            "beneficiary_bank"  =>  $request->beneficiary_bank,
-            "due_date"          => $request->due_date,
-            "bank_charge"       => $request->bank_charge,
-            "is_dolar"          => 0,
-            "currency"          => $request->currency,
-            "wht_id"            => $request->wht,
-        ]);
-
+        $payment = new PaymentRequestModel();
+        $payment->save();
         $total_description = 0;
-
         for ($i = 0; $i < count($request->description); $i++) {
-
             $total_description = $total_description + $request->price[$i];
-
             DescriptionModel::create([
-                "value" => $request->description[$i],
-                "price" => $request->price[$i],
-                "id_payment_request" => $paymentRequest->id,
+                'value'                 => $request->description[$i],
+                'price'                 => $request->price[$i],
+                'id_payment_request'    => $payment->getKey(),
             ]);
         }
-
         $vat = ($total_description * 11) / 100;
-
         $check_wht = ($isWhtNull == 0) ? $request->wht : 0;
-
         $wht =  ($total_description * $check_wht) / 100;
-
         $result = $total_description + $vat - $wht;
-
         $invoice_date = \Carbon\Carbon::parse($request->invoice_date);
-
         $deadline = $invoice_date->addDays($request->due_date);
 
-        PaymentRequestModel::where('id', $paymentRequest->id)->update([
-            'result_vat' => $vat,
-            "total_wht" =>  $wht,
-            "result_wht" => $result,
-            'deadline' => $deadline,
-            "total" => $request->bank_charge + $result
-        ]);
-
-        return redirect()->route('payment.index');
+        $payment->invoice_date  =  $request->invoice_date;
+        $payment->received_date =  $request->received_date;
+        $payment->contract      =  $request->contract;
+        $payment->date_pr       =  $request->date_pr;
+        $payment->no_pr         =  $counti . '/' . $division->slug . date('/m/y', strtotime($request->date_pr));
+        $payment->id_division   =  $request->id_division;
+        $payment->name_beneficiary =  $request->name_beneficiary;
+        $payment->bank_account  =  $request->bank_account;
+        $payment->for           =  $request->for;
+        $payment->beneficiary_bank =  $request->beneficiary_bank;
+        $payment->due_date      =  $request->due_date;
+        $payment->bank_charge   =  $request->bank_charge;
+        $payment->currency      =  $request->currency;
+        $payment->wht_id        =  $request->wht;
+        $payment->result_vat    =  $vat;
+        $payment->total_wht     =  $wht;
+        $payment->result_wht    =  $result;
+        $payment->deadline      =  $deadline;
+        $payment->total         =  $request->bank_charge + $result;
+        $payment->save();
+        if ($payment) {
+            return redirect()->route('payment.index')->with(['success' => 'Data berhasil ditambah!']);
+        } else {
+            return redirect()->route('payment.index')->with(['error' => 'Data gagal ditambah!']);
+        }
     }
 
     public function delete(PaymentRequestModel $payment)
     {
-        PaymentRequestModel::where('id', $payment->id)->delete();
-        $descData  = DescriptionModel::where('id_payment_request', $payment->id)->get();
-
-        foreach ($descData as $key => $value) {
-
-            DescriptionModel::where('id', $value->id)->delete();
+        if (!$payment) {
+            abort(404);
         }
-
-        return redirect()->back();
+        $payment = $payment->delete();
+        if ($payment) {
+            return redirect()->route('payment.index')->with(['success' => 'Data Berhasil dihapus!']);
+        } else {
+            return redirect()->route('payment.index')->with(['error' => 'Data Gagal dihapus!']);
+        }
     }
 
     public function download(PaymentRequestModel $payment)
@@ -262,7 +235,7 @@ class PaymentRequestController extends Controller
         }
         $desc  = DescriptionModel::where('id_payment_request', $payment->id)->get();
         $divition  = DivisionModel::where('id', $payment->id_division)->first();
-        $pdf = PDF::loadview('payment_request.download', ['desc' => $desc, 'divition' => $divition, 'payment' => $payment]);
+        $pdf = Pdf::loadview('payment_request.download', ['desc' => $desc, 'divition' => $divition, 'payment' => $payment]);
         return $pdf->download($payment->id . '_' . date('ymdHis') . '.pdf');
     }
 

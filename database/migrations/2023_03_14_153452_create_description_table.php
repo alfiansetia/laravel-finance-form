@@ -15,10 +15,11 @@ class CreateDescriptionTable extends Migration
     {
         Schema::create('description', function (Blueprint $table) {
             $table->id();
-            $table->string('value')->nullable();
-            $table->bigInteger('price')->nullable();
-            $table->foreignId('id_payment_request')->nullable();
+            $table->string('value');
+            $table->bigInteger('price')->default(0);
+            $table->unsignedBigInteger('id_payment_request');
             $table->timestamps();
+            $table->foreign('id_payment_request')->references('id')->on('payment_request')->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 

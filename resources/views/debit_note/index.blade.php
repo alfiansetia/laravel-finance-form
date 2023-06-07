@@ -29,7 +29,7 @@
                             <tbody>
                                 @foreach ($data as $key => $item)
                                     <tr>
-                                        <td class="text-center"> {{ $key++ }} </td>
+                                        <td class="text-center"> {{ $key+1 }} </td>
                                         <td class="text-center"> {{ date('d-M-Y', strtotime($item->invoice_date)) }} </td>
                                         <td class="text-center">{{ $item->no_debit_note }}</td>
                                         <td class="text-center">{{ $item->received_bank }}</td>

@@ -38,8 +38,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     Route::resource('wht', WhtController::class);
+
     Route::resource('payment', PaymentRequestController::class);
     Route::get('payment/{payment}/download', [PaymentRequestController::class, 'download'])->name('payment.download');
 
     Route::resource('debit', DebitNoteController::class);
+    Route::get('debit/{debit}/download', [DebitNoteController::class, 'download'])->name('debit.download');
 });

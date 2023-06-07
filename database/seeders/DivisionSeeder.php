@@ -16,7 +16,7 @@ class DivisionSeeder extends Seeder
      */
     public function run()
     {
-        DivisionModel::truncate();
+        // DivisionModel::truncate();
 
         $datas = [
             [

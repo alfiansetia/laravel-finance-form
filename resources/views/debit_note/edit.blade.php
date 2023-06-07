@@ -67,7 +67,7 @@
         </div>
 
         <div class="row" id="add_desc_form">
-            @foreach ($desc as $item)
+            @foreach ($data->desc as $item)
                 <div class="col-md-6" id="desc_form">
                     <div class="form-group">
                         <strong>Description</strong>
@@ -143,7 +143,7 @@
 
 
     <script>
-        var data = @json($desc);
+        var data = @json($data->desc);
 
         let totalDesc = data.length;
 

@@ -15,10 +15,11 @@ class CreateDecriptionDebitTable extends Migration
     {
         Schema::create('decription_debit', function (Blueprint $table) {
             $table->id();
-            $table->string('value')->nullable();
-            $table->bigInteger('price')->nullable();
-            $table->foreignId('id_debit_note')->nullable();
+            $table->string('value');
+            $table->bigInteger('price')->default(0);
+            $table->unsignedBigInteger('id_debit_note');
             $table->timestamps();
+            $table->foreign('id_debit_note')->references('id')->on('debit_note')->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 
