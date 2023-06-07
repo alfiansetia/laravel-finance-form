@@ -17,4 +17,9 @@ class PaymentRequestModel extends Model
     {
         return $this->belongsTo(DivisionModel::class, 'id_division');
     }
+
+    public function wht()
+    {
+        return $this->belongsTo(Wht::class);
+    }
 }

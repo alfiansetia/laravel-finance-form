@@ -34,7 +34,9 @@ class CreatePaymentRequestTable extends Migration
             $table->bigInteger('total')->nullable();
             $table->boolean('is_dolar')->nullable();
             $table->enum('currency', ['idr', 'usd', 'sgd'])->default('idr');
+            $table->unsignedBigInteger('wht_id')->nullable();
             $table->timestamps();
+            $table->foreign('wht_id')->references('id')->on('whts')->cascadeOnUpdate()->nullOnDelete();
         });
     }
 

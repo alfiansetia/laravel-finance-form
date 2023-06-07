@@ -77,6 +77,12 @@
                         <p>Debit Note</p>
                     </a>
                 </li>
+                <li class="nav-item {{ $title == 'WHT' ? 'active' : '' }}">
+                    <a href="{{ route('wht.index') }}">
+                        <i class="fas fa-desktop"></i>
+                        <p>WHT</p>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

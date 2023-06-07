@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             // DescriptionSeeder::class,
             DivisionSeeder::class,
             UsersSeeder::class,
+            WhtSeeder::class,
             // FinanceSeeder::class,
             // PaymentRequestSeeder::class
         ]);

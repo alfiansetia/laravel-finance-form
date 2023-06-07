@@ -116,10 +116,15 @@
     <script src="../../assets/js/setting-demo2.js"></script>
 
     @if (session()->has('success'))
-        toastr.success('{{ session('success') }}', 'BERHASIL!');
+        <script>
+            alert("{{ session('success') }}")
+        </script>
     @elseif(session()->has('error'))
-        toastr.error('{{ session('error') }}', 'GAGAL!');
+        <script>
+            alert("{{ session('error') }}")
+        </script>
     @endif
+    
     @stack('js')
 </body>
 

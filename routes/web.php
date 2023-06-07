@@ -3,6 +3,7 @@
 use App\Http\Controllers\DebitNoteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentRequestController;
+use App\Http\Controllers\WhtController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -50,6 +51,8 @@ Route::delete('/delete-debit-note/{id}', [DebitNoteController::class, 'delete'])
 Route::get('/edit-debit-note/{id}', [DebitNoteController::class, 'edit'])->name('edit_debit_note');
 Route::post('/update-debit-note', [DebitNoteController::class, 'update'])->name('update_debit_note');
 Route::get('/print-debit-note/{id}', [DebitNoteController::class, 'print'])->name('print_debit_note');
+
+Route::resource('wht', WhtController::class);
 
 Route::get('/logout-action',   function () {
     Auth::logout();
