@@ -11,30 +11,9 @@
                         <span>
                             {{ auth()->user()->name }}
                             <span class="user-level">Administrator</span>
-                            <span class="caret"></span>
                         </span>
                     </a>
                     <div class="clearfix"></div>
-
-                    <div class="collapse in" id="collapseExample">
-                        <ul class="nav">
-                            <li>
-                                <a href="#profile">
-                                    <span class="link-collapse">My Profile</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#edit">
-                                    <span class="link-collapse">Edit Profile</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#settings">
-                                    <span class="link-collapse">Settings</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </div>
             <ul class="nav nav-primary">
@@ -47,12 +26,12 @@
                     <div class="collapse" id="dashboard">
                         <ul class="nav nav-collapse">
                             <li>
-                                <a href="../../demo1/index.html">
+                                <a href="">
                                     <span class="sub-item">Dashboard 1</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="../../demo2/index.html">
+                                <a href="">
                                     <span class="sub-item">Dashboard 2</span>
                                 </a>
                             </li>
@@ -72,7 +51,7 @@
                     </a>
                 </li>
                 <li class="nav-item {{ $title == 'Debit Note' ? 'active' : '' }}">
-                    <a href="{{ route('debit_note') }}">
+                    <a href="{{ route('debit.index') }}">
                         <i class="fas fa-desktop"></i>
                         <p>Debit Note</p>
                     </a>

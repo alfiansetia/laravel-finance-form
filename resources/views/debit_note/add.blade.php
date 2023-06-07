@@ -10,7 +10,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('store_payment_request') }}" method="POST">
+                    <form action="{{ route('debit.store') }}" method="POST">
                         @csrf
                         <div class="form-row">
                             <div class="form-group col-md-6">
@@ -65,7 +65,6 @@
                                 </select>
                             </div>
                         </div>
-
                         <div class="form-row" id="add_desc_form">
                             <div class="form-group col-md-6 desc_form">
                                 <label>Description</label>
@@ -83,7 +82,6 @@
                                     Description</a>
                             </div>
                         </div>
-
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="currency">Bank</label>
@@ -117,7 +115,7 @@
                             </div>
                         </div>
                         <div class="text-right">
-                            <a href="{{ route('payment_request') }}" class="btn btn-md btn-secondary ml-auto mr-2"><i
+                            <a href="{{ route('debit.index') }}" class="btn btn-md btn-secondary ml-auto mr-2"><i
                                     class="fas fa-backward mr-1"></i>Back</a>
                             <button type="submit" class="btn btn-md btn-primary float-right"><i
                                     class="fab fa-telegram-plane mr-1"></i>Save</button>
@@ -128,27 +126,9 @@
         </div>
     </div>
 
-
-    <form action="{{ route('store_debit_note') }}" method="POST">
+    <form action="{{ route('debit.store') }}" method="POST">
         @csrf
-
-        <div class="mt-5">
-            <h2>Create Debit Note</h2>
-        </div>
-
         <div class="row mt-5">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <strong>Name Division</strong>
-                    <select class="form-control" name="id_division" required>
-                        @foreach ($division as $item)
-                            <option value="{{ $item->id }}">{{ $item->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6">
-            </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <strong>No Invoice</strong>

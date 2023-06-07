@@ -7,7 +7,7 @@
                 <div class="card-header">
                     <div class="d-flex align-items-center">
                         <h4 class="card-title">{{ $title }}</h4>
-                        <a href="{{ route('add_debit_note') }}" class="btn btn-primary btn-round ml-auto">
+                        <a href="{{ route('debit.create') }}" class="btn btn-primary btn-round ml-auto">
                             <i class="fa fa-plus mr-2"></i>Add
                         </a>
                     </div>
@@ -37,16 +37,15 @@
                                         <td class="text-center">{{ $item->for }}</td>
                                         <td class="text-center">
                                             <div class="btn-group" role="group" aria-label="Basic example">
-                                                <a href="{{ route('print_debit_note', $item->id) }}"
-                                                    class="btn btn-sm btn-secondary" title="Download"><i
+                                                <a href="{{ route('debit.edit', $item->id) }}"
+                                                    class="btn btn-sm btn-secondary" title="Download" target="_blank"><i
                                                         class="fas fa-file-pdf"></i></a>
-                                                <a href="{{ route('print_debit_note', $item->id) }}"
-                                                    class="btn btn-sm btn-info" title="Detail" target="_blank"><i
-                                                        class="fas fa-eye"></i></a>
-                                                <a href="{{ route('edit_debit_note', $item->id) }}"
+                                                <a href="{{ route('debit.edit', $item->id) }}" class="btn btn-sm btn-info"
+                                                    title="Detail" target="_blank"><i class="fas fa-eye"></i></a>
+                                                <a href="{{ route('debit.edit', $item->id) }}"
                                                     class="btn btn-sm btn-warning" title="Edit"><i
                                                         class="fas fa-edit"></i></a>
-                                                <form action="{{ route('delete_debit_note', $item->id) }}" method="POST">
+                                                <form action="{{ route('debit.destroy', $item->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" onclick="return confirm('Delete Data?')"
