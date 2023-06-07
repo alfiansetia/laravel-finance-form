@@ -10,7 +10,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('store_payment_request') }}" method="POST">
+                    <form action="{{ route('payment.store') }}" method="POST">
                         @csrf
                         <div class="form-row">
                             <div class="form-group col-md-6">
@@ -118,7 +118,7 @@
                             </div>
                         </div>
                         <div class="text-right">
-                            <a href="{{ route('payment_request') }}" class="btn btn-md btn-secondary ml-auto mr-2"><i
+                            <a href="{{ route('payment.index') }}" class="btn btn-md btn-secondary ml-auto mr-2"><i
                                     class="fas fa-backward mr-1"></i>Back</a>
                             <button type="submit" class="btn btn-md btn-primary float-right"><i
                                     class="fab fa-telegram-plane mr-1"></i>Save</button>

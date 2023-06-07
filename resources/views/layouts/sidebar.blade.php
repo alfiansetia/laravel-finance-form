@@ -66,7 +66,7 @@
                     <h4 class="text-section">Components</h4>
                 </li>
                 <li class="nav-item {{ $title == 'Payment Request' ? 'active' : '' }}">
-                    <a href="{{ route('payment_request') }}">
+                    <a href="{{ route('payment.index') }}">
                         <i class="fas fa-desktop"></i>
                         <p>Payment Request</p>
                     </a>
