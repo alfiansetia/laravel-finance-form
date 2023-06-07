@@ -71,6 +71,12 @@
                         <p>Payment Request</p>
                     </a>
                 </li>
+                <li class="nav-item {{ $title == 'Debit Note' ? 'active' : '' }}">
+                    <a href="{{ route('debit_note') }}">
+                        <i class="fas fa-desktop"></i>
+                        <p>Debit Note</p>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
