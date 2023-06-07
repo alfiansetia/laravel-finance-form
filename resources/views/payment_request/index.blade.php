@@ -6,7 +6,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title">Payment Request</h4>
+                        <h4 class="card-title">{{ $title }}</h4>
                         <a href="{{ route('add_payment_request') }}" class="btn btn-primary btn-round ml-auto">
                             <i class="fa fa-plus mr-2"></i>Add
                         </a>
@@ -17,7 +17,7 @@
                         <table id="table" class="display table table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th class="text-center">No.</th>
+                                    <th class="text-center" style="width: 30px;">No.</th>
                                     <th class="text-center">Division</th>
                                     <th class="text-center">PR Voucher Date</th>
                                     <th class="text-center">No PR Voucher</th>
@@ -52,7 +52,8 @@
                                                     method="POST">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" onclick="return confirm('Delete Data?')" class="btn btn-sm btn-danger" title="Delete">
+                                                    <button type="submit" onclick="return confirm('Delete Data?')"
+                                                        class="btn btn-sm btn-danger" title="Delete">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>
                                                 </form>

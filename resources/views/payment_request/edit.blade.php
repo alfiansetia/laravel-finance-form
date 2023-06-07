@@ -6,7 +6,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title">Edit Payment Request</h4>
+                        <h4 class="card-title">Edit {{ $title }}</h4>
                     </div>
                 </div>
                 <div class="card-body">
@@ -115,15 +115,11 @@
                             <div class="form-group col-md-6">
                                 <label for="wht">WHT</label>
                                 <select class="custom-select" id="wht" name="wht">
-                                    <option {{ ceil((100 * $data->total_wht) / $total_description) < 1 ? '' : 'selected' }}
-                                        value="">
-                                        Select</option>
-                                    <option {{ ceil((100 * $data->total_wht) / $total_description) == 2 ? 'selected' : '' }}
-                                        value="2">
-                                        WHT 21</option>
-                                    <option {{ ceil((100 * $data->total_wht) / $total_description) == 3 ? 'selected' : '' }}
-                                        value="3">
-                                        WHT 22</option>
+                                    <option value="">Select Wht</option>
+                                    @foreach ($wht as $item)
+                                        <option {{ $data->wht_id == $item->id ? 'selected' : '' }}
+                                            value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>

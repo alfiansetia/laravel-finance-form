@@ -6,7 +6,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title">Create Payment Request</h4>
+                        <h4 class="card-title">Add {{ $title }}</h4>
                     </div>
                 </div>
                 <div class="card-body">
@@ -45,7 +45,8 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="name_beneficiary">Name Beneficiary</label>
-                                <input type="text" id="name_beneficiary" name="name_beneficiary" class="form-control" required>
+                                <input type="text" id="name_beneficiary" name="name_beneficiary" class="form-control"
+                                    required>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="bank_account">Bank A/C</label>
@@ -86,8 +87,8 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="currency">Bank</label>
-                                <input type="text" id="beneficiary_bank" name="beneficiary_bank"
-                                    class="form-control" required>
+                                <input type="text" id="beneficiary_bank" name="beneficiary_bank" class="form-control"
+                                    required>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="for">For</label>
@@ -97,14 +98,16 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="due_date">Due Date</label>
-                                <input type="number" id="due_date" name="due_date" class="form-control" min="0">
+                                <input type="number" id="due_date" name="due_date" class="form-control"
+                                    min="0">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="wht">WHT</label>
                                 <select class="custom-select" id="wht" name="wht">
-                                    <option value="">Select</option>
-                                    <option value="2">WHT 21</option>
-                                    <option value="3">WHT 22</option>
+                                    <option value="">Select Wht</option>
+                                    @foreach ($wht as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>

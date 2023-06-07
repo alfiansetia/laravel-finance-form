@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DescriptionModel;
 use App\Models\DivisionModel;
 use App\Models\PaymentRequestModel;
+use App\Models\Wht;
 use CURLFile;
 use DateTime;
 use Faker\Provider\ar_EG\Payment;
@@ -33,21 +34,20 @@ class PaymentRequestController extends Controller
         $title = $this->title;
         $data = PaymentRequestModel::all();
         $desc = DescriptionModel::all();
-        return view('payment_request.index', compact('data', 'desc', 'title'));
+        return view('payment_request.index', compact('data', 'desc'))->with(['title' => $this->title]);
     }
 
 
     public function create()
     {
-        $title = $this->title;
-        $countDesc = 1;
+        $wht = Wht::get();
         $division = DivisionModel::all();
-        return view('payment_request.add', compact('division', 'countDesc', 'title'));
+        return view('payment_request.add', compact('division', 'wht'))->with(['title' => $this->title]);
     }
 
     public function edit($id)
     {
-        $title = $this->title;
+        $wht = Wht::get();
         $division = DivisionModel::all();
         $data = PaymentRequestModel::find($id);
         $desc = DescriptionModel::where('id_payment_request', $data->id)->get();
@@ -57,7 +57,7 @@ class PaymentRequestController extends Controller
         foreach ($desc as $key => $value) {
             $total_description = $total_description + $value->price;
         }
-        return view('payment_request.edit', compact('division', 'data', 'desc', 'total_description', 'title'));
+        return view('payment_request.edit', compact('division', 'data', 'desc', 'total_description', 'wht'))->with(['title' => $this->title]);
     }
 
     public function update(Request $request)
@@ -193,6 +193,7 @@ class PaymentRequestController extends Controller
             "bank_charge"       => $request->bank_charge,
             "is_dolar"          => 0,
             "currency"          => $request->currency,
+            "wht_id"            => $request->wht,
         ]);
 
         $total_description = 0;

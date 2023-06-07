@@ -14,6 +14,8 @@ use Response;
 
 class DebitNoteController extends Controller
 {
+    private $title = 'Debit Note';
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -21,16 +23,15 @@ class DebitNoteController extends Controller
 
     public function index()
     {
-        $i = 1;
-        $data = DebitNoteModel::all();
-        $desc = DescriptionDebitModel::all();
-        return view('debit_note.index', compact('data', 'i', 'desc'));
+        $data = DebitNoteModel::get();
+        $desc = DescriptionDebitModel::get();
+        return view('debit_note.index', compact('data','desc'))->with(['title' => $this->title]);
     }
 
     public function create()
     {
         $division = DivisionModel::all();
-        return view('debit_note.add', compact('division'));
+        return view('debit_note.add', compact('division'))->with(['title' => $this->title]);
     }
 
     public function store(Request $request)
@@ -133,7 +134,7 @@ class DebitNoteController extends Controller
         $division = DivisionModel::all();
         $data = DebitNoteModel::find($id);
         $desc = DescriptionDebitModel::where('id_debit_note', $data->id)->get();
-        return view('debit_note.edit', compact('division', 'data', 'desc'));
+        return view('debit_note.edit', compact('division', 'data', 'desc'))->with(['title' => $this->title]);
     }
 
     public function update(Request $request)
@@ -340,6 +341,6 @@ class DebitNoteController extends Controller
 
 
         $filepath = public_path('DebitNote.pdf');
-        return Response::download($filepath);
+        // return Response::download($filepath);
     }
 }
