@@ -116,6 +116,22 @@
                                 <label for="bank_charge">Bank Charges</label>
                                 <input type="number" name="bank_charge" class="form-control" min="0">
                             </div>
+                            <div class="form-group col-md-6">
+                                <label>VAT</label><br>
+                                <div class="form-check form-check-inline">
+                                    <label class="form-radio-label">
+                                        <input class="form-radio-input" type="radio" name="vat" value="yes"
+                                            checked>
+                                        <span class="form-radio-sign">Yes</span>
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <label class="form-radio-label">
+                                        <input class="form-radio-input" type="radio" name="vat" value="no">
+                                        <span class="form-radio-sign">No</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                         <div class="text-right">
                             <a href="{{ route('payment.index') }}" class="btn btn-md btn-secondary ml-auto mr-2"><i

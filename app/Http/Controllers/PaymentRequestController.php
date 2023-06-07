@@ -162,18 +162,9 @@ class PaymentRequestController extends Controller
 
     public function store(Request $request)
     {
-
-        // if ($request->wht > 100 || $request->wht < 1) {
-        //     $validator = Validator::make($request->all(), [
-        //         'wht' => 'numeric|min:1|max:100',
-        //     ]);
-
-        //     if ($validator->fails()) {
-        //         return redirect()->back()
-        //             ->withErrors($validator)
-        //             ->withInput();
-        //     }
-        // }
+        $this->validate($request, [
+            'vat' => 'required|in:yes,no',
+        ]);
         $isWhtNull = ($request->wht == '') ? 1 : 0;
 
         $division = DivisionModel::findOrFail($request->id_division);
