@@ -39,10 +39,10 @@
                                         <td class="text-center">{{ $item->beneficiary_bank }}</td>
                                         <td class="text-center">
                                             <div class="btn-group" role="group" aria-label="Basic example">
-                                                <a href="{{ route('payment.edit', $item->id) }}"
-                                                    class="btn btn-sm btn-secondary" title="Download"><i
+                                                <a href="{{ route('payment.download', $item->id) }}"
+                                                    class="btn btn-sm btn-secondary" title="Download" target="_blank"><i
                                                         class="fas fa-file-pdf"></i></a>
-                                                <a href="{{ route('payment.edit', $item->id) }}"
+                                                <a href="{{ route('payment.show', $item->id) }}"
                                                     class="btn btn-sm btn-info" title="Detail" target="_blank"><i
                                                         class="fas fa-eye"></i></a>
                                                 <a href="{{ route('payment.edit', $item->id) }}"

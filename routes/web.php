@@ -57,4 +57,5 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('wht', WhtController::class);
     Route::resource('payment', PaymentRequestController::class);
+    Route::get('payment/{payment}/download', [PaymentRequestController::class, 'download'])->name('payment.download');
 });

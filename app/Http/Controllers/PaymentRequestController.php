@@ -6,6 +6,7 @@ use App\Models\DescriptionModel;
 use App\Models\DivisionModel;
 use App\Models\PaymentRequestModel;
 use App\Models\Wht;
+// use Barryvdh\DomPDF\PDF;
 use CURLFile;
 use DateTime;
 use Faker\Provider\ar_EG\Payment;
@@ -45,11 +46,28 @@ class PaymentRequestController extends Controller
         return view('payment_request.add', compact('division', 'wht'))->with(['title' => $this->title]);
     }
 
-    public function edit($id)
+    public function show(PaymentRequestModel $payment)
     {
+        if (!$payment) {
+            abort(404);
+        }
+        $payment = $payment;
+        if (!$payment) {
+            abort(404);
+        }
+        $desc  = DescriptionModel::where('id_payment_request', $payment->id)->get();
+        $divition  = DivisionModel::where('id', $payment->id_division)->first();
+        return view('payment_request.detail', compact('desc', 'divition', 'payment'));
+    }
+
+    public function edit(PaymentRequestModel $payment)
+    {
+        if (!$payment) {
+            abort(404);
+        }
         $wht = Wht::get();
         $division = DivisionModel::all();
-        $data = PaymentRequestModel::find($id);
+        $data = PaymentRequestModel::find($payment->id);
         $desc = DescriptionModel::where('id_payment_request', $data->id)->get();
 
         $total_description = 0;
@@ -60,7 +78,7 @@ class PaymentRequestController extends Controller
         return view('payment_request.edit', compact('division', 'data', 'desc', 'total_description', 'wht'))->with(['title' => $this->title]);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, PaymentRequestModel $payment)
     {
         $title = $this->title;
         $dateTime = new DateTime($request->date_pr);
@@ -139,7 +157,7 @@ class PaymentRequestController extends Controller
             "total" => $request->bank_charge + $result
         ]);
 
-        return redirect()->route('payment_request');
+        return redirect()->route('payment.index');
     }
 
     public function store(Request $request)
@@ -229,14 +247,13 @@ class PaymentRequestController extends Controller
             "total" => $request->bank_charge + $result
         ]);
 
-        return redirect()->route('payment_request');
+        return redirect()->route('payment.index');
     }
 
-    public function delete($id)
+    public function delete(PaymentRequestModel $payment)
     {
-        PaymentRequestModel::where('id', $id)->delete();
-        $descData  = DescriptionModel::where('id_payment_request', $id)->get();
-
+        PaymentRequestModel::where('id', $payment->id)->delete();
+        $descData  = DescriptionModel::where('id_payment_request', $payment->id)->get();
 
         foreach ($descData as $key => $value) {
 
@@ -246,25 +263,37 @@ class PaymentRequestController extends Controller
         return redirect()->back();
     }
 
-
-    public function print($id)
+    public function download(PaymentRequestModel $payment)
     {
-        $payment = PaymentRequestModel::find($id);
+        $payment = $payment;
+        if (!$payment) {
+            abort(404);
+        }
+        $desc  = DescriptionModel::where('id_payment_request', $payment->id)->get();
+        $divition  = DivisionModel::where('id', $payment->id_division)->first();
+        $pdf = PDF::loadview('payment_request.download', ['desc' => $desc, 'divition' => $divition, 'payment' => $payment]);
+        return $pdf->download($payment->id . '_' . date('ymdHis') . '.pdf');
+    }
+
+
+    public function print(PaymentRequestModel $paymentRequestModel)
+    {
+        $payment = PaymentRequestModel::find($paymentRequestModel->id);
         if (!$payment) {
             abort(404);
         }
 
-        $desc  = DescriptionModel::where('id_payment_request', $id)->get();
+        $desc  = DescriptionModel::where('id_payment_request', $paymentRequestModel->id)->get();
         $divition  = DivisionModel::where('id', $payment->id_division)->first();
 
         return view('detail', compact('payment', 'desc', 'divition'));
 
 
-        $jsonString  = PaymentRequestModel::find($id);
+        $jsonString  = PaymentRequestModel::find($paymentRequestModel->id);
         $data = json_decode($jsonString, true);
 
 
-        $descData  = DescriptionModel::where('id_payment_request', $id)->get();
+        $descData  = DescriptionModel::where('id_payment_request', $paymentRequestModel->id)->get();
 
         $div  = DivisionModel::where('id', $jsonString->id_division)->first();
         $divData = json_decode($div, true);
