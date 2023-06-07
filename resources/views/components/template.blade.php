@@ -63,7 +63,6 @@
         </div>
         <!-- Sidebar -->
         @include('layouts.sidebar')
-
         <div class="main-panel">
             <div class="content">
                 <div class="page-inner">
@@ -92,12 +91,12 @@
                     @yield('content')
                 </div>
             </div>
-
             @include('layouts.footer')
-
         </div>
-
     </div>
+    <form action="{{ route('logout') }}" method="POST" id="form_logout" class="d-none">
+        @csrf
+    </form>
     <!--   Core JS Files   -->
     <script src="../../assets/js/core/jquery.3.2.1.min.js"></script>
     <script src="../../assets/js/core/popper.min.js"></script>
@@ -115,6 +114,14 @@
     <!-- Atlantis DEMO methods, don't include it in your project! -->
     <script src="../../assets/js/setting-demo2.js"></script>
 
+    <script>
+        function logout_() {
+            if (confirm('Logout?')) {
+                $('#form_logout').submit();
+            }
+        }
+    </script>
+
     @if (session()->has('success'))
         <script>
             alert("{{ session('success') }}")
@@ -124,7 +131,7 @@
             alert("{{ session('error') }}")
         </script>
     @endif
-    
+
     @stack('js')
 </body>
 

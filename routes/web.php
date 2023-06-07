@@ -22,15 +22,6 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::get('/tes', function () {
-    return view('tes');
-});
-
-Route::get('/tes2', function () {
-    return view('tes2');
-});
-
-
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
