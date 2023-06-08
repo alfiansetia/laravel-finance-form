@@ -43,7 +43,7 @@
                                                     class="btn btn-sm btn-secondary" title="Download" target="_blank"><i
                                                         class="fas fa-file-pdf"></i></a>
                                                 <a href="{{ route('payment.show', $item->id) }}"
-                                                    class="btn btn-sm btn-info" title="Detail" target="_blank"><i
+                                                    class="btn btn-sm btn-info" title="Detail"><i
                                                         class="fas fa-eye"></i></a>
                                                 <a href="{{ route('payment.edit', $item->id) }}"
                                                     class="btn btn-sm btn-warning" title="Edit"><i

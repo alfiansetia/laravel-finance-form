@@ -161,7 +161,7 @@
                                 <label for="due_date">Due Date</label>
                                 <input type="number" id="due_date" name="due_date"
                                     class="form-control @error('due_date') is-invalid @enderror"
-                                    value="{{ old('due_date') }}" min="0">
+                                    value="{{ old('due_date', 0) }}" min="0">
                                 @error('due_date')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -189,7 +189,7 @@
                                 <label for="bank_charge">Bank Charges</label>
                                 <input type="number" name="bank_charge"
                                     class="form-control @error('bank_charge') is-invalid @enderror"
-                                    value="{{ old('bank_charge') }}" min="0">
+                                    value="{{ old('bank_charge', 0) }}" min="0">
                                 @error('bank_charge')
                                     <div class="invalid-feedback">
                                         {{ $message }}

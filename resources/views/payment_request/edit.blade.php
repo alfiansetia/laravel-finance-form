@@ -47,7 +47,7 @@
                             <div class="form-group col-md-6">
                                 <label for="date_pr">PR Voucher Date</label>
                                 <input type="date" id="date_pr" name="date_pr" class="form-control"
-                                    value="{{ date('Y-m-d', strtotime($data->date_pr)) }}" required>
+                                    value="{{ date('Y-m-d', strtotime($data->date_pr)) }}" readonly required>
                             </div>
                         </div>
                         <div class="form-row">
@@ -111,7 +111,7 @@
                             <div class="form-group col-md-6">
                                 <label for="due_date">Due Date</label>
                                 <input type="number" id="due_date" name="due_date" class="form-control"
-                                    min="0" value="{{ $data->due_date }}">
+                                    min="0" value="{{ $data->due_date ?? 0 }}">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="wht">WHT</label>
@@ -128,7 +128,7 @@
                             <div class="form-group col-md-6">
                                 <label for="bank_charge">Bank Charges</label>
                                 <input type="number" name="bank_charge" class="form-control" min="0"
-                                    value="value="{{ $data->bank_charge }}"">
+                                    value="{{ $data->bank_charge ?? 0 }}">
                             </div>
                             <div class="form-group col-md-6">
                                 <label>VAT</label><br>

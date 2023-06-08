@@ -160,14 +160,13 @@ class DebitNoteController extends Controller
 
         $division = DivisionModel::findOrFail($request->id_division);
 
-
         $data->update([
             'no_invoice' => $request->no_invoice,
             'invoice_date' => $request->invoice_date,
             "tax_invoice_serial_no" => $request->tax_invoice_serial_no,
             'tax_invoice_date' => $request->tax_invoice_date,
-            "no_debit_note" => $count . '/' . $division->slug . date('/m/Y', strtotime($request->date_pr)),
-            "id_division" => $request->id_division,
+            // "no_debit_note" => $count . '/' . $division->slug . date('/m/Y', strtotime($request->date_pr)),
+            // "id_division" => $request->id_division,
             "for" => $request->for,
             "received_bank" => $request->received_bank,
         ]);
@@ -176,7 +175,6 @@ class DebitNoteController extends Controller
 
 
         foreach ($descData as $key => $value) {
-
             DescriptionDebitModel::where('id', $value->id)->delete();
         }
 

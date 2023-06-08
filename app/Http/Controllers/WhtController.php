@@ -39,7 +39,7 @@ class WhtController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name'  => 'required|unique:whts,name',
+            'name'  => 'required',
             'value' => 'required|integer|gt:0',
         ], [
             'name.required'     => 'Name Wajib diisi',
@@ -98,7 +98,7 @@ class WhtController extends Controller
             abort(404);
         }
         $this->validate($request, [
-            'name'  => 'required|unique:whts,name,' . $wht->id,
+            'name'  => 'required',
             'value' => 'required|integer|gt:0',
         ], [
             'name.required'     => 'Name Wajib diisi',
