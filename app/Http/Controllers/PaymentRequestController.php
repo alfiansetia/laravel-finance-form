@@ -7,17 +7,9 @@ use App\Models\DivisionModel;
 use App\Models\PaymentRequestModel;
 use App\Models\Wht;
 use Barryvdh\DomPDF\Facade\Pdf;
-use CURLFile;
 use DateTime;
-use Faker\Provider\ar_EG\Payment;
 use Illuminate\Http\Request;
-use PhpOffice\PhpWord\PhpWord;
-use Illuminate\Support\Facades\Storage;
-use File;
-use Response;
-use Illuminate\Support\Facades\Validator;
-use League\CommonMark\Extension\DescriptionList\Node\DescriptionTerm;
-
+use Illuminate\Support\Carbon;
 
 class PaymentRequestController extends Controller
 {
@@ -68,8 +60,23 @@ class PaymentRequestController extends Controller
         if (!$payment) {
             abort(404);
         }
+        $this->validate($request, [
+            'beneficiary_bank'  => 'required',
+            'invoice_date'      => 'required|date_format:Y-m-d',
+            'received_date'     => 'required|date_format:Y-m-d|after_or_equal:invoice_date',
+            'name_beneficiary'  => 'required',
+            'bank_account'      => 'required',
+            'for'               => 'required',
+            'currency'          => 'required|in:idr,usd,sgd',
+            'vat'               => 'required|in:yes,no',
+            'wht'               => 'nullable|integer|exists:whts,id',
+            'due_date'          => 'required|integer|gte:0',
+            'bank_charge'       => 'required|integer|gte:0',
+            'description'       => 'required|array|min:1',
+            'price'             => 'required|array|min:1',
+        ]);
 
-        $invoice_date = \Carbon\Carbon::parse($request->invoice_date);
+        $invoice_date = Carbon::parse($request->invoice_date);
 
         $deadline = $invoice_date->addDays($request->due_date);
 
@@ -93,19 +100,20 @@ class PaymentRequestController extends Controller
         $result = $total_description + $vat_value - $wht_value;
 
         $payment->update([
-            'contract'          => $request->contract,
+            'beneficiary_bank'  => $request->beneficiary_bank,
             'invoice_date'      => $request->invoice_date,
             'received_date'     => $request->received_date,
             'name_beneficiary'  => $request->name_beneficiary,
             'bank_account'      => $request->bank_account,
-            'beneficiary_bank'  => $request->beneficiary_bank,
             'for'               => $request->for,
+            'currency'          => $request->currency,
+            'vat'               => $request->vat,
+            'wht_id'            => $request->wht,
             'due_date'          => $request->due_date,
-            "is_dolar"          => 0,
-            "currency"          => $request->currency,
+            'bank_charge'       => $request->bank_charge,
             'result_vat'        => $vat_value,
-            "total_wht"         => $wht_value,
-            "result_wht"        => $result,
+            'total_wht'         => $wht_value,
+            'result_wht'        => $result,
             'deadline'          => $deadline,
             'total'             => ($request->bank_charge ?? 0) + $result,
         ]);
@@ -140,10 +148,10 @@ class PaymentRequestController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'id_division'       => 'required|exists:division,id',
+            'id_division'       => 'required|integer|exists:division,id',
             'beneficiary_bank'  => 'required',
             'invoice_date'      => 'required|date_format:Y-m-d',
-            'received_date'     => 'required|date_format:Y-m-d',
+            'received_date'     => 'required|date_format:Y-m-d|after_or_equal:invoice_date',
             'date_pr'           => 'required|date_format:Y-m-d',
             'name_beneficiary'  => 'required',
             'bank_account'      => 'required',
@@ -151,8 +159,8 @@ class PaymentRequestController extends Controller
             'currency'          => 'required|in:idr,usd,sgd',
             'vat'               => 'required|in:yes,no',
             'wht'               => 'nullable|integer|exists:whts,id',
-            'due_date'          => 'required|gte:0',
-            'bank_charge'       => 'required|gte:0',
+            'due_date'          => 'required|integer|gte:0',
+            'bank_charge'       => 'required|integer|gte:0',
             'description'       => 'required|array|min:1',
             'price'             => 'required|array|min:1',
         ]);
@@ -161,10 +169,10 @@ class PaymentRequestController extends Controller
 
         $dateTime = new DateTime($request->date_pr);
 
-        $carbonDate = \Carbon\Carbon::instance($dateTime);
+        $carbonDate = Carbon::instance($dateTime);
         $month = $carbonDate->month;
 
-        $carbonDate = \Carbon\Carbon::instance($dateTime);
+        $carbonDate = Carbon::instance($dateTime);
         $year = $carbonDate->year;
 
         $count =
@@ -193,7 +201,7 @@ class PaymentRequestController extends Controller
 
         $result = $total_description + $vat_value - $wht_value;
 
-        $invoice_date = \Carbon\Carbon::parse($request->invoice_date);
+        $invoice_date = Carbon::parse($request->invoice_date);
         $deadline = $invoice_date->addDays($request->due_date);
 
         $payment = PaymentRequestModel::create([
@@ -215,7 +223,7 @@ class PaymentRequestController extends Controller
             'total_wht'         => $wht_value,
             'result_wht'        => $result,
             'deadline'          => $deadline,
-            'total'             => ($request->bank_charge ?? 0) + $result,
+            'total'             => $request->bank_charge + $result,
         ]);
 
         for ($i = 0; $i < count($request->description); $i++) {
