@@ -140,10 +140,21 @@ class PaymentRequestController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'vat'           => 'required|in:yes,no',
-            'description'   => 'required|array|min:1',
-            'price'         => 'required|array|min:1',
-            'wht'           => 'nullable|integer|exists:whts,id',
+            'id_division'       => 'required|exists:division,id',
+            'beneficiary_bank'  => 'required',
+            'invoice_date'      => 'required|date_format:Y-m-d',
+            'received_date'     => 'required|date_format:Y-m-d',
+            'date_pr'           => 'required|date_format:Y-m-d',
+            'name_beneficiary'  => 'required',
+            'bank_account'      => 'required',
+            'for'               => 'required',
+            'currency'          => 'required|in:idr,usd,sgd',
+            'vat'               => 'required|in:yes,no',
+            'wht'               => 'nullable|integer|exists:whts,id',
+            'due_date'          => 'required|gte:0',
+            'bank_charge'       => 'required|gte:0',
+            'description'       => 'required|array|min:1',
+            'price'             => 'required|array|min:1',
         ]);
 
         $division = DivisionModel::findOrFail($request->id_division);
@@ -186,25 +197,25 @@ class PaymentRequestController extends Controller
         $deadline = $invoice_date->addDays($request->due_date);
 
         $payment = PaymentRequestModel::create([
-            'invoice_date'  =>  $request->invoice_date,
-            'received_date' =>  $request->received_date,
-            'contract'      =>  $request->contract,
-            'date_pr'       =>  $request->date_pr,
-            'no_pr'         =>  $counti . '/' . $division->slug . date('/m/y', strtotime($request->date_pr)),
-            'id_division'   =>  $request->id_division,
-            'name_beneficiary' => $request->name_beneficiary,
-            'bank_account'  =>  $request->bank_account,
-            'for'           =>  $request->for,
-            'beneficiary_bank' => $request->beneficiary_bank,
-            'due_date'      =>  $request->due_date,
-            'bank_charge'   =>  $request->bank_charge,
-            'currency'      =>  $request->currency,
-            'wht_id'        =>  $request->wht,
-            'result_vat'    =>  $vat_value,
-            'total_wht'     =>  $wht_value,
-            'result_wht'    =>  $result,
-            'deadline'      =>  $deadline,
-            'total'         => ($request->bank_charge ?? 0) + $result,
+            'no_pr'             => $counti . '/' . $division->slug . date('/m/y', strtotime($request->date_pr)),
+            'id_division'       => $request->id_division,
+            'beneficiary_bank'  => $request->beneficiary_bank,
+            'invoice_date'      => $request->invoice_date,
+            'received_date'     => $request->received_date,
+            // 'contract'      =>  $request->contract,
+            'date_pr'           => $request->date_pr,
+            'name_beneficiary'  => $request->name_beneficiary,
+            'bank_account'      => $request->bank_account,
+            'for'               => $request->for,
+            'currency'          => $request->currency,
+            'wht_id'            => $request->wht,
+            'due_date'          => $request->due_date,
+            'bank_charge'       => $request->bank_charge,
+            'result_vat'        => $vat_value,
+            'total_wht'         => $wht_value,
+            'result_wht'        => $result,
+            'deadline'          => $deadline,
+            'total'             => ($request->bank_charge ?? 0) + $result,
         ]);
 
         for ($i = 0; $i < count($request->description); $i++) {
