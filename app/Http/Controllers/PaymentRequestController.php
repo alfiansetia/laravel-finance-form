@@ -221,7 +221,7 @@ class PaymentRequestController extends Controller
         }
     }
 
-    public function delete(PaymentRequestModel $payment)
+    public function destroy(PaymentRequestModel $payment)
     {
         if (!$payment) {
             abort(404);
