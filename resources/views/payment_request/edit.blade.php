@@ -136,12 +136,22 @@
                             <div class="form-group col-md-6">
                                 <label for="due_date">Due Date *</label>
                                 <input type="number" id="due_date" name="due_date" class="form-control"
-                                    min="0" value="{{ $data->due_date ?? 0 }}">
+                                    min="0" value="{{ $data->due_date ?? 0 }}" required>
+                                @error('due_date')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="bank_charge">Bank Charges *</label>
                                 <input type="number" id="bank_charge" name="bank_charge" class="form-control"
-                                    min="0" value="{{ $data->bank_charge ?? 0 }}">
+                                    min="0" value="{{ $data->bank_charge ?? 0 }}" required>
+                                @error('bank_charge')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                         </div>
                         <div class="text-right">
