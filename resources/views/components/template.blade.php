@@ -40,7 +40,7 @@
             <!-- Logo Header -->
             <div class="logo-header" data-background-color="blue">
 
-                <a href="/" class="logo">
+                <a href="{{ route('home') }}" class="logo">
                     <img src="{{ asset('logo.png') }}" height="40" alt="navbar brand" class="navbar-brand">
                 </a>
                 <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse"
@@ -84,6 +84,9 @@
     <script src="{{ asset('assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js') }}"></script>
 
+
+    <script src="{{ asset('assets/js/plugin/sweetalert/sweetalert.min.js') }}"></script>
+
     <!-- jQuery Scrollbar -->
     <script src="{{ asset('assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
     <!-- Datatables -->
@@ -93,18 +96,51 @@
 
     <script>
         function logout_() {
-            if (confirm('Logout?')) {
-                $('#form_logout').submit();
-            }
+            swal({
+                title: 'Logout?',
+                icon: "warning",
+                type: 'warning',
+                buttons: {
+                    confirm: {
+                        text: 'Yes',
+                        className: 'btn btn-success'
+                    },
+                    cancel: {
+                        visible: true,
+                        className: 'btn btn-danger'
+                    }
+                }
+            }).then((value) => {
+                if (value) {
+                    $('#form_logout').submit();
+                } else {
+                    swal.close();
+                }
+            });
         }
     </script>
 
     @if (session()->has('success'))
         <script>
-            alert("{{ session('success') }}")
+            swal("Success!", "{{ session('success') }}", {
+                icon: "success",
+                buttons: {
+                    confirm: {
+                        className: 'btn btn-success'
+                    }
+                },
+            });
         </script>
     @elseif(session()->has('error'))
         <script>
+            swal("Error!", "{{ session('error') }}", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: 'btn btn-danger'
+                    }
+                },
+            });
             alert("{{ session('error') }}")
         </script>
     @endif

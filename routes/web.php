@@ -3,6 +3,7 @@
 use App\Http\Controllers\DebitNoteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentRequestController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WhtController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -30,7 +31,7 @@ Auth::routes([
 ]);
 
 Route::get('/', function () {
-    return redirect()->route('payment.index');
+    return redirect()->route('login');
 });
 
 Route::group(['middleware' => 'auth'], function () {
@@ -44,4 +45,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('debit', DebitNoteController::class);
     Route::get('debit/{debit}/download', [DebitNoteController::class, 'download'])->name('debit.download');
+
+    Route::get('user/profile', [UserController::class, 'profile'])->name('user.profile');
+    Route::post('user/profile', [UserController::class, 'profileUpdate'])->name('user.profile.update');
+    Route::post('user/password', [UserController::class, 'passwordUpdate'])->name('user.password.update');
 });
