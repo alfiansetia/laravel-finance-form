@@ -15,12 +15,18 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="id_division">Name Division *</label>
-                                <select class="form-control @error('id_division') is-invalid @enderror"" id="id_division"
+                                <select class="form-control @error('id_division') is-invalid @enderror" id="id_division"
                                     name="id_division" required>
                                     @foreach ($division as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        <option {{ old('id_division') == $item->id ? 'selected' : '' }}
+                                            value="{{ $item->id }}">{{ $item->name }}</option>
                                     @endforeach
                                 </select>
+                                @error('id_division')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="beneficiary_bank">Bank *</label>
@@ -122,9 +128,9 @@
                                 <label for="currency">Type Currency *</label>
                                 <select class="form-control @error('currency') is-invalid @enderror" id="currency"
                                     name="currency" required>
-                                    <option value="idr" selected>IDR</option>
-                                    <option value="usd">USD</option>
-                                    <option value="sgd">SGD</option>
+                                    <option {{ old('currency') == 'idr' ? 'selected' : '' }} value="idr">IDR</option>
+                                    <option {{ old('currency') == 'usd' ? 'selected' : '' }} value="usd">USD</option>
+                                    <option {{ old('currency') == 'sgd' ? 'selected' : '' }} value="sgd">SGD</option>
                                 </select>
                                 @error('currency')
                                     <div class="invalid-feedback">
@@ -140,7 +146,7 @@
                             </div>
                             <div class="form-group col-md-6 price_form">
                                 <label>Price *</label>
-                                <input type="number" name="price[]" class="form-control" min="0" required>
+                                <input type="number" name="price[]" class="form-control" min="1" required>
                             </div>
                             <div class="form-group col-md-12" id="before">
                                 <a id="add_form_desc" onclick="addDesc()" class="btn btn-sm btn-success float-right mt-2"
@@ -204,14 +210,13 @@
                                 <label for="bank_charge">Bank Charges *</label>
                                 <input type="number" id="bank_charge" name="bank_charge"
                                     class="form-control @error('bank_charge') is-invalid @enderror"
-                                    value="{{ old('bank_charge', 0) }}" min="0" req>
+                                    value="{{ old('bank_charge', 0) }}" min="0" required>
                                 @error('bank_charge')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                 @enderror
                             </div>
-
                         </div>
                         <div class="text-right">
                             <a href="{{ route('payment.index') }}" class="btn btn-md btn-secondary ml-auto mr-2"><i
@@ -226,7 +231,6 @@
     </div>
 @endsection
 @push('js')
-    @stack('js')
     <script>
         $(document).ready(function() {
             var today = new Date().toISOString().split('T')[0];
@@ -246,7 +250,7 @@
                             </div>
                             <div class="form-group col-md-6 price_form">
                                 <label>Price *</label>
-                                <input type="number" name="price[]" class="form-control" min="0" required>
+                                <input type="number" name="price[]" class="form-control" min="1" required>
                             </div>
             `);
                 $('#before').before(form);

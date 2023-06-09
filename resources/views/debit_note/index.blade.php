@@ -29,7 +29,7 @@
                             <tbody>
                                 @foreach ($data as $key => $item)
                                     <tr>
-                                        <td class="text-center"> {{ $key+1 }} </td>
+                                        <td class="text-center"> {{ $key + 1 }} </td>
                                         <td class="text-center"> {{ date('d-M-Y', strtotime($item->invoice_date)) }} </td>
                                         <td class="text-center">{{ $item->no_debit_note }}</td>
                                         <td class="text-center">{{ $item->received_bank }}</td>
@@ -45,10 +45,11 @@
                                                 <a href="{{ route('debit.edit', $item->id) }}"
                                                     class="btn btn-sm btn-warning" title="Edit"><i
                                                         class="fas fa-edit"></i></a>
-                                                <form action="{{ route('debit.destroy', $item->id) }}" method="POST">
+                                                <form id="form{{ $item->id }}"
+                                                    action="{{ route('debit.destroy', $item->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" onclick="return confirm('Delete Data?')"
+                                                    <button type="button" onclick="deleteData('{{ $item->id }}');"
                                                         class="btn btn-sm btn-danger" title="Delete">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>
@@ -81,5 +82,29 @@
                 ]
             });
         });
+
+        function deleteData(idform) {
+            swal({
+                title: 'Delete Data?',
+                icon: "warning",
+                type: 'warning',
+                buttons: {
+                    confirm: {
+                        text: 'Yes',
+                        className: 'btn btn-success'
+                    },
+                    cancel: {
+                        visible: true,
+                        className: 'btn btn-danger'
+                    }
+                }
+            }).then((value) => {
+                if (value) {
+                    $('#form' + idform).submit();
+                } else {
+                    swal.close();
+                }
+            });
+        }
     </script>
 @endpush

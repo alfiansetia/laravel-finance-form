@@ -52,7 +52,7 @@
                                                     action="{{ route('payment.destroy', $item->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="button" onclick="deleteData('form{{ $item->id }}');"
+                                                    <button type="button" onclick="deleteData('{{ $item->id }}');"
                                                         class="btn btn-sm btn-danger" title="Delete">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>
@@ -103,7 +103,7 @@
                 }
             }).then((value) => {
                 if (value) {
-                    $('#' + idform).submit();
+                    $('#form' + idform).submit();
                 } else {
                     swal.close();
                 }

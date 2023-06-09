@@ -74,6 +74,8 @@ class PaymentRequestController extends Controller
             'bank_charge'       => 'required|integer|gte:0',
             'description'       => 'required|array|min:1',
             'price'             => 'required|array|min:1',
+            'description.*'     => 'required|max:120',
+            'price.*'           => 'required|integer|gt:0',
         ]);
 
         $invoice_date = Carbon::parse($request->invoice_date);
@@ -163,6 +165,8 @@ class PaymentRequestController extends Controller
             'bank_charge'       => 'required|integer|gte:0',
             'description'       => 'required|array|min:1',
             'price'             => 'required|array|min:1',
+            'description.*'     => 'required|max:120',
+            'price.*'           => 'required|integer|gt:0',
         ]);
 
         $division = DivisionModel::findOrFail($request->id_division);
