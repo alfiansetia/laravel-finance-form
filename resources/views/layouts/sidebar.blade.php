@@ -31,19 +31,19 @@
                 </li>
                 <li class="nav-item {{ $title == 'Payment Request' ? 'active' : '' }}">
                     <a href="{{ route('payment.index') }}">
-                        <i class="fas fa-desktop"></i>
+                        <i class="fas fa-money-bill"></i>
                         <p>Payment Request</p>
                     </a>
                 </li>
                 <li class="nav-item {{ $title == 'Debit Note' ? 'active' : '' }}">
                     <a href="{{ route('debit.index') }}">
-                        <i class="fas fa-desktop"></i>
+                        <i class="far fa-credit-card"></i>
                         <p>Debit Note</p>
                     </a>
                 </li>
                 <li class="nav-item {{ $title == 'WHT' ? 'active' : '' }}">
                     <a href="{{ route('wht.index') }}">
-                        <i class="fas fa-desktop"></i>
+                        <i class="fas fa-percent"></i>
                         <p>WHT</p>
                     </a>
                 </li>
