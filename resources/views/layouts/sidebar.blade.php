@@ -7,7 +7,7 @@
                     <img src="{{ asset('assets/img/profile.jpg') }}" alt="..." class="avatar-img rounded-circle">
                 </div>
                 <div class="info">
-                    <a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
+                    <a href="{{ route('user.profile') }}">
                         <span>
                             {{ auth()->user()->name }}
                             <span class="user-level">{{ auth()->user()->email }}</span>
