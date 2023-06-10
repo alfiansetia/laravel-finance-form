@@ -47,9 +47,7 @@
         @include('layouts.sidebar')
         <div class="main-panel">
             <div class="content">
-                <div class="page-inner">
-                    @yield('content')
-                </div>
+                @yield('content')
             </div>
             @include('layouts.footer')
         </div>
