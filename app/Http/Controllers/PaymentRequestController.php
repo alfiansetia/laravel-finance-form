@@ -39,7 +39,7 @@ class PaymentRequestController extends Controller
             abort(404);
         }
         return view('payment_request.detail', compact('payment'))->with([
-            'title' => 'Detail ' . $payment->no_pr,
+            'title' => $this->title,
             'path_logo' => asset('logo.jpg'),
         ]);
     }

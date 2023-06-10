@@ -54,6 +54,7 @@
             font-family: "Calibri", sans-serif;
             padding-left: 5pt;
             padding-right: 5pt;
+            margin-right: 3pt;
             font-size: 9px;
         }
 
@@ -62,7 +63,7 @@
             font-family: "Calibri", sans-serif;
             padding-left: 5pt;
             padding-right: 5pt;
-            font-size: 10px;
+            font-size: 9px;
         }
 
         .pd-big {
@@ -75,33 +76,33 @@
 
         .pd-header {
             white-space: nowrap;
-            padding-left: 30px;
-            padding-right: 3pt;
-            font-size: 24px;
+            padding-left: 60px;
+            padding-right: 1pt;
+            font-size: 19px;
             margin: 0;
             margin-top: 0;
             padding-top: 0;
+            font-weight: bold;
+            margin-bottom: 15pt;
+            margin-right: 5pt;
         }
     </style>
 </head>
 
 <body>
-
-    <table style="border-collapse:collapse;border:none;">
+    <table style="border-collapse:collapse;border:none; margin-left: auto;margin-right: auto; width: 100%;">
         <tbody>
             <tr>
                 <td colspan="9"
                     style="border-top: 1pt solid black;border-right: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-bottom: none;padding: 0mm;height: 70pt;vertical-align: middle;">
-                    <img src="{{ $path_logo }}" width="114" height="45"
-                        style="margin-left: 8pt;margin-top: 2pt;">
-                    <p class="pd-header">
-                        <strong>
-                            <span
-                                style="font-family:'Calibri',sans-serif;font-size:21px; margin-left: 10pt;margin-right: 15pt">{{ $payment->division->name }}</span>
-                            <span style='font-size:21px;font-family:"Times New Roman",serif;'>PAYMENT
-                                REQUEST</span>
-                        </strong>
-                    </p>
+                    <img src="{{ $path_logo }}" width="114" height="45" style="margin-left: 8pt;margin-top: 0;">
+                    <div class="pd-header">
+                        <span style="font-family:'Calibri', sans-serif;float: left;">
+                            {{ $payment->division->name }}
+                        </span>
+                        <span style="font-family:'Times New Roman', serif;float: right;margin-right: 5pt;">PAYMENT
+                            REQUEST</span>
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -149,6 +150,11 @@
                     <strong><span class="pd-small">Price</span></strong>
                 </td>
             </tr>
+            <tr>
+                <td colspan="9"
+                    style="border-top: none;border-left: 1pt solid black;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 1pt;vertical-align: middle;">
+                </td>
+            </tr>
             @php
                 $sisa = 21 - count($payment->desc);
             @endphp
@@ -159,7 +165,7 @@
                         <span class="pd-small">{{ $item->value }}</span>
                     </td>
                     <td
-                        style="text-align: right;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
+                        style="text-align: right;width: 82pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
                         <span
                             class="pd-small">{{ number_format($item->price, $payment->currency != 'idr' ? 2 : 0, ',', ',') }}</span>
                     </td>
@@ -175,7 +181,7 @@
                         <span class="pd-small">VAT 11%</span>
                     </td>
                     <td
-                        style="text-align: right;width: 76.05pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
+                        style="text-align: right;width: 82pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
                         <span
                             class="pd-small">{{ number_format($payment->result_vat, $payment->currency != 'idr' ? 2 : 0, ',', ',') }}</span>
 
@@ -279,7 +285,7 @@
             </tr>
             <tr>
                 <td colspan="9"
-                    style="border-top: none;border-left: 1pt solid black;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 2pt;vertical-align: middle;">
+                    style="border-top: none;border-left: 1pt solid black;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 1pt;vertical-align: middle;">
                 </td>
             </tr>
             <tr>
@@ -295,10 +301,7 @@
                 </td>
                 <td colspan="3"
                     style="border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 11.6pt;vertical-align: middle;">
-                    <p
-                        style='margin:0mm;margin-top:1.9pt;margin-right:0mm;margin-bottom:.0001pt;margin-left:1.55pt;line-height:8.7pt;'>
-                        <strong><span class="pd-small">CHECK SUPPORTING DOCUMENT</span></strong>
-                    </p>
+                    <strong><span class="pd-small">CHECK SUPPORTING DOCUMENT</span></strong>
                 </td>
             </tr>
             <tr>
@@ -466,7 +469,7 @@
 
                 </td>
                 <td colspan="3"
-                    style="border-top: none;border-bottom: none;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 13.4pt;vertical-align: top;">
+                    style="border-top: none;border-bottom: none;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 13.4pt;vertical-align: middle;">
                     <span class="pd-xs">[ &nbsp; &nbsp; &nbsp;] COPY OF CONTRACT DOCUMENT</span>
                 </td>
             </tr>
@@ -479,7 +482,7 @@
                 <td colspan="1" style="border-left: 1pt solid black;border-right: 1pt solid black;">
                 </td>
                 <td colspan="3"
-                    style="border-left: 1pt solid black;border-right: 1pt solid black;vertical-align: top;">
+                    style="border-left: 1pt solid black;border-right: 1pt solid black;vertical-align: middle;">
                     <span class="pd-xs">[ &nbsp; &nbsp; &nbsp;] COPY OF SURAT PENUNJUKKAN
                         REKANAN</span>
                 </td>
@@ -493,7 +496,7 @@
                 <td colspan="1" style="border-left: 1pt solid black;border-right: 1pt solid black;">
                 </td>
                 <td colspan="3"
-                    style="border-left: 1pt solid black;border-right: 1pt solid black;vertical-align: top;">
+                    style="border-left: 1pt solid black;border-right: 1pt solid black;vertical-align: middle;">
                     <span class="pd-xs">[ &nbsp; &nbsp; &nbsp;] ORIGINAL BANK GUARANTEE (Down
                         Payment)</span>
                 </td>
@@ -507,29 +510,43 @@
                 <td colspan="1" style="border-left: 1pt solid black;border-right: 1pt solid black;">
                 </td>
                 <td colspan="3"
-                    style="border-left: 1pt solid black;border-right: 1pt solid black;vertical-align: top;">
+                    style="border-left: 1pt solid black;border-right: 1pt solid black;vertical-align: middle;">
                     <span class="pd-xs">[ &nbsp; &nbsp; &nbsp;] HANDING OVER DOCUMENT ORIGINAL /
                         BAST</span>
                 </td>
             </tr>
             <tr>
+                <td colspan="2" style="border-left: 1pt solid black;border-right: 1pt solid black;">
+                </td>
+                <td colspan="1" style="border-left: 1pt solid black;border-right: 1pt solid black;">
+                </td>
+                <td colspan="2"></td>
+                <td colspan="1" style="border-left: 1pt solid black;border-right: 1pt solid black;">
+                </td>
+                <td colspan="3"
+                    style="border-left: 1pt solid black;border-right: 1pt solid black;vertical-align: middle;">
+                    <span class="pd-xs">[ &nbsp; &nbsp; &nbsp;] ORIGINAL BANK GUARANTEE (Down
+                        Payment)</span>
+                </td>
+            </tr>
+            <tr>
                 <td colspan="2"
-                    style="text-align: center;border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0mm;height: 10.45pt;vertical-align: middle;">
+                    style="text-align: center;border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;vertical-align: middle;">
                     <span class="pd-small">Khouw Vivi</span>
                 </td>
                 <td
-                    style="text-align: center;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 10.45pt;vertical-align: middle;">
+                    style="text-align: center;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;vertical-align: middle;">
                     <span class="pd-small">Djajadi</span>
                 </td>
                 <td colspan="2" style="border-bottom:  1pt solid black;"></td>
                 <td
-                    style="text-align: center;width: 87.05pt;border-top: none;border-left: 1pt solid black;;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 10.45pt;vertical-align: middle;">
+                    style="text-align: center;width: 76.05pt;border-top: none;border-left: 1pt solid black;;border-bottom: 1pt solid black;border-right: 1pt solid black;vertical-align: middle;">
                     <span class="pd-small">Darren Chan</span>
                 </td>
                 <td colspan="3"
-                    style="border-top: none;border-bottom: 1pt solid black;;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 10.45pt;vertical-align: top;">
-                    <span class="pd-xs">[ &nbsp; &nbsp; &nbsp;] ORIGINAL BANK GUARANTEE (Down
-                        Payment)</span>
+                    style="border-top: none;border-bottom: 1pt solid black;;border-left: none;border-image: initial;border-right: 1pt solid black;vertical-align: middle;">
+                    {{-- <span class="pd-xs">[ &nbsp; &nbsp; &nbsp;] ORIGINAL BANK GUARANTEE (Down
+                                Payment)</span> --}}
                 </td>
             </tr>
 
