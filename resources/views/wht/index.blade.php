@@ -35,10 +35,11 @@
                                                     <a href="{{ route('wht.edit', $item->id) }}"
                                                         class="btn btn-sm btn-warning" title="Edit"><i
                                                             class="fas fa-edit"></i></a>
-                                                    <form action="{{ route('wht.destroy', $item->id) }}" method="POST">
+                                                    <form id="form{{ $item->id }}"
+                                                        action="{{ route('wht.destroy', $item->id) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" onclick="return confirm('Delete Data?')"
+                                                        <button type="button" onclick="deleteData('{{ $item->id }}');"
                                                             class="btn btn-sm btn-danger" title="Delete">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </button>
@@ -72,5 +73,29 @@
                 ]
             });
         });
+
+        function deleteData(idform) {
+            swal({
+                title: 'Delete Data?',
+                icon: "warning",
+                type: 'warning',
+                buttons: {
+                    confirm: {
+                        text: 'Yes',
+                        className: 'btn btn-success'
+                    },
+                    cancel: {
+                        visible: true,
+                        className: 'btn btn-danger'
+                    }
+                }
+            }).then((value) => {
+                if (value) {
+                    $('#form' + idform).submit();
+                } else {
+                    swal.close();
+                }
+            });
+        }
     </script>
 @endpush

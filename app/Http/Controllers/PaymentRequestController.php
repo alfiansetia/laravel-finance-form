@@ -179,13 +179,27 @@ class PaymentRequestController extends Controller
         $carbonDate = Carbon::instance($dateTime);
         $year = $carbonDate->year;
 
+
+        // old function
+
+        // $count =
+        //     PaymentRequestModel::where('id_division', $division->id)
+        //     ->whereYear('date_pr', $year)
+        //     ->whereMonth('date_pr', $month)
+        //     ->count() + 1;
+
+        // $counti = str_pad($count, 4, '0', STR_PAD_LEFT);
+        // $counti . '/' . $division->slug . date('/m/y', strtotime($request->date_pr))
+
+
         $count =
             PaymentRequestModel::where('id_division', $division->id)
             ->whereYear('date_pr', $year)
             ->whereMonth('date_pr', $month)
-            ->count() + 1;
+            ->orderByDesc('no_pr')
+            ->first();
 
-        $counti = str_pad($count, 4, '0', STR_PAD_LEFT);
+        $counti = ($count->no_pr ?? 0) + 1;
 
         $total_description = 0;
         for ($i = 0; $i < count($request->description); $i++) {
@@ -207,9 +221,8 @@ class PaymentRequestController extends Controller
 
         $invoice_date = Carbon::parse($request->invoice_date);
         $deadline = $invoice_date->addDays($request->due_date);
-
         $payment = PaymentRequestModel::create([
-            'no_pr'             => $counti . '/' . $division->slug . date('/m/y', strtotime($request->date_pr)),
+            'no_pr'             => $counti,
             'id_division'       => $request->id_division,
             'beneficiary_bank'  => $request->beneficiary_bank,
             'invoice_date'      => $request->invoice_date,

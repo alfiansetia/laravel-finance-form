@@ -41,9 +41,9 @@ class UserController extends Controller
         ]);
 
         if ($user) {
-            return redirect()->route('division.index')->with(['success' => 'Data berhasil ditambah!']);
+            return redirect()->route('user.index')->with(['success' => 'Data berhasil ditambah!']);
         } else {
-            return redirect()->route('division.index')->with(['error' => 'Data gagal ditambah!']);
+            return redirect()->route('user.index')->with(['error' => 'Data gagal ditambah!']);
         }
     }
 

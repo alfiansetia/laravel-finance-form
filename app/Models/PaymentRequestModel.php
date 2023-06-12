@@ -13,6 +13,12 @@ class PaymentRequestModel extends Model
 
     protected $guarded = ['id'];
 
+    function getNoPrAttribute($value)
+    {
+        $no = str_pad($value, 4, '0', STR_PAD_LEFT);
+        return $no . '/' . $this->division->slug . date('/m/y', strtotime($this->date_pr));
+    }
+
     public function division()
     {
         return $this->belongsTo(DivisionModel::class, 'id_division');
