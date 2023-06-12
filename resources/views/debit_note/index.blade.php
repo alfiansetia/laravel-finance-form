@@ -39,11 +39,11 @@
                                             <td class="text-center">{{ $item->for }}</td>
                                             <td class="text-center">
                                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                                    <a href="{{ route('debit.edit', $item->id) }}"
+                                                    <a href="{{ route('debit.download', $item->id) }}"
                                                         class="btn btn-sm btn-secondary" title="Download" target="_blank"><i
                                                             class="fas fa-file-pdf"></i></a>
-                                                    <a href="{{ route('debit.edit', $item->id) }}"
-                                                        class="btn btn-sm btn-info" title="Detail" target="_blank"><i
+                                                    <a href="{{ route('debit.show', $item->id) }}"
+                                                        class="btn btn-sm btn-info" title="Detail"><i
                                                             class="fas fa-eye"></i></a>
                                                     <a href="{{ route('debit.edit', $item->id) }}"
                                                         class="btn btn-sm btn-warning" title="Edit"><i

@@ -15,7 +15,7 @@
                             @csrf
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="id_division">Name Division *</label>
+                                    <label for="id_division">Name Division <font style="color: red;">*</font></label>
                                     <select class="form-control @error('id_division') is-invalid @enderror" id="id_division"
                                         name="id_division" required>
                                         @foreach ($division as $item)
@@ -30,7 +30,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="beneficiary_bank">Bank *</label>
+                                    <label for="beneficiary_bank">Bank <font style="color: red;">*</font></label>
                                     <input type="text" id="beneficiary_bank" name="beneficiary_bank"
                                         class="form-control @error('beneficiary_bank') is-invalid @enderror"
                                         value="{{ old('beneficiary_bank') }}" required>
@@ -43,7 +43,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="invoice_date">Invoice Date *</label>
+                                    <label for="invoice_date">Invoice Date <font style="color: red;">*</font></label>
                                     <input type="date" id="invoice_date" name="invoice_date"
                                         class="form-control @error('invoice_date') is-invalid @enderror"
                                         value="{{ old('invoice_date') }}" required>
@@ -54,7 +54,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="received_date">Received Date *</label>
+                                    <label for="received_date">Received Date <font style="color: red;">*</font></label>
                                     <input type="date" id="received_date" name="received_date"
                                         class="form-control @error('received_date') is-invalid @enderror"
                                         value="{{ old('received_date') }}" required>
@@ -67,7 +67,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="date_pr">PR Voucher Date *</label>
+                                    <label for="date_pr">PR Voucher Date <font style="color: red;">*</font></label>
                                     <input type="date" id="date_pr" name="date_pr"
                                         class="form-control @error('date_pr') is-invalid @enderror"
                                         value="{{ old('date_pr') }}" required>
@@ -78,7 +78,8 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="name_beneficiary">Name Beneficiary *</label>
+                                    <label for="name_beneficiary">Name Beneficiary <font style="color: red;">*</font>
+                                        </label>
                                     <input type="text" id="name_beneficiary" name="name_beneficiary"
                                         class="form-control @error('name_beneficiary') is-invalid @enderror"
                                         value="{{ old('name_beneficiary') }}" required>
@@ -91,7 +92,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="bank_account">Bank A/C *</label>
+                                    <label for="bank_account">Bank A/C <font style="color: red;">*</font></label>
                                     <input type="text" id="bank_account" name="bank_account"
                                         class="form-control @error('bank_account') is-invalid @enderror"
                                         value="{{ old('bank_account') }}" required>
@@ -102,7 +103,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="for">For *</label>
+                                    <label for="for">For <font style="color: red;">*</font></label>
                                     <input type="text" id="for" name="for"
                                         class="form-control @error('for') is-invalid @enderror" value="{{ old('for') }}"
                                         required>
@@ -114,19 +115,19 @@
                                 </div>
                             </div>
                             <div class="form-row">
-                                {{-- <div class="form-group col-md-6">
-                                <label for="contract">Contract</label>
-                                <input type="text" id="contract" name="contract"
-                                    class="form-control @error('contract') is-invalid @enderror"
-                                    value="{{ old('contract') }}">
-                                @error('contract')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div> --}}
                                 <div class="form-group col-md-6">
-                                    <label for="currency">Type Currency *</label>
+                                    <label for="contract">Contract</label>
+                                    <input type="text" id="contract" name="contract"
+                                        class="form-control @error('contract') is-invalid @enderror"
+                                        value="{{ old('contract') }}">
+                                    @error('contract')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="currency">Type Currency <font style="color: red;">*</font></label>
                                     <select class="form-control @error('currency') is-invalid @enderror" id="currency"
                                         name="currency" required>
                                         <option {{ old('currency') == 'idr' ? 'selected' : '' }} value="idr">IDR
@@ -145,12 +146,12 @@
                             </div>
                             <div class="form-row" id="add_desc_form">
                                 <div class="form-group col-md-6 desc_form">
-                                    <label>Description *</label>
+                                    <label>Description <font style="color: red;">*</font></label>
                                     <input type="text" name="description[]" class="form-control" maxlength="120"
                                         required>
                                 </div>
                                 <div class="form-group col-md-6 price_form">
-                                    <label>Price *</label>
+                                    <label>Price <font style="color: red;">*</font></label>
                                     <input type="number" name="price[]" class="form-control" min="1" required>
                                 </div>
                                 <div class="form-group col-md-12" id="before">
@@ -164,7 +165,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label>VAT *</label><br>
+                                    <label>VAT <font style="color: red;">*</font></label><br>
                                     <div class="form-check form-check-inline">
                                         <label class="form-radio-label">
                                             <input class="form-radio-input" type="radio" name="vat" value="yes"
@@ -214,7 +215,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="bank_charge">Bank Charges *</label>
+                                    <label for="bank_charge">Bank Charges <font style="color: red;">*</font></label>
                                     <input type="number" id="bank_charge" name="bank_charge"
                                         class="form-control @error('bank_charge') is-invalid @enderror"
                                         value="{{ old('bank_charge', 0) }}" min="0" required>
@@ -253,11 +254,11 @@
                 totalDesc++;
                 var form = $(`
                             <div class="form-group col-md-6 desc_form">
-                                <label>Description *</label>
+                                <label>Description <font style="color: red;">*</font></label>
                                 <input type="text" name="description[]" class="form-control" maxlength="120" required>
                             </div>
                             <div class="form-group col-md-6 price_form">
-                                <label>Price *</label>
+                                <label>Price <font style="color: red;">*</font></label>
                                 <input type="number" name="price[]" class="form-control" min="1" required>
                             </div>
             `);

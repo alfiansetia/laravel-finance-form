@@ -90,11 +90,11 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex align-items-center">
-                            <h4 class="card-title">Detail {{ $title }} {{ $data->no_pr }}</h4>
-                            <a href="{{ route('payment.edit', $data->id) }}" class="btn btn-secondary btn-round ml-auto">
+                            <h4 class="card-title">Detail {{ $title }} {{ $data->no_debit_note }}</h4>
+                            <a href="{{ route('debit.edit', $data->id) }}" class="btn btn-secondary btn-round ml-auto">
                                 <i class="fas fa-edit mr-1"></i>Edit
                             </a>
-                            <a href="{{ route('payment.download', $data->id) }}" class="btn btn-primary btn-round ml-2"
+                            <a href="{{ route('debit.download', $data->id) }}" class="btn btn-primary btn-round ml-2"
                                 target="_blank">
                                 <i class="fas fa-file-pdf mr-1"></i>Download
                             </a>
@@ -104,7 +104,7 @@
                         <div class="table-responsive">
 
                             <table style="border-collapse:collapse;border:none; margin-left: auto;margin-right: auto;">
-                                @include('payment_request.content')
+                                @include('debit_note.content')
                             </table>
 
                         </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DescriptionModel;
 use App\Models\DivisionModel;
 use App\Models\PaymentRequestModel;
+use App\Models\Vat;
 use App\Models\Wht;
 use Barryvdh\DomPDF\Facade\Pdf;
 use DateTime;
@@ -18,7 +19,7 @@ class PaymentRequestController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('role')->only(['index']);
+        $this->middleware('role')->only(['destroy']);
     }
 
     public function index()
@@ -39,9 +40,11 @@ class PaymentRequestController extends Controller
         if (!$payment) {
             abort(404);
         }
-        return view('payment_request.detail', compact('payment'))->with([
-            'title' => $this->title,
+        return view('payment_request.detail')->with([
+            'title'     => $this->title,
+            'data'      => $payment,
             'path_logo' => asset('logo.jpg'),
+            'vat'       => Vat::first(),
         ]);
     }
 
@@ -91,8 +94,10 @@ class PaymentRequestController extends Controller
         $wht_value = 0;
         $vat_value = 0;
 
+        $vat = Vat::first();
+
         if ($request->vat == 'yes') {
-            $vat_value = ($total_description * 11) / 100;
+            $vat_value = ($total_description * $vat->value) / 100;
         }
 
         $wht = Wht::find($request->wht);
@@ -109,6 +114,7 @@ class PaymentRequestController extends Controller
             'name_beneficiary'  => $request->name_beneficiary,
             'bank_account'      => $request->bank_account,
             'for'               => $request->for,
+            'contract'          => $request->contract,
             'currency'          => $request->currency,
             'vat'               => $request->vat,
             'wht_id'            => $request->wht,
@@ -209,8 +215,10 @@ class PaymentRequestController extends Controller
         $wht_value = 0;
         $vat_value = 0;
 
+        $vat = Vat::first();
+
         if ($request->vat == 'yes') {
-            $vat_value = ($total_description * 11) / 100;
+            $vat_value = ($total_description * $vat->value) / 100;
         }
 
         $wht = Wht::find($request->wht);
@@ -233,6 +241,7 @@ class PaymentRequestController extends Controller
             'name_beneficiary'  => $request->name_beneficiary,
             'bank_account'      => $request->bank_account,
             'for'               => $request->for,
+            'contract'          => $request->contract,
             'currency'          => $request->currency,
             'wht_id'            => $request->wht,
             'due_date'          => $request->due_date,
@@ -277,21 +286,13 @@ class PaymentRequestController extends Controller
         if (!$payment) {
             abort(404);
         }
-        $desc  = DescriptionModel::where('id_payment_request', $payment->id)->get();
-        $divition  = DivisionModel::where('id', $payment->id_division)->first();
+        $vat = Vat::first();
         $pdf = Pdf::loadview('payment_request.download', [
-            'desc' => $desc,
-            'divition' => $divition,
-            'payment' => $payment,
-            'title' => 'Detail ' . $payment->no_pr,
+            'title'     => 'Detail ' . $payment->no_pr,
+            'data'      => $payment,
             'path_logo' => public_path('logo.jpg'),
+            'vat'       => $vat,
         ])->setPaper('A4', 'portrait');
-        // ->setOptions([
-        //     'margin_top' => 10,
-        //     'margin_bottom' => 10,
-        //     'margin_left' => 10,
-        //     'margin_right' => 10,
-        // ]);
         return $pdf->download($payment->id . '_' . date('ymdHis') . '.pdf');
     }
 }

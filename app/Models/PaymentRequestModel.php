@@ -16,7 +16,7 @@ class PaymentRequestModel extends Model
     function getNoPrAttribute($value)
     {
         $no = str_pad($value, 4, '0', STR_PAD_LEFT);
-        return $no . '/' . $this->division->slug . date('/m/y', strtotime($this->date_pr));
+        return $no . '/' . $this->division->slug . '-PR' . date('/m/y', strtotime($this->date_pr));
     }
 
     public function division()

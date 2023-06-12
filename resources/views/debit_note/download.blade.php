@@ -1,5 +1,11 @@
-@extends('components.template')
-@push('css')
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ $title }}</title>
     <style>
         .bold-right {
             text-align: right;
@@ -81,36 +87,13 @@
             margin-right: 5pt;
         }
     </style>
-@endpush
+</head>
 
-@section('content')
-    <div class="page-inner">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="d-flex align-items-center">
-                            <h4 class="card-title">Detail {{ $title }} {{ $data->no_pr }}</h4>
-                            <a href="{{ route('payment.edit', $data->id) }}" class="btn btn-secondary btn-round ml-auto">
-                                <i class="fas fa-edit mr-1"></i>Edit
-                            </a>
-                            <a href="{{ route('payment.download', $data->id) }}" class="btn btn-primary btn-round ml-2"
-                                target="_blank">
-                                <i class="fas fa-file-pdf mr-1"></i>Download
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
+<body>
+    <table style="border-collapse:collapse;border:none; margin-left: auto;margin-right: auto; width: 100%;">
+        @include('debit_note.content')
 
-                            <table style="border-collapse:collapse;border:none; margin-left: auto;margin-right: auto;">
-                                @include('payment_request.content')
-                            </table>
+    </table>
+</body>
 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endsection
+</html>

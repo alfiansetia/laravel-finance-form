@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\DebitNoteModel;
 use App\Models\DescriptionDebitModel;
 use App\Models\DivisionModel;
+use App\Models\Vat;
 use App\Models\Wht;
+use Barryvdh\DomPDF\Facade\Pdf;
 use DateTime;
-use CURLFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -18,7 +19,7 @@ class DebitNoteController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('role')->only(['destroy']);
     }
 
     public function index()
@@ -33,6 +34,19 @@ class DebitNoteController extends Controller
         $wht = Wht::all();
         $division = DivisionModel::all();
         return view('debit_note.add', compact('division', 'wht'))->with(['title' => $this->title]);
+    }
+
+    public function show(DebitNoteModel $debit)
+    {
+        if (!$debit) {
+            abort(404);
+        }
+        return view('debit_note.detail')->with([
+            'title'     => $this->title,
+            'data'      => $debit,
+            'path_logo' => asset('logo.jpg'),
+            'vat'       => Vat::first(),
+        ]);
     }
 
     public function store(Request $request)
@@ -70,8 +84,9 @@ class DebitNoteController extends Controller
             DebitNoteModel::where('id_division', $division->id)
             ->whereYear('debit_note_date', $year)
             ->whereMonth('debit_note_date', $month)
-            ->count() + 1;
-        $counti = str_pad($count, 4, '0', STR_PAD_LEFT);
+            ->orderByDesc('no_debit_note')
+            ->first();
+        $counti = ($count->no_debit_note ?? 0) + 1;
 
         $total_description = 0;
         $wht_value = 0;
@@ -81,8 +96,10 @@ class DebitNoteController extends Controller
             $total_description = $total_description + $request->price[$i];
         }
 
+        $vat = Vat::first();
+
         if ($request->vat == 'yes') {
-            $vat_value = ($total_description * 11) / 100;
+            $vat_value = ($total_description * $vat->value) / 100;
         }
 
         $wht = Wht::find($request->wht);
@@ -93,7 +110,7 @@ class DebitNoteController extends Controller
         $result = $total_description + $vat_value - $wht_value;
 
         $debitNote = DebitNoteModel::create([
-            'no_debit_note'         => $counti . '/' . $division->slug . date('/m/y', strtotime($request->debit_note_date)),
+            'no_debit_note'         => $counti,
             'id_division'           => $request->id_division,
             'received_bank'         => $request->received_bank,
             'no_invoice'            => $request->no_invoice,
@@ -180,9 +197,13 @@ class DebitNoteController extends Controller
         for ($i = 0; $i < count($request->description); $i++) {
             $total_description = $total_description + $request->price[$i];
         }
+
+        $vat = Vat::first();
+
         if ($request->vat == 'yes') {
-            $vat_value = ($total_description * 11) / 100;
+            $vat_value = ($total_description * $vat->value) / 100;
         }
+
 
         $wht = Wht::find($request->wht);
         if ($wht) {
@@ -225,139 +246,19 @@ class DebitNoteController extends Controller
             return redirect()->route('debit.index')->with(['error' => 'Data gagal diubah!']);
         }
     }
-
-    // public function print($id)
-    // {
-    //     $jsonString  = DebitNoteModel::find($id);
-    //     $data = json_decode($jsonString, true);
-
-
-    //     $descData  = DescriptionDebitModel::where('id_debit_note', $id)->get();
-
-    //     $div  = DivisionModel::where('id', $jsonString->id_division)->first();
-    //     $divData = json_decode($div, true);
-
-    //     $description = [];
-
-    //     foreach ($descData as $key => $value) {
-
-    //         if ($jsonString->is_dolar == 1) {
-    //             array_push($description, ['description' =>   $value->value, 'price' => '$' . $value->price]);
-    //         } else {
-    //             array_push(
-    //                 $description,
-    //                 ['description' =>   $value->value, 'price' => 'Rp' . $value->price]
-    //             );
-    //         }
-    //     }
-
-    //     if (count($description) < 4) {
-    //         $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('templateDebitNote.docx');
-    //     } else {
-    //         $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('templateDebitNoteMore4.docx');
-    //         echo false;
-    //     }
-
-    //     $templateProcessor->setValues(
-    //         $data,
-    //     );
-
-    //     $templateProcessor->setValues(
-    //         $divData,
-    //     );
-
-    //     $templateProcessor->setValue(
-    //         'debit_note_date_convert',
-    //         date('d-M-Y', strtotime($jsonString->debit_note_date))
-    //     );
-    //     $templateProcessor->setValue('tax_invoice_date_convert', date('d-M-Y', strtotime($jsonString->tax_invoice_date)));
-    //     $templateProcessor->setValue('invoice_date_convert', date('d-M-Y', strtotime($jsonString->invoice_date)));
-
-    //     if ($jsonString->is_dolar == 1) {
-    //         $templateProcessor->setValue('to_be_paid', '$' . $jsonString->result_wht);
-    //         $templateProcessor->setValue('bank_charge_convert', '$' . $jsonString->bank_charge);
-    //         $templateProcessor->setValue('total_convert', '$' . $jsonString->total);
-    //     } else {
-    //         $templateProcessor->setValue('to_be_paid', 'Rp' . $jsonString->result_wht);
-    //         $templateProcessor->setValue('bank_charge_convert', 'Rp' . $jsonString->bank_charge);
-    //         $templateProcessor->setValue('total_convert', 'Rp' . $jsonString->total);
-    //     }
-
-    //     if ($jsonString->total_wht != 0) {
-    //         if ($jsonString->is_dolar == 1) {
-    //             $templateProcessor->setValues(
-    //                 ['vat_title' => "VAT %", 'vat_body' => '$' . $jsonString->result_vat],
-    //             );
-
-
-    //             $templateProcessor->setValues(
-    //                 ['wht_title' => "WHT", 'wht_body' => '(' . '$' . $jsonString->total_wht . ')']
-    //             );
-    //         } else {
-    //             $templateProcessor->setValues(
-    //                 ['vat_title' => "VAT %", 'vat_body' => 'Rp' . $jsonString->result_vat],
-    //             );
-
-
-    //             $templateProcessor->setValues(
-    //                 ['wht_title' => "WHT", 'wht_body' => '(' . 'Rp' . $jsonString->total_wht . ')']
-    //             );
-    //         }
-    //     } else {
-    //         $templateProcessor->setValues(
-    //             ['vat_title' => "", 'vat_body' => ''],
-    //         );
-
-
-    //         $templateProcessor->setValues(
-    //             ['wht_title' => "", 'wht_body' => '']
-    //         );
-    //     }
-
-    //     $templateProcessor->cloneRowAndSetValues('description', $description);
-
-    //     // header("Content-Disposition: attachment; filename=debit-note.docx");
-
-    //     // $templateProcessor->saveAs('php://output');
-    //     $saveDocPath = public_path('DebitNote.docx');
-
-    //     $templateProcessor->saveAs($saveDocPath);
-
-    //     $FileHandle = fopen('DebitNote.pdf', 'w+');
-
-    //     $curl = curl_init();
-
-    //     $instructions = '{
-    //         "parts": [
-    //             {
-    //             "file": "document"
-    //             }
-    //         ]
-    //     }';
-
-    //     curl_setopt_array($curl, array(
-    //         CURLOPT_URL => 'https://api.pspdfkit.com/build',
-    //         CURLOPT_CUSTOMREQUEST => 'POST',
-    //         CURLOPT_RETURNTRANSFER => true,
-    //         CURLOPT_ENCODING => '',
-    //         CURLOPT_POSTFIELDS => array(
-    //             'instructions' => $instructions,
-    //             'document' => new CURLFile('DebitNote.docx')
-    //         ),
-    //         CURLOPT_HTTPHEADER => array(
-    //             'Authorization: Bearer pdf_live_PMWNGJl4qTCXi0pfS9Qa5Q3RqEpqLwX7bMtjEq9SzYE'
-    //         ),
-    //         CURLOPT_FILE => $FileHandle,
-    //     ));
-
-    //     $response = curl_exec($curl);
-
-    //     curl_close($curl);
-
-    //     fclose($FileHandle);
-
-
-    //     $filepath = public_path('DebitNote.pdf');
-    //     // return Response::download($filepath);
-    // }
+    public function download(DebitNoteModel $debit)
+    {
+        $debit = $debit;
+        if (!$debit) {
+            abort(404);
+        }
+        $vat = Vat::first();
+        $pdf = Pdf::loadview('debit_note.download', [
+            'title'     => 'Detail ' . $debit->no_pr,
+            'data'      => $debit,
+            'path_logo' => public_path('logo.jpg'),
+            'vat'       => $vat,
+        ])->setPaper('A4', 'portrait');
+        return $pdf->download($debit->id . '_' . date('ymdHis') . '.pdf');
+    }
 }

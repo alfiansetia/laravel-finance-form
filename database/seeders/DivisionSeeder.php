@@ -21,31 +21,31 @@ class DivisionSeeder extends Seeder
         $datas = [
             [
                 "name" => "PT. ESR INDONESIA MANAGEMENT",
-                "slug" => "EIM-PR",
+                "slug" => "EIM",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
                 "name" => "PT. ESR INDONESIA HOLDINGS",
-                "slug" => "EIH-PR",
+                "slug" => "EIH",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
                 "name" => "PT. ESR INDONESIA PROPERTIES ONE",
-                "slug" => "EIPO-PR",
+                "slug" => "EIPO",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
                 "name" => "PT. ESR INDONESIA PROPERTIES TWO",
-                "slug" => "EIPT-PR",
+                "slug" => "EIPT",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
                 "name" => "PT. ESR INDONESIA PROPERTIES THREE",
-                "slug" => "EIPTh-PR",
+                "slug" => "EIPTh",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
