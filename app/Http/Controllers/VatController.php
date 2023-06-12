@@ -20,6 +20,11 @@ class VatController extends Controller
         return view('vat.index', compact('data'))->with(['title' => $this->title]);
     }
 
+    public function show()
+    {
+        abort(404);
+    }
+
 
     /**
      * Update the specified resource in storage.

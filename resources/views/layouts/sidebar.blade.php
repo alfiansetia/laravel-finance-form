@@ -47,6 +47,12 @@
                         <p>Debit Note</p>
                     </a>
                 </li>
+                <li class="nav-item {{ $title == 'Bank' ? 'active' : '' }}">
+                    <a href="{{ route('bank.index') }}">
+                        <i class="far fa-credit-card"></i>
+                        <p>Bank</p>
+                    </a>
+                </li>
                 <li class="nav-item {{ $title == 'WHT' || $title == 'VAT' ? 'active submenu' : '' }}">
                     <a data-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false">
                         <i class="fas fa-percent"></i>

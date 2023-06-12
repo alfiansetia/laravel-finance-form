@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\DebitNoteController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\HomeController;
@@ -42,9 +43,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('wht', WhtController::class);
 
-    Route::resource('division', DivisionController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+    Route::resource('bank', BankController::class);
 
-    Route::resource('vat', VatController::class)->only(['index', 'update']);
+    Route::resource('division', DivisionController::class);
+
+    Route::resource('vat', VatController::class)->only(['index', 'update', 'show']);
 
     Route::resource('payment', PaymentRequestController::class);
     Route::get('payment/{payment}/download', [PaymentRequestController::class, 'download'])->name('payment.download');
@@ -52,7 +55,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('debit', DebitNoteController::class);
     Route::get('debit/{debit}/download', [DebitNoteController::class, 'download'])->name('debit.download');
 
-    Route::resource('user', UserController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+    Route::resource('user', UserController::class);
     Route::get('user/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::post('user/profile', [UserController::class, 'profileUpdate'])->name('user.profile.update');
     Route::post('user/password', [UserController::class, 'passwordUpdate'])->name('user.password.update');

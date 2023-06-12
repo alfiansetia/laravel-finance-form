@@ -65,9 +65,9 @@ class WhtController extends Controller
      * @param  \App\Models\Wht  $wht
      * @return \Illuminate\Http\Response
      */
-    public function show(Wht $wht)
+    public function show()
     {
-        //
+        abort(404);
     }
 
     /**

@@ -24,6 +24,11 @@ class UserController extends Controller
         return view('user.add')->with(['title' => $this->title]);
     }
 
+    public function show()
+    {
+       abort(404);
+    }
+
     function store(Request $request)
     {
         $this->validate($request, [

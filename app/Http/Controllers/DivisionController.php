@@ -29,6 +29,11 @@ class DivisionController extends Controller
         return view('division.add')->with(['title' => $this->title]);
     }
 
+    public function show()
+    {
+       abort(404);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
