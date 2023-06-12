@@ -188,19 +188,20 @@
                     </td>
                 </tr>
             @endif
-            @if ($payment->total_wht > 0)
+            @if ($payment->total_wht > 0 && $payment->wht_id != null)
                 @php
                     $sisa = $sisa - 1;
                 @endphp
                 <tr>
                     <td colspan="8"
                         style="border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0mm;height: 13pt;vertical-align: middle;">
-                        <span class="pd-small">WHT</span>
+                        <span class="pd-small">{{ $payment->wht->name }}</span>
                     </td>
                     <td
                         style="text-align: right;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
-                        <span
-                            class="pd-small">{{ number_format($payment->result_wht, $payment->currency != 'idr' ? 2 : 0, ',', ',') }}</span>
+                        <span class="pd-small">(
+                            {{ number_format($payment->total_wht, $payment->currency != 'idr' ? 2 : 0, ',', ',') }}
+                            )</span>
 
                     </td>
                 </tr>
