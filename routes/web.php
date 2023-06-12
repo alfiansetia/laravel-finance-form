@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\DebitNoteController;
+use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentRequestController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VatController;
 use App\Http\Controllers\WhtController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +41,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     Route::resource('wht', WhtController::class);
+
+    Route::resource('division', DivisionController::class);
+
+    Route::resource('vat', VatController::class)->only(['index', 'update']);
 
     Route::resource('payment', PaymentRequestController::class);
     Route::get('payment/{payment}/download', [PaymentRequestController::class, 'download'])->name('payment.download');

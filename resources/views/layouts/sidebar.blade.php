@@ -41,12 +41,28 @@
                         <p>Debit Note</p>
                     </a>
                 </li>
-                <li class="nav-item {{ $title == 'WHT' ? 'active' : '' }}">
-                    <a href="{{ route('wht.index') }}">
+                <li class="nav-item {{ $title == 'WHT' ? 'active submenu' : '' }}">
+                    <a data-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false">
                         <i class="fas fa-percent"></i>
-                        <p>WHT</p>
+                        <p>TAX</p>
+                        <span class="caret"></span>
                     </a>
+                    <div class="collapse {{ $title == 'WHT' ? 'show' : '' }}" id="dashboard">
+                        <ul class="nav nav-collapse">
+                            <li class="{{ $title == 'WHT' ? 'active' : '' }}">
+                                <a href="{{ route('wht.index') }}">
+                                    <span class="sub-item">WHT</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('vat.index') }}">
+                                    <span class="sub-item">VAT</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
+
             </ul>
         </div>
     </div>
