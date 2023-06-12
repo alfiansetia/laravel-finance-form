@@ -29,6 +29,12 @@
                     </span>
                     <h4 class="text-section">Components</h4>
                 </li>
+                <li class="nav-item {{ $title == 'Division' ? 'active' : '' }}">
+                    <a href="{{ route('division.index') }}">
+                        <i class="far fa-building"></i>
+                        <p>Division</p>
+                    </a>
+                </li>
                 <li class="nav-item {{ $title == 'Payment Request' ? 'active' : '' }}">
                     <a href="{{ route('payment.index') }}">
                         <i class="fas fa-money-bill"></i>
@@ -41,26 +47,32 @@
                         <p>Debit Note</p>
                     </a>
                 </li>
-                <li class="nav-item {{ $title == 'WHT' ? 'active submenu' : '' }}">
+                <li class="nav-item {{ $title == 'WHT' || $title == 'VAT' ? 'active submenu' : '' }}">
                     <a data-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false">
                         <i class="fas fa-percent"></i>
                         <p>TAX</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse {{ $title == 'WHT' ? 'show' : '' }}" id="dashboard">
+                    <div class="collapse {{ $title == 'WHT' || $title == 'VAT' ? 'show' : '' }}" id="dashboard">
                         <ul class="nav nav-collapse">
                             <li class="{{ $title == 'WHT' ? 'active' : '' }}">
                                 <a href="{{ route('wht.index') }}">
                                     <span class="sub-item">WHT</span>
                                 </a>
                             </li>
-                            <li>
+                            <li class="{{ $title == 'VAT' ? 'active' : '' }}">
                                 <a href="{{ route('vat.index') }}">
                                     <span class="sub-item">VAT</span>
                                 </a>
                             </li>
                         </ul>
                     </div>
+                </li>
+                <li class="nav-item {{ $title == 'User' ? 'active' : '' }}">
+                    <a href="{{ route('user.index') }}">
+                        <i class="fas fa-user-alt"></i>
+                        <p>User Account</p>
+                    </a>
                 </li>
 
             </ul>

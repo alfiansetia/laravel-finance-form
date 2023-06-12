@@ -42,7 +42,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('wht', WhtController::class);
 
-    Route::resource('division', DivisionController::class);
+    Route::resource('division', DivisionController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
     Route::resource('vat', VatController::class)->only(['index', 'update']);
 
@@ -52,6 +52,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('debit', DebitNoteController::class);
     Route::get('debit/{debit}/download', [DebitNoteController::class, 'download'])->name('debit.download');
 
+    Route::resource('user', UserController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
     Route::get('user/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::post('user/profile', [UserController::class, 'profileUpdate'])->name('user.profile.update');
     Route::post('user/password', [UserController::class, 'passwordUpdate'])->name('user.password.update');
