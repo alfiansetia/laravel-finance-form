@@ -33,4 +33,9 @@ class DebitNoteModel extends Model
     {
         return $this->hasMany(DescriptionDebitModel::class, 'id_debit_note');
     }
+
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class, 'id');
+    }
 }

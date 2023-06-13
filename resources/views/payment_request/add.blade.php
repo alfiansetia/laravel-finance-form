@@ -31,9 +31,14 @@
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="beneficiary_bank">Bank <font style="color: red;">*</font></label>
-                                    <input type="text" id="beneficiary_bank" name="beneficiary_bank"
-                                        class="form-control @error('beneficiary_bank') is-invalid @enderror"
-                                        value="{{ old('beneficiary_bank') }}" required>
+                                    <select name="beneficiary_bank" id="beneficiary_bank"
+                                        class="form-control @error('beneficiary_bank') is-invalid @enderror" required>
+                                        <option value="">Select Bank</option>
+                                        @foreach ($bank as $item)
+                                            <option {{ old('beneficiary_bank') == $item->id ? 'selected' : '' }}
+                                                value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
                                     @error('beneficiary_bank')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -79,7 +84,7 @@
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="name_beneficiary">Name Beneficiary <font style="color: red;">*</font>
-                                        </label>
+                                    </label>
                                     <input type="text" id="name_beneficiary" name="name_beneficiary"
                                         class="form-control @error('name_beneficiary') is-invalid @enderror"
                                         value="{{ old('name_beneficiary') }}" required>

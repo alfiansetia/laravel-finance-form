@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bank;
 use App\Models\DescriptionModel;
 use App\Models\DivisionModel;
 use App\Models\PaymentRequestModel;
@@ -30,9 +31,10 @@ class PaymentRequestController extends Controller
 
     public function create()
     {
-        $wht = Wht::get();
+        $bank = Bank::all();
+        $wht = Wht::all();
         $division = DivisionModel::all();
-        return view('payment_request.add', compact('division', 'wht'))->with(['title' => $this->title]);
+        return view('payment_request.add', compact('division', 'wht', 'bank'))->with(['title' => $this->title]);
     }
 
     public function show(PaymentRequestModel $payment)
@@ -53,10 +55,11 @@ class PaymentRequestController extends Controller
         if (!$payment) {
             abort(404);
         }
-        $wht = Wht::get();
-        $division = DivisionModel::get();
+        $bank = Bank::all();
+        $wht = Wht::all();
+        $division = DivisionModel::all();
         $data = $payment;
-        return view('payment_request.edit', compact('division', 'data', 'wht'))->with(['title' => $this->title]);
+        return view('payment_request.edit', compact('division', 'data', 'wht', 'bank'))->with(['title' => $this->title]);
     }
 
     public function update(Request $request, PaymentRequestModel $payment)
@@ -65,7 +68,7 @@ class PaymentRequestController extends Controller
             abort(404);
         }
         $this->validate($request, [
-            'beneficiary_bank'  => 'required',
+            'beneficiary_bank'  => 'required|integer|exists:banks,id',
             'invoice_date'      => 'required|date_format:Y-m-d',
             'received_date'     => 'required|date_format:Y-m-d|after_or_equal:invoice_date',
             'name_beneficiary'  => 'required',
@@ -108,7 +111,7 @@ class PaymentRequestController extends Controller
         $result = $total_description + $vat_value - $wht_value;
 
         $payment->update([
-            'beneficiary_bank'  => $request->beneficiary_bank,
+            'bank_id'           => $request->beneficiary_bank,
             'invoice_date'      => $request->invoice_date,
             'received_date'     => $request->received_date,
             'name_beneficiary'  => $request->name_beneficiary,
@@ -158,7 +161,7 @@ class PaymentRequestController extends Controller
     {
         $this->validate($request, [
             'id_division'       => 'required|integer|exists:division,id',
-            'beneficiary_bank'  => 'required',
+            'beneficiary_bank'  => 'required|integer|exists:banks,id',
             'invoice_date'      => 'required|date_format:Y-m-d',
             'received_date'     => 'required|date_format:Y-m-d|after_or_equal:invoice_date',
             'date_pr'           => 'required|date_format:Y-m-d',
@@ -233,7 +236,7 @@ class PaymentRequestController extends Controller
         $payment = PaymentRequestModel::create([
             'no_pr'             => $counti,
             'id_division'       => $request->id_division,
-            'beneficiary_bank'  => $request->beneficiary_bank,
+            'bank_id'           => $request->beneficiary_bank,
             'invoice_date'      => $request->invoice_date,
             'received_date'     => $request->received_date,
             // 'contract'      =>  $request->contract,

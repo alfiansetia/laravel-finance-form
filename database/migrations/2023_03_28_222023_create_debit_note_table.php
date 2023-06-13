@@ -22,18 +22,23 @@ class CreateDebitNoteTable extends Migration
             $table->integer('no_debit_note')->default(0);
             $table->unsignedBigInteger('id_division');
             $table->string('for')->nullable();
-            $table->bigInteger('result_vat')->nullable();
-            $table->bigInteger('total_wht')->nullable();
-            $table->bigInteger('result_wht')->nullable();
+            $table->bigInteger('result_vat')->default(0);
+            $table->bigInteger('total_wht')->default(0);
+            $table->bigInteger('result_wht')->default(0);
             $table->String('received_bank')->nullable();
-            $table->bigInteger('bank_charge')->nullable();
+            $table->bigInteger('bank_charge')->default(0);
             // miss
             $table->String('received_from')->nullable();
             $table->datetime('debit_note_date')->nullable();
-            $table->bigInteger('total')->nullable();
-            $table->boolean('is_dolar')->nullable();
+            $table->bigInteger('total')->default(0);
+            $table->enum('currency', ['idr', 'usd', 'sgd'])->default('idr');
+            $table->enum('vat', ['yes', 'no'])->default('yes');
+            $table->unsignedBigInteger('wht_id')->nullable();
+            $table->unsignedBigInteger('bank_id')->nullable();
             $table->timestamps();
             $table->foreign('id_division')->references('id')->on('division')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreign('wht_id')->references('id')->on('whts')->cascadeOnUpdate()->nullOnDelete();
+            $table->foreign('bank_id')->references('id')->on('banks')->cascadeOnUpdate()->nullOnDelete();
         });
     }
 

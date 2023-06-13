@@ -37,7 +37,7 @@
                                             <td class="text-center">{{ $item->no_pr }}</td>
                                             <td class="text-center">{{ $item->name_beneficiary }}</td>
                                             <td class="text-center">{{ $item->bank_account }}</td>
-                                            <td class="text-center">{{ $item->beneficiary_bank }}</td>
+                                            <td class="text-center">{{ $item->bank->name }}</td>
                                             <td class="text-center">
                                                 <div class="btn-group" role="group" aria-label="Basic example">
                                                     <a href="{{ route('payment.download', $item->id) }}"

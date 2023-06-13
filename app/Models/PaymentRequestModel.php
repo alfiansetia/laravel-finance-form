@@ -33,4 +33,9 @@ class PaymentRequestModel extends Model
     {
         return $this->hasMany(DescriptionModel::class, 'id_payment_request');
     }
+
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class, 'id');
+    }
 }

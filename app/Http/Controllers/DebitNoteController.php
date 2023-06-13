@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bank;
 use App\Models\DebitNoteModel;
 use App\Models\DescriptionDebitModel;
 use App\Models\DivisionModel;
@@ -31,9 +32,10 @@ class DebitNoteController extends Controller
 
     public function create()
     {
+        $bank = Bank::all();
         $wht = Wht::all();
         $division = DivisionModel::all();
-        return view('debit_note.add', compact('division', 'wht'))->with(['title' => $this->title]);
+        return view('debit_note.add', compact('division', 'wht', 'bank'))->with(['title' => $this->title]);
     }
 
     public function show(DebitNoteModel $debit)
@@ -162,10 +164,11 @@ class DebitNoteController extends Controller
         if (!$debit) {
             abort(404);
         }
+        $bank = Bank::all();
         $data = $debit;
         $wht = Wht::all();
         $division = DivisionModel::get();
-        return view('debit_note.edit', compact('division', 'data', 'wht'))->with(['title' => $this->title]);
+        return view('debit_note.edit', compact('division', 'data', 'wht', 'bank'))->with(['title' => $this->title]);
     }
 
     public function update(Request $request, DebitNoteModel $debit)

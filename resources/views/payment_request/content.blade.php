@@ -214,7 +214,7 @@
     <tr>
         <td colspan="3"
             style="border-top: none;border-left: 1pt solid black;border-bottom: none;border-right: 1pt solid black;padding: 0mm;height: 9.55pt;vertical-align: middle;">
-            <span class="pd-small">{{ $data->beneficiary_bank }}</span>
+            <span class="pd-small">{{ $data->bank->name }}</span>
         </td>
         <td colspan="3"
             style="border-top: none;border-bottom: none;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 9.55pt;vertical-align: middle;">

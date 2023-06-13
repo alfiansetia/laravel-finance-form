@@ -24,19 +24,22 @@ class CreatePaymentRequestTable extends Migration
             $table->string('name_beneficiary')->nullable();
             $table->string('bank_account')->nullable();
             $table->string('for')->nullable();
-            $table->bigInteger('result_vat')->nullable();
-            $table->bigInteger('total_wht')->nullable();
-            $table->bigInteger('result_wht')->nullable();
+            $table->bigInteger('result_vat')->default(0);
+            $table->bigInteger('total_wht')->default(0);
+            $table->bigInteger('result_wht')->default(0);
             $table->String('beneficiary_bank')->nullable();
-            $table->bigInteger('due_date')->nullable();
+            $table->bigInteger('due_date')->default(0);
             $table->datetime('deadline')->nullable();
-            $table->bigInteger('bank_charge')->nullable();
-            $table->bigInteger('total')->nullable();
+            $table->bigInteger('bank_charge')->default(0);
+            $table->bigInteger('total')->default(0);
             $table->enum('currency', ['idr', 'usd', 'sgd'])->default('idr');
+            $table->enum('vat', ['yes', 'no'])->default('yes');
             $table->unsignedBigInteger('wht_id')->nullable();
+            $table->unsignedBigInteger('bank_id')->nullable();
             $table->timestamps();
             $table->foreign('wht_id')->references('id')->on('whts')->cascadeOnUpdate()->nullOnDelete();
             $table->foreign('id_division')->references('id')->on('division')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreign('bank_id')->references('id')->on('banks')->cascadeOnUpdate()->nullOnDelete();
         });
     }
 
