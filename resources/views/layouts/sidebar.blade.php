@@ -49,7 +49,7 @@
                 </li>
                 <li class="nav-item {{ $title == 'Bank' ? 'active' : '' }}">
                     <a href="{{ route('bank.index') }}">
-                        <i class="far fa-credit-card"></i>
+                        <i class="fas fa-wallet"></i>
                         <p>Bank</p>
                     </a>
                 </li>

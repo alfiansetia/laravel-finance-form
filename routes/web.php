@@ -55,7 +55,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('debit', DebitNoteController::class);
     Route::get('debit/{debit}/download', [DebitNoteController::class, 'download'])->name('debit.download');
 
-    Route::resource('user', UserController::class);
+    Route::resource('user', UserController::class)->except(['show']);
     Route::get('user/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::post('user/profile', [UserController::class, 'profileUpdate'])->name('user.profile.update');
     Route::post('user/password', [UserController::class, 'passwordUpdate'])->name('user.password.update');
