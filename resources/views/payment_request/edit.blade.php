@@ -19,13 +19,8 @@
                                 <div class="form-group col-md-6">
                                     <label for="id_division">Name Division <font style="color: red;">*</font></label>
                                     <select class="form-control @error('id_division') is-invalid @enderror" id="id_division"
-                                        name="id_division" readonly>
-                                        <option value="">Select Division</option>
-                                        @foreach ($division as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ $data->id_division == $item->id ? 'selected' : 'hidden' }}>
-                                                {{ $item->name }}</option>
-                                        @endforeach
+                                        name="id_division" readonly disabled>
+                                        <option value="{{ $data->division->id }}">{{ $data->division->name }}</option>
                                     </select>
                                     @error('id_division')
                                         <div class="invalid-feedback">
@@ -40,7 +35,8 @@
                                         <option value="">Select Bank</option>
                                         @foreach ($bank as $item)
                                             <option {{ $data->bank_id == $item->id ? 'selected' : '' }}
-                                                value="{{ $item->id }}">{{ $item->name }} {{ $item->division->name }}
+                                                value="{{ $item->id }}">{{ $item->name }}
+                                                {{ $item->division->name }}
                                             </option>
                                         @endforeach
                                     </select>

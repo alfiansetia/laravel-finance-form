@@ -22,7 +22,6 @@ class CreateDebitNoteTable extends Migration
             $table->integer('no_debit_note')->default(0);
             $table->unsignedBigInteger('id_division');
             $table->string('for')->nullable();
-            $table->String('received_bank')->nullable();
             $table->bigInteger('bank_charge')->default(0);
             $table->String('received_from')->nullable();
             $table->datetime('debit_note_date')->nullable();

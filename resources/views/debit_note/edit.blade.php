@@ -7,22 +7,19 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex align-items-center">
-                            <h4 class="card-title">Add {{ $title }}</h4>
+                            <h4 class="card-title">Edit {{ $title }}</h4>
                         </div>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('debit.store') }}" method="POST">
+                        <form action="{{ route('debit.update', $data->id) }}" method="POST">
                             @csrf
+                            @method('PUT')
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="id_division">Name Division *</label>
                                     <select class="form-control @error('id_division') is-invalid @enderror" id="id_division"
-                                        name="id_division" readonly>
-                                        @foreach ($division as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ $data->id_division == $item->id ? 'selected' : 'hidden' }}>
-                                                {{ $item->name }}</option>
-                                        @endforeach
+                                        name="id_division" readonly disabled>
+                                        <option value="{{ $data->division->id }}">{{ $data->division->name }}</option>
                                     </select>
                                     @error('id_division')
                                         <div class="invalid-feedback">
@@ -31,10 +28,17 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="received_bank">Received Bank *</label>
-                                    <input type="text" id="received_bank" name="received_bank"
-                                        class="form-control @error('received_bank') is-invalid @enderror"
-                                        value="{{ $data->received_bank }}" required>
+                                    <label for="received_bank">Received Bank <font style="color: red;">*</font></label>
+                                    <select name="received_bank" id="received_bank"
+                                        class="form-control @error('received_bank') is-invalid @enderror" required>
+                                        <option value="">Select Bank</option>
+                                        @foreach ($bank as $item)
+                                            <option {{ $data->bank_id == $item->id ? 'selected' : '' }}
+                                                value="{{ $item->id }}">{{ $item->name }}
+                                                {{ $item->division->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     @error('received_bank')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -157,26 +161,20 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label>VAT *</label><br>
-                                    <div class="form-check form-check-inline">
-                                        <label class="form-radio-label">
-                                            <input class="form-radio-input" type="radio" name="vat" value="yes"
-                                                checked>
-                                            <span class="form-radio-sign">Yes</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <label class="form-radio-label">
-                                            <input class="form-radio-input" type="radio" name="vat"
-                                                value="no">
-                                            <span class="form-radio-sign">No</span>
-                                        </label>
-                                    </div>
-                                    @error('vat')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
+                                    <label for="vat">VAT <font style="color: red;">*</font></label>
+                                    <div class="input-group">
+                                        <input type="number" id="vat" name="vat"
+                                            class="form-control @error('vat') is-invalid @enderror" min="0"
+                                            value="{{ $data->vat ?? 0 }}" required>
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">%</div>
                                         </div>
-                                    @enderror
+                                        @error('vat')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="wht">WHT</label>

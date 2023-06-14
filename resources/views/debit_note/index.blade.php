@@ -19,6 +19,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center" style="width: 30px;">No.</th>
+                                        <th class="text-center">Division</th>
                                         <th class="text-center">Invoice Date</th>
                                         <th class="text-center">No Debit Note</th>
                                         <th class="text-center">Received Bank</th>
@@ -31,10 +32,11 @@
                                     @foreach ($data as $key => $item)
                                         <tr>
                                             <td class="text-center"> {{ $key + 1 }} </td>
+                                            <td class="text-center">{{ $item->division->name }}</td>
                                             <td class="text-center"> {{ date('d-M-Y', strtotime($item->invoice_date)) }}
                                             </td>
                                             <td class="text-center">{{ $item->no_debit_note }}</td>
-                                            <td class="text-center">{{ $item->received_bank }}</td>
+                                            <td class="text-center">{{ $item->bank->name }}</td>
                                             <td class="text-center">{{ $item->received_from }}</td>
                                             <td class="text-center">{{ $item->for }}</td>
                                             <td class="text-center">
@@ -77,11 +79,11 @@
             $('#table').DataTable({
                 "columnDefs": [{
                         "orderable": false,
-                        "targets": [6]
+                        "targets": [7]
                     },
                     {
                         "searchable": false,
-                        "targets": [6]
+                        "targets": [7]
                     },
                 ]
             });

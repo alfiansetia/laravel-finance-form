@@ -56,9 +56,8 @@ class PaymentRequestController extends Controller
         }
         $bank = Bank::where('division_id', $payment->id_division)->get();
         $wht = Wht::all();
-        $division = DivisionModel::all();
         $data = $payment;
-        return view('payment_request.edit', compact('division', 'data', 'wht', 'bank'))->with(['title' => $this->title]);
+        return view('payment_request.edit', compact('data', 'wht', 'bank'))->with(['title' => $this->title]);
     }
 
     public function update(Request $request, PaymentRequestModel $payment)
@@ -84,7 +83,21 @@ class PaymentRequestController extends Controller
             'price.*'           => 'required|integer|gt:0',
         ]);
 
-        $payment->update([
+        $descData  = $payment->desc;
+
+        foreach ($descData as $item) {
+            DescriptionModel::find($item->id)->delete();
+        }
+
+        for ($i = 0; $i < count($request->description); $i++) {
+            DescriptionModel::create([
+                'id_payment_request'    => $payment->id,
+                'value'                 => $request->description[$i],
+                'price'                 => $request->price[$i],
+            ]);
+        }
+
+        $payment = $payment->update([
             'bank_id'           => $request->beneficiary_bank,
             'invoice_date'      => $request->invoice_date,
             'received_date'     => $request->received_date,
@@ -99,19 +112,6 @@ class PaymentRequestController extends Controller
             'bank_charge'       => $request->bank_charge,
         ]);
 
-        $descData  = $payment->desc;
-
-        foreach ($descData as $item) {
-            DescriptionModel::find($item->id)->delete();
-        }
-
-        for ($i = 0; $i < count($request->description); $i++) {
-            DescriptionModel::create([
-                'id_payment_request'    => $payment->id,
-                'value'                 => $request->description[$i],
-                'price'                 => $request->price[$i],
-            ]);
-        }
 
         if ($payment) {
             return redirect()->route('payment.index')->with(['success' => 'Data berhasil diubah!']);
@@ -169,10 +169,12 @@ class PaymentRequestController extends Controller
             ->orderByDesc('no_pr')
             ->first();
 
-        $counti = ($count->no_pr ?? 0) + 1;
+        $counti = 1;
+        if ($count) {
+            $counti = ($count->getOriginal('no_pr') ?? 0) + 1;
+        }
 
         $vat_value = 0;
-
         if ($request->vat == 'yes') {
             $vat = Vat::first();
             $vat_value = $vat->value ?? 0;

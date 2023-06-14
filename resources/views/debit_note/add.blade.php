@@ -19,6 +19,7 @@
                                     <label for="id_division">Name Division *</label>
                                     <select class="form-control @error('id_division') is-invalid @enderror" id="id_division"
                                         name="id_division" required>
+                                        <option value="">Select Division</option>
                                         @foreach ($division as $item)
                                             <option {{ old('id_division') == $item->id ? 'selected' : '' }}
                                                 value="{{ $item->id }}">
@@ -32,10 +33,17 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="received_bank">Received Bank *</label>
-                                    <input type="text" id="received_bank" name="received_bank"
-                                        class="form-control @error('received_bank') is-invalid @enderror"
-                                        value="{{ old('received_bank') }}" required>
+                                    <label for="received_bank">Received Bank <font style="color: red;">*</font></label>
+                                    <select name="received_bank" id="received_bank"
+                                        class="form-control @error('received_bank') is-invalid @enderror" required>
+                                        <option value="">Select Bank</option>
+                                        @foreach ($bank as $item)
+                                            <option {{ old('received_bank') == $item->id ? 'selected' : '' }}
+                                                value="{{ $item->id }}">{{ $item->name }}
+                                                {{ $item->division->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     @error('received_bank')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -193,7 +201,8 @@
                                         name="wht">
                                         <option value="">Select Wht</option>
                                         @foreach ($wht as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            <option {{ old('wht') == $item->id ? 'selected' : '' }}
+                                                value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('wht')

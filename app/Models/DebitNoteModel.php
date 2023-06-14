@@ -19,6 +19,15 @@ class DebitNoteModel extends Model
         return $no . '/' . $this->division->slug . '-DN' . date('/m/y', strtotime($this->debit_note_date));
     }
 
+    public function getTotalAttribute()
+    {
+        $total = 0;
+        foreach ($this->desc as $item) {
+            $total = $total + $item->price;
+        }
+        return $total;
+    }
+
     public function division()
     {
         return $this->belongsTo(DivisionModel::class, 'id_division');
@@ -36,6 +45,6 @@ class DebitNoteModel extends Model
 
     public function bank()
     {
-        return $this->belongsTo(Bank::class, 'id');
+        return $this->belongsTo(Bank::class);
     }
 }
