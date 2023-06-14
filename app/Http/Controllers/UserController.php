@@ -15,7 +15,7 @@ class UserController extends Controller
 
     public function __construct()
     {
-        $this->middleware('role');
+        $this->middleware('role')->except(['profile', 'profileUpdate', 'passwordUpdate']);
     }
 
     function index()
