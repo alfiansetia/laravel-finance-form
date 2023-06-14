@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class PaymentRequestModel extends Model
 {
@@ -17,6 +18,25 @@ class PaymentRequestModel extends Model
     {
         $no = str_pad($value, 4, '0', STR_PAD_LEFT);
         return $no . '/' . $this->division->slug . '-PR' . date('/m/y', strtotime($this->date_pr));
+    }
+
+    public function getDeadlineAttribute()
+    {
+        if ($this->due_date > 0) {
+            $invoice_date = Carbon::parse($this->invoice_date);
+            return $invoice_date->addDays($this->due_date)->format('d-M-y');
+        } else {
+            return 'ASAP';
+        }
+    }
+
+    public function getTotalAttribute()
+    {
+        $total = 0;
+        foreach ($this->desc as $item) {
+            $total = $total + $item->price;
+        }
+        return $total;
     }
 
     public function division()

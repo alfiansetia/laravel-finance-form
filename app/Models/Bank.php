@@ -10,4 +10,9 @@ class Bank extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    function division()
+    {
+        return $this->belongsTo(DivisionModel::class);
+    }
 }

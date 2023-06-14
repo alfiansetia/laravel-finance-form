@@ -15,14 +15,15 @@ class BankSeeder extends Seeder
     public function run()
     {
         $name = [
-            'BRI',
-            'BNI',
-            'MANDIRI',
-            'BCA',
+            'BRI 12345678',
+            'BNI 12345678',
+            'MANDIRI 12345678',
+            'BCA 12345678',
         ];
         foreach ($name as $item) {
             Bank::create([
-                'name' => $item
+                'name'          => $item,
+                'division_id'   => random_int(1, 4),
             ]);
         }
     }

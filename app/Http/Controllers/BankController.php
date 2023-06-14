@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bank;
+use App\Models\DivisionModel;
 use Illuminate\Http\Request;
 
 class BankController extends Controller
@@ -26,12 +27,13 @@ class BankController extends Controller
      */
     public function create()
     {
-        return view('bank.add')->with(['title' => $this->title]);
+        $division = DivisionModel::all();
+        return view('bank.add', compact('division'))->with(['title' => $this->title]);
     }
 
     public function show()
     {
-       abort(404);
+        abort(404);
     }
 
     /**
@@ -43,10 +45,12 @@ class BankController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|unique:banks,name'
+            'division'  => 'required|integer|exists:division,id',
+            'name'      => 'required',
         ]);
         $bank = Bank::create([
-            'name'  => $request->name,
+            'division_id'   => $request->division,
+            'name'          => $request->name,
         ]);
         if ($bank) {
             return redirect(route('bank.index'))->with(['success' => 'Data berhasil ditambahkan!']);
@@ -67,8 +71,9 @@ class BankController extends Controller
         if (!$bank) {
             abort(404);
         }
+        $division = DivisionModel::all();
         $data = $bank;
-        return view('bank.edit', compact('data'))->with(['title' => $this->title]);
+        return view('bank.edit', compact('data', 'division'))->with(['title' => $this->title]);
     }
 
     /**
@@ -84,10 +89,12 @@ class BankController extends Controller
             abort(404);
         }
         $this->validate($request, [
-            'name' => 'required|unique:banks,name,' . $bank->id
+            'division'  => 'required|integer|exists:division,id',
+            'name'      => 'required'
         ]);
         $bank = $bank->update([
-            'name'  => $request->name,
+            'division_id'   => $request->division,
+            'name'          => $request->name,
         ]);
         if ($bank) {
             return redirect(route('bank.index'))->with(['success' => 'Data berhasil diubah!']);

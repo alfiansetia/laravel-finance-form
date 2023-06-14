@@ -22,17 +22,12 @@ class CreateDebitNoteTable extends Migration
             $table->integer('no_debit_note')->default(0);
             $table->unsignedBigInteger('id_division');
             $table->string('for')->nullable();
-            $table->bigInteger('result_vat')->default(0);
-            $table->bigInteger('total_wht')->default(0);
-            $table->bigInteger('result_wht')->default(0);
             $table->String('received_bank')->nullable();
             $table->bigInteger('bank_charge')->default(0);
-            // miss
             $table->String('received_from')->nullable();
             $table->datetime('debit_note_date')->nullable();
-            $table->bigInteger('total')->default(0);
             $table->enum('currency', ['idr', 'usd', 'sgd'])->default('idr');
-            $table->enum('vat', ['yes', 'no'])->default('yes');
+            $table->integer('vat')->default(0);
             $table->unsignedBigInteger('wht_id')->nullable();
             $table->unsignedBigInteger('bank_id')->nullable();
             $table->timestamps();

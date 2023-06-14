@@ -46,7 +46,6 @@ class PaymentRequestController extends Controller
             'title'     => $this->title,
             'data'      => $payment,
             'path_logo' => asset('logo.jpg'),
-            'vat'       => Vat::first(),
         ]);
     }
 
@@ -55,7 +54,7 @@ class PaymentRequestController extends Controller
         if (!$payment) {
             abort(404);
         }
-        $bank = Bank::all();
+        $bank = Bank::where('division_id', $payment->id_division)->get();
         $wht = Wht::all();
         $division = DivisionModel::all();
         $data = $payment;
@@ -68,14 +67,14 @@ class PaymentRequestController extends Controller
             abort(404);
         }
         $this->validate($request, [
-            'beneficiary_bank'  => 'required|integer|exists:banks,id',
+            'beneficiary_bank'  => 'required|integer|exists:banks,id,division_id,' . $payment->id_division,
             'invoice_date'      => 'required|date_format:Y-m-d',
             'received_date'     => 'required|date_format:Y-m-d|after_or_equal:invoice_date',
-            'name_beneficiary'  => 'required',
-            'bank_account'      => 'required',
-            'for'               => 'required',
+            'name_beneficiary'  => 'required|max:100',
+            'bank_account'      => 'required|max:100',
+            'for'               => 'required|max:100',
             'currency'          => 'required|in:idr,usd,sgd',
-            'vat'               => 'required|in:yes,no',
+            'vat'               => 'required|integer|gte:0',
             'wht'               => 'nullable|integer|exists:whts,id',
             'due_date'          => 'required|integer|gte:0',
             'bank_charge'       => 'required|integer|gte:0',
@@ -84,31 +83,6 @@ class PaymentRequestController extends Controller
             'description.*'     => 'required|max:120',
             'price.*'           => 'required|integer|gt:0',
         ]);
-
-        $invoice_date = Carbon::parse($request->invoice_date);
-
-        $deadline = $invoice_date->addDays($request->due_date);
-
-        $total_description = 0;
-        for ($i = 0; $i < count($request->description); $i++) {
-            $total_description = $total_description + $request->price[$i];
-        }
-
-        $wht_value = 0;
-        $vat_value = 0;
-
-        $vat = Vat::first();
-
-        if ($request->vat == 'yes') {
-            $vat_value = ($total_description * $vat->value) / 100;
-        }
-
-        $wht = Wht::find($request->wht);
-        if ($wht) {
-            $wht_value =  ($total_description * $wht->value) / 100;
-        }
-
-        $result = $total_description + $vat_value - $wht_value;
 
         $payment->update([
             'bank_id'           => $request->beneficiary_bank,
@@ -123,30 +97,19 @@ class PaymentRequestController extends Controller
             'wht_id'            => $request->wht,
             'due_date'          => $request->due_date,
             'bank_charge'       => $request->bank_charge,
-            'result_vat'        => $vat_value,
-            'total_wht'         => $wht_value,
-            'result_wht'        => $result,
-            'deadline'          => $deadline,
-            'total'             => ($request->bank_charge ?? 0) + $result,
         ]);
 
         $descData  = $payment->desc;
 
-        foreach ($descData as $key => $value) {
-            DescriptionModel::find($value->id)->delete();
-        }
-
-        $total_description = 0;
-
-        for ($i = 0; $i < count($request->description); $i++) {
-            $total_description = $total_description + $request->price[$i];
+        foreach ($descData as $item) {
+            DescriptionModel::find($item->id)->delete();
         }
 
         for ($i = 0; $i < count($request->description); $i++) {
             DescriptionModel::create([
-                "value"                 => $request->description[$i],
-                "price"                 => $request->price[$i],
-                "id_payment_request"    => $payment->id,
+                'id_payment_request'    => $payment->id,
+                'value'                 => $request->description[$i],
+                'price'                 => $request->price[$i],
             ]);
         }
 
@@ -161,13 +124,13 @@ class PaymentRequestController extends Controller
     {
         $this->validate($request, [
             'id_division'       => 'required|integer|exists:division,id',
-            'beneficiary_bank'  => 'required|integer|exists:banks,id',
+            'beneficiary_bank'  => 'required|integer|exists:banks,id,division_id,' . $request->id_division,
             'invoice_date'      => 'required|date_format:Y-m-d',
             'received_date'     => 'required|date_format:Y-m-d|after_or_equal:invoice_date',
             'date_pr'           => 'required|date_format:Y-m-d',
-            'name_beneficiary'  => 'required',
-            'bank_account'      => 'required',
-            'for'               => 'required',
+            'name_beneficiary'  => 'required|max:100',
+            'bank_account'      => 'required|max:100',
+            'for'               => 'required|max:100',
             'currency'          => 'required|in:idr,usd,sgd',
             'vat'               => 'required|in:yes,no',
             'wht'               => 'nullable|integer|exists:whts,id',
@@ -179,8 +142,6 @@ class PaymentRequestController extends Controller
             'price.*'           => 'required|integer|gt:0',
         ]);
 
-        $division = DivisionModel::findOrFail($request->id_division);
-
         $dateTime = new DateTime($request->date_pr);
 
         $carbonDate = Carbon::instance($dateTime);
@@ -188,7 +149,6 @@ class PaymentRequestController extends Controller
 
         $carbonDate = Carbon::instance($dateTime);
         $year = $carbonDate->year;
-
 
         // old function
 
@@ -203,7 +163,7 @@ class PaymentRequestController extends Controller
 
 
         $count =
-            PaymentRequestModel::where('id_division', $division->id)
+            PaymentRequestModel::where('id_division', $request->id_division)
             ->whereYear('date_pr', $year)
             ->whereMonth('date_pr', $month)
             ->orderByDesc('no_pr')
@@ -211,35 +171,19 @@ class PaymentRequestController extends Controller
 
         $counti = ($count->no_pr ?? 0) + 1;
 
-        $total_description = 0;
-        for ($i = 0; $i < count($request->description); $i++) {
-            $total_description = $total_description + $request->price[$i];
-        }
-        $wht_value = 0;
         $vat_value = 0;
 
-        $vat = Vat::first();
-
         if ($request->vat == 'yes') {
-            $vat_value = ($total_description * $vat->value) / 100;
+            $vat = Vat::first();
+            $vat_value = $vat->value ?? 0;
         }
 
-        $wht = Wht::find($request->wht);
-        if ($wht) {
-            $wht_value =  ($total_description * $wht->value) / 100;
-        }
-
-        $result = $total_description + $vat_value - $wht_value;
-
-        $invoice_date = Carbon::parse($request->invoice_date);
-        $deadline = $invoice_date->addDays($request->due_date);
         $payment = PaymentRequestModel::create([
             'no_pr'             => $counti,
             'id_division'       => $request->id_division,
             'bank_id'           => $request->beneficiary_bank,
             'invoice_date'      => $request->invoice_date,
             'received_date'     => $request->received_date,
-            // 'contract'      =>  $request->contract,
             'date_pr'           => $request->date_pr,
             'name_beneficiary'  => $request->name_beneficiary,
             'bank_account'      => $request->bank_account,
@@ -249,18 +193,14 @@ class PaymentRequestController extends Controller
             'wht_id'            => $request->wht,
             'due_date'          => $request->due_date,
             'bank_charge'       => $request->bank_charge,
-            'result_vat'        => $vat_value,
-            'total_wht'         => $wht_value,
-            'result_wht'        => $result,
-            'deadline'          => $deadline,
-            'total'             => $request->bank_charge + $result,
+            'vat'               => $vat_value,
         ]);
 
         for ($i = 0; $i < count($request->description); $i++) {
             DescriptionModel::create([
+                'id_payment_request'    => $payment->id,
                 'value'                 => $request->description[$i],
                 'price'                 => $request->price[$i],
-                'id_payment_request'    => $payment->id,
             ]);
         }
         if ($payment) {
@@ -289,12 +229,10 @@ class PaymentRequestController extends Controller
         if (!$payment) {
             abort(404);
         }
-        $vat = Vat::first();
         $pdf = Pdf::loadview('payment_request.download', [
             'title'     => 'Detail ' . $payment->no_pr,
             'data'      => $payment,
             'path_logo' => public_path('logo.jpg'),
-            'vat'       => $vat,
         ])->setPaper('A4', 'portrait');
         return $pdf->download($payment->id . '_' . date('ymdHis') . '.pdf');
     }

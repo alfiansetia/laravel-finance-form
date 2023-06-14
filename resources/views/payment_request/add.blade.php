@@ -18,6 +18,7 @@
                                     <label for="id_division">Name Division <font style="color: red;">*</font></label>
                                     <select class="form-control @error('id_division') is-invalid @enderror" id="id_division"
                                         name="id_division" required>
+                                        <option value="">Select Division</option>
                                         @foreach ($division as $item)
                                             <option {{ old('id_division') == $item->id ? 'selected' : '' }}
                                                 value="{{ $item->id }}">{{ $item->name }}</option>
@@ -36,7 +37,8 @@
                                         <option value="">Select Bank</option>
                                         @foreach ($bank as $item)
                                             <option {{ old('beneficiary_bank') == $item->id ? 'selected' : '' }}
-                                                value="{{ $item->id }}">{{ $item->name }}</option>
+                                                value="{{ $item->id }}">{{ $item->name }} {{ $item->division->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                     @error('beneficiary_bank')

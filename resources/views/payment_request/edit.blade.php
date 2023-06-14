@@ -20,6 +20,7 @@
                                     <label for="id_division">Name Division <font style="color: red;">*</font></label>
                                     <select class="form-control @error('id_division') is-invalid @enderror" id="id_division"
                                         name="id_division" readonly>
+                                        <option value="">Select Division</option>
                                         @foreach ($division as $item)
                                             <option value="{{ $item->id }}"
                                                 {{ $data->id_division == $item->id ? 'selected' : 'hidden' }}>
@@ -34,9 +35,15 @@
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="beneficiary_bank">Bank <font style="color: red;">*</font></label>
-                                    <input type="text" id="beneficiary_bank" name="beneficiary_bank"
-                                        class="form-control @error('beneficiary_bank') is-invalid @enderror"
-                                        value="{{ $data->beneficiary_bank }}" required>
+                                    <select name="beneficiary_bank" id="beneficiary_bank"
+                                        class="form-control @error('beneficiary_bank') is-invalid @enderror" required>
+                                        <option value="">Select Bank</option>
+                                        @foreach ($bank as $item)
+                                            <option {{ $data->bank_id == $item->id ? 'selected' : '' }}
+                                                value="{{ $item->id }}">{{ $item->name }} {{ $item->division->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     @error('beneficiary_bank')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -172,20 +179,19 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label>VAT</label><br>
-                                    <div class="form-check form-check-inline">
-                                        <label class="form-radio-label">
-                                            <input class="form-radio-input" type="radio" name="vat" value="yes"
-                                                checked>
-                                            <span class="form-radio-sign">Yes</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <label class="form-radio-label">
-                                            <input class="form-radio-input" type="radio" name="vat"
-                                                value="no">
-                                            <span class="form-radio-sign">No</span>
-                                        </label>
+                                    <label for="vat">VAT <font style="color: red;">*</font></label>
+                                    <div class="input-group">
+                                        <input type="number" id="vat" name="vat"
+                                            class="form-control @error('vat') is-invalid @enderror" min="0"
+                                            value="{{ $data->vat ?? 0 }}" required>
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">%</div>
+                                        </div>
+                                        @error('vat')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">

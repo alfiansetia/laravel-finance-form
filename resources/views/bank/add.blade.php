@@ -15,6 +15,22 @@
                             @csrf
                             <div class="form-row">
                                 <div class="form-group col-md-6">
+                                    <label for="division">Division <font style="color: red;">*</font></label>
+                                    <select class="form-control @error('division') is-invalid @enderror" id="division"
+                                        name="division" required>
+                                        <option value="">Select Division</option>
+                                        @foreach ($division as $item)
+                                            <option {{ old('division') == $item->id ? 'selected' : '' }}
+                                                value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('division')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-6">
                                     <label for="name">Name</label>
                                     <input type="text" id="name" name="name"
                                         class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}"

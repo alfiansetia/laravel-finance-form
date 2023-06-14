@@ -23,4 +23,8 @@ class DivisionModel extends Model
         return $this->belongsTo(DebitNoteModel::class, 'id');
     }
 
+    public function bank()
+    {
+        return $this->hasMany(Bank::class, 'id');
+    }
 }

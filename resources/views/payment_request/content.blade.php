@@ -1,3 +1,17 @@
+@php
+    $vat_value = 0;
+    $wht_value = 0;
+    $total = 0;
+    $grand_total = 0;
+    if ($data->vat > 0) {
+        $vat_value = ($data->total * $data->vat) / 100;
+    }
+    if ($data->wht) {
+        $wht_value = ($data->total * $data->wht->value) / 100;
+    }
+    $total = $data->total + $vat_value - $wht_value;
+    $grand_total = $data->total + $data->bank_charge + $vat_value - $wht_value;
+@endphp
 <tbody>
     <tr>
         <td colspan="9"
@@ -78,24 +92,24 @@
             </td>
         </tr>
     @endforeach
-    @if ($data->result_vat > 0)
+    @if ($vat_value > 0)
         @php
             $sisa = $sisa - 1;
         @endphp
         <tr>
             <td colspan="8"
                 style="border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0mm;height: 13pt;vertical-align: middle;">
-                <span class="pd-small">{{ $vat->name }} {{ $vat->value }}%</span>
+                <span class="pd-small">VAT {{ $data->vat }}%</span>
             </td>
             <td
                 style="text-align: right;width: 82pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
                 <span
-                    class="pd-small">{{ number_format($data->result_vat, $data->currency != 'idr' ? 2 : 0, ',', ',') }}</span>
+                    class="pd-small">{{ number_format($vat_value, $data->currency != 'idr' ? 2 : 0, ',', ',') }}</span>
 
             </td>
         </tr>
     @endif
-    @if ($data->total_wht > 0 && $data->wht_id != null)
+    @if ($wht_value > 0)
         @php
             $sisa = $sisa - 1;
         @endphp
@@ -107,7 +121,7 @@
             <td
                 style="text-align: right;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
                 <span class="pd-small">(
-                    {{ number_format($data->total_wht, $data->currency != 'idr' ? 2 : 0, ',', ',') }}
+                    {{ number_format($wht_value, $data->currency != 'idr' ? 2 : 0, ',', ',') }}
                     )</span>
 
             </td>
@@ -142,7 +156,7 @@
         </td>
         <td class="bold-border">
             <strong><span
-                    class="pd-small">{{ number_format($data->result_wht, $data->currency != 'idr' ? 2 : 0, ',', ',') }}</span></strong>
+                    class="pd-small">{{ number_format($total, $data->currency != 'idr' ? 2 : 0, ',', ',') }}</span></strong>
         </td>
     </tr>
     <tr>
@@ -180,7 +194,7 @@
         </td>
         <td class="bold-border" style="border-bottom: 3pt solid black">
             <strong><span
-                    class="pd-small">{{ number_format($data->total, $data->currency != 'idr' ? 2 : 0, ',', ',') }}</span></strong>
+                    class="pd-small">{{ number_format($grand_total, $data->currency != 'idr' ? 2 : 0, ',', ',') }}</span></strong>
         </td>
     </tr>
 
@@ -333,8 +347,7 @@
         </td>
         <td
             style="text-align: center;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 9.6pt;vertical-align: middle;">
-            <span
-                class="pd-small">{{ $data->due_date < 1 ? 'ASAP' : date('d-M-y', strtotime($data->deadline)) }}</span>
+            <span class="pd-small">{{ $data->deadline }}</span>
         </td>
         <td colspan="2"
             style="border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 9.6pt;vertical-align: middle;">

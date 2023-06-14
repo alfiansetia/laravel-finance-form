@@ -19,6 +19,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center" style="width: 30px;">No.</th>
+                                        <th class="text-center">Division</th>
                                         <th class="text-center">Name</th>
                                         <th class="text-center">Action</th>
                                     </tr>
@@ -27,6 +28,7 @@
                                     @foreach ($data as $key => $item)
                                         <tr>
                                             <td class="text-center"> {{ $key + 1 }} </td>
+                                            <td class="text-center">{{ $item->division->name }}</td>
                                             <td class="text-center">{{ $item->name }}</td>
                                             <td class="text-center">
                                                 <div class="btn-group" role="group" aria-label="Basic example">
@@ -62,11 +64,11 @@
             $('#table').DataTable({
                 "columnDefs": [{
                         "orderable": false,
-                        "targets": [2]
+                        "targets": [3]
                     },
                     {
                         "searchable": false,
-                        "targets": [2]
+                        "targets": [3]
                     },
                 ]
             });

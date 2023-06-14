@@ -16,7 +16,9 @@ class CreateBanksTable extends Migration
         Schema::create('banks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->unsignedBigInteger('division_id');
             $table->timestamps();
+            $table->foreign('division_id')->references('id')->on('division')->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 
