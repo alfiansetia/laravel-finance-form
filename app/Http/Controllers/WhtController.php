@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 class WhtController extends Controller
 {
     private $title = 'WHT';
+
+    public function __construct()
+    {
+        $this->middleware('role');
+    }
+
     /**
      * Display a listing of the resource.
      *

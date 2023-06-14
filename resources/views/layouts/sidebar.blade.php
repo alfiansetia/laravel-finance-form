@@ -27,13 +27,7 @@
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>
                     </span>
-                    <h4 class="text-section">Components</h4>
-                </li>
-                <li class="nav-item {{ $title == 'Division' ? 'active' : '' }}">
-                    <a href="{{ route('division.index') }}">
-                        <i class="far fa-building"></i>
-                        <p>Division</p>
-                    </a>
+                    <h4 class="text-section">Transaction</h4>
                 </li>
                 <li class="nav-item {{ $title == 'Payment Request' ? 'active' : '' }}">
                     <a href="{{ route('payment.index') }}">
@@ -47,40 +41,63 @@
                         <p>Debit Note</p>
                     </a>
                 </li>
-                <li class="nav-item {{ $title == 'Bank' ? 'active' : '' }}">
-                    <a href="{{ route('bank.index') }}">
-                        <i class="fas fa-wallet"></i>
-                        <p>Bank</p>
-                    </a>
-                </li>
-                <li class="nav-item {{ $title == 'WHT' || $title == 'VAT' ? 'active submenu' : '' }}">
-                    <a data-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false">
-                        <i class="fas fa-percent"></i>
-                        <p>TAX</p>
-                        <span class="caret"></span>
-                    </a>
-                    <div class="collapse {{ $title == 'WHT' || $title == 'VAT' ? 'show' : '' }}" id="dashboard">
-                        <ul class="nav nav-collapse">
-                            <li class="{{ $title == 'WHT' ? 'active' : '' }}">
-                                <a href="{{ route('wht.index') }}">
-                                    <span class="sub-item">WHT</span>
-                                </a>
-                            </li>
-                            <li class="{{ $title == 'VAT' ? 'active' : '' }}">
-                                <a href="{{ route('vat.index') }}">
-                                    <span class="sub-item">VAT</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item {{ $title == 'User' ? 'active' : '' }}">
-                    <a href="{{ route('user.index') }}">
-                        <i class="fas fa-user-alt"></i>
-                        <p>User Account</p>
-                    </a>
-                </li>
-
+                @if (auth()->user()->role == 'admin')
+                    <li class="nav-section">
+                        <span class="sidebar-mini-icon">
+                            <i class="fa fa-ellipsis-h"></i>
+                        </span>
+                        <h4 class="text-section">Components</h4>
+                    </li>
+                    <li class="nav-item {{ $title == 'Division' || $title == 'Bank' ? 'active submenu' : '' }}">
+                        <a data-toggle="collapse" href="#division_menu" class="collapsed" aria-expanded="false">
+                            <i class="far fa-building"></i>
+                            <p>Division</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse {{ $title == 'Division' || $title == 'Bank' ? 'show' : '' }}"
+                            id="division_menu">
+                            <ul class="nav nav-collapse">
+                                <li class="{{ $title == 'Division' ? 'active' : '' }}">
+                                    <a href="{{ route('division.index') }}">
+                                        <span class="sub-item">Name Division</span>
+                                    </a>
+                                </li>
+                                <li class="{{ $title == 'Bank' ? 'active' : '' }}">
+                                    <a href="{{ route('bank.index') }}">
+                                        <span class="sub-item">Bank Division</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item {{ $title == 'WHT' || $title == 'VAT' ? 'active submenu' : '' }}">
+                        <a data-toggle="collapse" href="#tax_menu" class="collapsed" aria-expanded="false">
+                            <i class="fas fa-percent"></i>
+                            <p>TAX</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse {{ $title == 'WHT' || $title == 'VAT' ? 'show' : '' }}" id="tax_menu">
+                            <ul class="nav nav-collapse">
+                                <li class="{{ $title == 'WHT' ? 'active' : '' }}">
+                                    <a href="{{ route('wht.index') }}">
+                                        <span class="sub-item">WHT</span>
+                                    </a>
+                                </li>
+                                <li class="{{ $title == 'VAT' ? 'active' : '' }}">
+                                    <a href="{{ route('vat.index') }}">
+                                        <span class="sub-item">VAT</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item {{ $title == 'User' ? 'active' : '' }}">
+                        <a href="{{ route('user.index') }}">
+                            <i class="fas fa-user-alt"></i>
+                            <p>User Account</p>
+                        </a>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>

@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 class DivisionController extends Controller
 {
     private $title = 'Division';
+
+    public function __construct()
+    {
+        $this->middleware('role');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -31,7 +36,7 @@ class DivisionController extends Controller
 
     public function show()
     {
-       abort(404);
+        abort(404);
     }
 
     /**

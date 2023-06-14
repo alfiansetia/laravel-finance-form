@@ -31,7 +31,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="name">Name</label>
+                                    <label for="name">Name <font style="color: red;">*</font></label>
                                     <input type="text" id="name" name="name"
                                         class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}"
                                         required>

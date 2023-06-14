@@ -60,6 +60,19 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
+                                    <label for="due_date">Due Date <font style="color: red;">*</font></label>
+                                    <input type="number" id="due_date" name="due_date"
+                                        class="form-control @error('due_date') is-invalid @enderror" min="0"
+                                        value="{{ $data->due_date ?? 0 }}" required>
+                                    @error('due_date')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
                                     <label for="received_date">Received Date <font style="color: red;">*</font></label>
                                     <input type="date" id="received_date" name="received_date"
                                         class="form-control @error('received_date') is-invalid @enderror"
@@ -70,8 +83,6 @@
                                         </div>
                                     @enderror
                                 </div>
-                            </div>
-                            <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="date_pr">PR Voucher Date <font style="color: red;">*</font></label>
                                     <input type="date" id="date_pr" name="date_pr"
@@ -83,7 +94,19 @@
                                         </div>
                                     @enderror
                                 </div>
-
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="contract">Contract</label>
+                                    <input type="text" id="contract" name="contract"
+                                        class="form-control @error('contract') is-invalid @enderror"
+                                        value="{{ $data->contract }}">
+                                    @error('contract')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
                                 <div class="form-group col-md-6">
                                     <label for="name_beneficiary">Name Beneficiary <font style="color: red;">*</font>
                                     </label>
@@ -112,8 +135,8 @@
                                 <div class="form-group col-md-6">
                                     <label for="for">For <font style="color: red;">*</font></label>
                                     <input type="text" id="for" name="for"
-                                        class="form-control @error('for') is-invalid @enderror" value="{{ $data->for }}"
-                                        required>
+                                        class="form-control @error('for') is-invalid @enderror"
+                                        value="{{ $data->for }}" required>
                                     @error('for')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -121,18 +144,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="contract">Contract</label>
-                                    <input type="text" id="contract" name="contract"
-                                        class="form-control @error('contract') is-invalid @enderror"
-                                        value="{{ $data->contract }}">
-                                    @error('contract')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
+                            <div class="form-row" id="add_desc_form">
                                 <div class="form-group col-md-6">
                                     <label for="currency">Type Currency <font style="color: red;">*</font></label>
                                     <select class="form-control @error('currency') is-invalid @enderror" id="currency"
@@ -208,17 +220,6 @@
                                 </div>
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="due_date">Due Date <font style="color: red;">*</font></label>
-                                    <input type="number" id="due_date" name="due_date"
-                                        class="form-control @error('due_date') is-invalid @enderror" min="0"
-                                        value="{{ $data->due_date ?? 0 }}" required>
-                                    @error('due_date')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
                                 <div class="form-group col-md-6">
                                     <label for="bank_charge">Bank Charges <font style="color: red;">*</font></label>
                                     <input type="number" id="bank_charge" name="bank_charge"

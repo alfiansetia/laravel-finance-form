@@ -9,6 +9,11 @@ class VatController extends Controller
 {
     private $title = 'VAT';
 
+    public function __construct()
+    {
+        $this->middleware('role');
+    }
+
     /**
      * Display a listing of the resource.
      *

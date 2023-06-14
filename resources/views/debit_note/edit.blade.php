@@ -120,6 +120,17 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
+                                    <label for="received_from">Received From *</label>
+                                    <input type="text" id="received_from" name="received_from"
+                                        class="form-control @error('received_from') is-invalid @enderror"
+                                        value="{{ $data->received_from }}" required>
+                                    @error('received_from')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-6">
                                     <label for="currency">Type Currency *</label>
                                     <select class="form-control @error('currency') is-invalid @enderror" id="currency"
                                         name="currency" required>
@@ -182,7 +193,8 @@
                                         name="wht">
                                         <option value="">Select Wht</option>
                                         @foreach ($wht as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            <option {{ $data->wht_id == $item->id ? 'selected' : '' }}
+                                                value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('wht')
@@ -199,17 +211,6 @@
                                         class="form-control @error('bank_charge') is-invalid @enderror"
                                         value="{{ $data->bank_charge ?? 0 }}" min="0" required>
                                     @error('bank_charge')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="received_from">Received From *</label>
-                                    <input type="text" id="received_from" name="received_from"
-                                        class="form-control @error('received_from') is-invalid @enderror"
-                                        value="{{ $data->received_from }}" required>
-                                    @error('received_from')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>

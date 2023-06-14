@@ -13,6 +13,11 @@ class UserController extends Controller
 
     private $title = 'User';
 
+    public function __construct()
+    {
+        $this->middleware('role');
+    }
+
     function index()
     {
         $data = User::all();
@@ -26,7 +31,7 @@ class UserController extends Controller
 
     public function show()
     {
-       abort(404);
+        abort(404);
     }
 
     function store(Request $request)

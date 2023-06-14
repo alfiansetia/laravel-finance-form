@@ -46,7 +46,7 @@ class BankController extends Controller
     {
         $this->validate($request, [
             'division'  => 'required|integer|exists:division,id',
-            'name'      => 'required',
+            'name'      => 'required|max:100',
         ]);
         $bank = Bank::create([
             'division_id'   => $request->division,
@@ -90,7 +90,7 @@ class BankController extends Controller
         }
         $this->validate($request, [
             'division'  => 'required|integer|exists:division,id',
-            'name'      => 'required'
+            'name'      => 'required|max:100'
         ]);
         $bank = $bank->update([
             'division_id'   => $request->division,
