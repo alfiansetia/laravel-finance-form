@@ -16,7 +16,7 @@
                             @method('PUT')
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="id_division">Name Division *</label>
+                                    <label for="id_division">Name Division <font style="color: red;">*</font></label>
                                     <select class="form-control @error('id_division') is-invalid @enderror" id="id_division"
                                         name="id_division" readonly disabled>
                                         <option value="{{ $data->division->id }}">{{ $data->division->name }}</option>
@@ -28,7 +28,9 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="received_bank">Received Bank <font style="color: red;">*</font></label>
+                                    <label for="received_bank">Received Bank <font style="color: red;">
+                                            <font style="color: red;">*</font>
+                                        </font></label>
                                     <select name="received_bank" id="received_bank"
                                         class="form-control @error('received_bank') is-invalid @enderror" required>
                                         <option value="">Select Bank</option>
@@ -48,7 +50,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="no_invoice">No Invoice</label>
+                                    <label for="no_invoice">No Invoice <font style="color: red;">*</font></label>
                                     <input type="number" id="no_invoice" name="no_invoice"
                                         class="form-control @error('no_invoice') is-invalid @enderror"
                                         value="{{ $data->no_invoice }}" required>
@@ -59,7 +61,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="invoice_date">Invoice Date</label>
+                                    <label for="invoice_date">Invoice Date <font style="color: red;">*</font></label>
                                     <input type="date" id="invoice_date" name="invoice_date"
                                         class="form-control @error('invoice_date') is-invalid @enderror"
                                         value="{{ date('Y-m-d', strtotime($data->invoice_date)) }}" required>
@@ -72,7 +74,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="debit_note_date">Debit Note Date</label>
+                                    <label for="debit_note_date">Debit Note Date <font style="color: red;">*</font></label>
                                     <input type="date" id="debit_note_date" name="debit_note_date"
                                         class="form-control @error('debit_note_date') is-invalid @enderror"
                                         value="{{ date('Y-m-d', strtotime($data->debit_note_date)) }}" disabled required>
@@ -83,7 +85,8 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="tax_invoice_serial_no">Tax Invoice Serial No</label>
+                                    <label for="tax_invoice_serial_no">Tax Invoice Serial No <font style="color: red;">*
+                                        </font></label>
                                     <input type="text" id="tax_invoice_serial_no" name="tax_invoice_serial_no"
                                         class="form-control @error('tax_invoice_serial_no') is-invalid @enderror"
                                         value="{{ $data->tax_invoice_serial_no }}" required>
@@ -96,7 +99,8 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="tax_invoice_date">Tax Invoice Date</label>
+                                    <label for="tax_invoice_date">Tax Invoice Date <font style="color: red;">*</font>
+                                    </label>
                                     <input type="date" id="tax_invoice_date" name="tax_invoice_date"
                                         class="form-control @error('tax_invoice_date') is-invalid @enderror"
                                         value="{{ date('Y-m-d', strtotime($data->tax_invoice_date)) }}" required>
@@ -107,7 +111,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="for">For *</label>
+                                    <label for="for">For <font style="color: red;">*</font></label>
                                     <input type="text" id="for" name="for"
                                         class="form-control @error('for') is-invalid @enderror" value="{{ $data->for }}"
                                         required>
@@ -120,7 +124,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="received_from">Received From *</label>
+                                    <label for="received_from">Received From <font style="color: red;">*</font></label>
                                     <input type="text" id="received_from" name="received_from"
                                         class="form-control @error('received_from') is-invalid @enderror"
                                         value="{{ $data->received_from }}" required>
@@ -131,7 +135,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="currency">Type Currency *</label>
+                                    <label for="currency">Type Currency <font style="color: red;">*</font></label>
                                     <select class="form-control @error('currency') is-invalid @enderror" id="currency"
                                         name="currency" required>
                                         <option {{ $data->currency == 'idr' ? 'selected' : '' }} value="idr">IDR
@@ -151,12 +155,12 @@
                             <div class="form-row" id="add_desc_form">
                                 @foreach ($data->desc as $item)
                                     <div class="form-group col-md-6 desc_form">
-                                        <label>Description *</label>
+                                        <label>Description <font style="color: red;">*</font></label>
                                         <input type="text" name="description[]" class="form-control" maxlength="120"
                                             value="{{ $item->value }}" required>
                                     </div>
                                     <div class="form-group col-md-6 price_form">
-                                        <label>Price *</label>
+                                        <label>Price <font style="color: red;">*</font></label>
                                         <input type="text" name="price[]" class="form-control mask-angka"
                                             min="1" value="{{ $item->price }}" required>
                                     </div>
@@ -172,7 +176,9 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="vat">VAT <font style="color: red;">*</font></label>
+                                    <label for="vat">VAT <font style="color: red;">
+                                            <font style="color: red;">*</font>
+                                        </font></label>
                                     <div class="input-group">
                                         <input type="number" id="vat" name="vat"
                                             class="form-control @error('vat') is-invalid @enderror" min="0"
@@ -206,7 +212,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="bank_charge">Bank Charges *</label>
+                                    <label for="bank_charge">Bank Charges <font style="color: red;">*</font></label>
                                     <input type="text" id="bank_charge" name="bank_charge"
                                         class="form-control mask-angka @error('bank_charge') is-invalid @enderror"
                                         value="{{ $data->bank_charge ?? 0 }}" min="0" required>

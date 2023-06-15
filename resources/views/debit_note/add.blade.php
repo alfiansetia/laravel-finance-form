@@ -16,7 +16,7 @@
                             @csrf
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="id_division">Name Division *</label>
+                                    <label for="id_division">Name Division <font style="color: red;">*</font></label>
                                     <select class="form-control @error('id_division') is-invalid @enderror" id="id_division"
                                         name="id_division" required>
                                         <option value="">Select Division</option>
@@ -33,7 +33,9 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="received_bank">Received Bank <font style="color: red;">*</font></label>
+                                    <label for="received_bank">Received Bank <font style="color: red;">
+                                            <font style="color: red;">*</font>
+                                        </font></label>
                                     <select name="received_bank" id="received_bank"
                                         class="form-control @error('received_bank') is-invalid @enderror" required>
                                         <option value="">Select Bank</option>
@@ -53,7 +55,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="no_invoice">No Invoice</label>
+                                    <label for="no_invoice">No Invoice <font style="color: red;">*</font></label>
                                     <input type="number" id="no_invoice" name="no_invoice"
                                         class="form-control @error('no_invoice') is-invalid @enderror"
                                         value="{{ old('no_invoice') }}" required>
@@ -64,7 +66,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="invoice_date">Invoice Date</label>
+                                    <label for="invoice_date">Invoice Date <font style="color: red;">*</font></label>
                                     <input type="date" id="invoice_date" name="invoice_date"
                                         class="form-control @error('invoice_date') is-invalid @enderror"
                                         value="{{ old('invoice_date') }}" required>
@@ -77,7 +79,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="debit_note_date">Debit Note Date</label>
+                                    <label for="debit_note_date">Debit Note Date <font style="color: red;">*</font></label>
                                     <input type="date" id="debit_note_date" name="debit_note_date"
                                         class="form-control @error('debit_note_date') is-invalid @enderror"
                                         value="{{ old('debit_note_date') }}" required>
@@ -88,7 +90,8 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="tax_invoice_serial_no">Tax Invoice Serial No</label>
+                                    <label for="tax_invoice_serial_no">Tax Invoice Serial No <font style="color: red;">*
+                                        </font></label>
                                     <input type="text" id="tax_invoice_serial_no" name="tax_invoice_serial_no"
                                         class="form-control @error('tax_invoice_serial_no') is-invalid @enderror"
                                         value="{{ old('tax_invoice_serial_no') }}" required>
@@ -101,7 +104,8 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="tax_invoice_date">Tax Invoice Date</label>
+                                    <label for="tax_invoice_date">Tax Invoice Date <font style="color: red;">*</font>
+                                        </label>
                                     <input type="date" id="tax_invoice_date" name="tax_invoice_date"
                                         class="form-control @error('tax_invoice_date') is-invalid @enderror"
                                         value="{{ old('tax_invoice_date') }}" required>
@@ -112,7 +116,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="for">For *</label>
+                                    <label for="for">For <font style="color: red;">*</font></label>
                                     <input type="text" id="for" name="for"
                                         class="form-control @error('for') is-invalid @enderror" value="{{ old('for') }}"
                                         required>
@@ -125,7 +129,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="received_from">Received From *</label>
+                                    <label for="received_from">Received From <font style="color: red;">*</font></label>
                                     <input type="text" id="received_from" name="received_from"
                                         class="form-control @error('received_from') is-invalid @enderror"
                                         value="{{ old('received_from') }}" required>
@@ -136,7 +140,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="currency">Type Currency *</label>
+                                    <label for="currency">Type Currency <font style="color: red;">*</font></label>
                                     <select class="form-control @error('currency') is-invalid @enderror" id="currency"
                                         name="currency" required>
                                         <option {{ old('currency') == 'idr' ? 'selected' : '' }} value="idr">IDR
@@ -155,12 +159,12 @@
                             </div>
                             <div class="form-row" id="add_desc_form">
                                 <div class="form-group col-md-6 desc_form">
-                                    <label>Description *</label>
+                                    <label>Description <font style="color: red;">*</font></label>
                                     <input type="text" name="description[]" class="form-control" maxlength="120"
                                         required>
                                 </div>
                                 <div class="form-group col-md-6 price_form">
-                                    <label>Price *</label>
+                                    <label>Price <font style="color: red;">*</font></label>
                                     <input type="text" name="price[]" class="form-control mask-angka" min="1"
                                         required>
                                 </div>
@@ -175,7 +179,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label>VAT *</label><br>
+                                    <label>VAT <font style="color: red;">*</font></label><br>
                                     <div class="form-check form-check-inline">
                                         <label class="form-radio-label">
                                             <input class="form-radio-input" type="radio" name="vat" value="yes"
@@ -215,7 +219,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="bank_charge">Bank Charges *</label>
+                                    <label for="bank_charge">Bank Charges <font style="color: red;">*</font></label>
                                     <input type="text" id="bank_charge" name="bank_charge"
                                         class="form-control mask-angka @error('bank_charge') is-invalid @enderror"
                                         value="{{ old('bank_charge', 0) }}" min="0" required>
@@ -257,11 +261,11 @@
                 totalDesc++;
                 var form = $(`
                         <div class="form-group col-md-6 desc_form">
-                            <label>Description *</label>
+                            <label>Description <font style="color: red;">*</font></label>
                             <input type="text" name="description[]" class="form-control" maxlength="120" required>
                         </div>
                         <div class="form-group col-md-6 price_form">
-                            <label>Price *</label>
+                            <label>Price <font style="color: red;">*</font></label>
                             <input type="text" name="price[]" class="form-control mask-angka" min="1" required>
                         </div>
         `);
