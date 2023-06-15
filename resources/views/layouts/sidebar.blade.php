@@ -97,6 +97,12 @@
                             <p>User Account</p>
                         </a>
                     </li>
+                    <li class="nav-item {{ $title == 'Vendor' ? 'active' : '' }}">
+                        <a href="{{ route('vendor.index') }}">
+                            <i class="fas fa-store"></i>
+                            <p>Vendor</p>
+                        </a>
+                    </li>
                 @endif
             </ul>
         </div>

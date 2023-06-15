@@ -16,7 +16,7 @@
                             @method('PUT')
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="name">Name</label>
+                                    <label for="name">Name <font style="color: red;">*</font></label>
                                     <input type="text" id="name" name="name"
                                         class="form-control @error('name') is-invalid @enderror"
                                         value="{{ old('name', $data->name) }}" required>
@@ -27,7 +27,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="value">Value</label>
+                                    <label for="value">Value <font style="color: red;">*</font></label>
                                     <div class="input-group">
                                         <input type="number" id="value" name="value"
                                             value="{{ old('value', $data->value ?? 0) }}"

@@ -58,4 +58,9 @@ class PaymentRequestModel extends Model
     {
         return $this->belongsTo(Bank::class);
     }
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
+    }
 }

@@ -43,7 +43,7 @@
     <tr>
         <td colspan="7"
             style="border-top: none;border-right: none;border-bottom: none;border-image: initial;border-left: 1pt solid black;padding: 0mm;height: 3pt;vertical-align: middle;">
-            <strong><span class="pd-small">{{ $data->name_beneficiary }}</span></strong>
+            <strong><span class="pd-small">{{ $data->vendor->beneficary }}</span></strong>
         </td>
 
         <td
@@ -233,7 +233,7 @@
         </td>
         <td colspan="3"
             style="border-top: none;border-bottom: none;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 9.55pt;vertical-align: middle;">
-            <span class="pd-small">{{ $data->name_beneficiary }}</span>
+            <span class="pd-small">{{ $data->vendor->beneficary }}</span>
         </td>
         <td colspan="2"
             style="border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 8.6pt;vertical-align: middle;">
@@ -254,7 +254,7 @@
             <span class="pd-small">{{ $data->division->name }}</span>
         </td>
         <td colspan="3" style="white-space: nowrap;border: none;padding: 0mm;height: 11pt;vertical-align: middle;">
-            <span class="pd-small">{{ $data->bank_account }}</span>
+            <span class="pd-small">{{ $data->vendor->bank }}</span>
         </td>
 
         <td colspan="3"

@@ -7,6 +7,7 @@ use App\Models\DescriptionModel;
 use App\Models\DivisionModel;
 use App\Models\PaymentRequestModel;
 use App\Models\Vat;
+use App\Models\Vendor;
 use App\Models\Wht;
 use Barryvdh\DomPDF\Facade\Pdf;
 use DateTime;
@@ -32,8 +33,9 @@ class PaymentRequestController extends Controller
     {
         $bank = Bank::all();
         $wht = Wht::all();
+        $vendor = Vendor::all();
         $division = DivisionModel::all();
-        return view('payment_request.add', compact('division', 'wht', 'bank'))->with(['title' => $this->title]);
+        return view('payment_request.add', compact('division', 'wht', 'bank', 'vendor'))->with(['title' => $this->title]);
     }
 
     public function show(PaymentRequestModel $payment)
@@ -55,8 +57,9 @@ class PaymentRequestController extends Controller
         }
         $bank = Bank::where('division_id', $payment->id_division)->get();
         $wht = Wht::all();
+        $vendor = Vendor::all();
         $data = $payment;
-        return view('payment_request.edit', compact('data', 'wht', 'bank'))->with(['title' => $this->title]);
+        return view('payment_request.edit', compact('data', 'wht', 'bank', 'vendor'))->with(['title' => $this->title]);
     }
 
     public function update(Request $request, PaymentRequestModel $payment)
@@ -68,8 +71,7 @@ class PaymentRequestController extends Controller
             'beneficiary_bank'  => 'required|integer|exists:banks,id,division_id,' . $payment->id_division,
             'invoice_date'      => 'required|date_format:Y-m-d',
             'received_date'     => 'required|date_format:Y-m-d|after_or_equal:invoice_date',
-            'name_beneficiary'  => 'required|max:100',
-            'bank_account'      => 'required|max:100',
+            'beneficiary'       => 'required|integer|exists:vendors,id',
             'for'               => 'required|max:100',
             'currency'          => 'required|in:idr,usd,sgd',
             'vat'               => 'required|integer|gte:0',
@@ -100,8 +102,7 @@ class PaymentRequestController extends Controller
             'bank_id'           => $request->beneficiary_bank,
             'invoice_date'      => $request->invoice_date,
             'received_date'     => $request->received_date,
-            'name_beneficiary'  => $request->name_beneficiary,
-            'bank_account'      => $request->bank_account,
+            'vendor_id'         => $request->beneficiary,
             'for'               => $request->for,
             'contract'          => $request->contract,
             'currency'          => $request->currency,
@@ -127,8 +128,7 @@ class PaymentRequestController extends Controller
             'invoice_date'      => 'required|date_format:Y-m-d',
             'received_date'     => 'required|date_format:Y-m-d|after_or_equal:invoice_date',
             'date_pr'           => 'required|date_format:Y-m-d',
-            'name_beneficiary'  => 'required|max:100',
-            'bank_account'      => 'required|max:100',
+            'beneficiary'       => 'required|integer|exists:vendors,id',
             'for'               => 'required|max:100',
             'currency'          => 'required|in:idr,usd,sgd',
             'vat'               => 'required|in:yes,no',
@@ -185,8 +185,7 @@ class PaymentRequestController extends Controller
             'invoice_date'      => $request->invoice_date,
             'received_date'     => $request->received_date,
             'date_pr'           => $request->date_pr,
-            'name_beneficiary'  => $request->name_beneficiary,
-            'bank_account'      => $request->bank_account,
+            'vendor_id'         => $request->beneficiary,
             'for'               => $request->for,
             'contract'          => $request->contract,
             'currency'          => $request->currency,

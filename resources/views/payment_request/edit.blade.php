@@ -107,13 +107,30 @@
                                         </div>
                                     @enderror
                                 </div>
-                                <div class="form-group col-md-6">
+                                {{-- <div class="form-group col-md-6">
                                     <label for="name_beneficiary">Name Beneficiary <font style="color: red;">*</font>
                                     </label>
                                     <input type="text" id="name_beneficiary" name="name_beneficiary"
                                         class="form-control @error('name_beneficiary') is-invalid @enderror"
                                         value="{{ $data->name_beneficiary }}" required>
                                     @error('name_beneficiary')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div> --}}
+                                <div class="form-group col-md-6">
+                                    <label for="beneficiary">Name Beneficiary <font style="color: red;">*</font></label>
+                                    <select class="custom-select @error('beneficiary') is-invalid @enderror"
+                                        id="beneficiary" name="beneficiary" required>
+                                        <option value="">Select beneficiary</option>
+                                        @foreach ($vendor as $item)
+                                            <option {{ $data->vendor_id == $item->id ? 'selected' : '' }}
+                                                data-bank="{{ $item->bank }}" value="{{ $item->id }}">
+                                                {{ $item->beneficary }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('beneficiary')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -125,7 +142,7 @@
                                     <label for="bank_account">Bank A/C <font style="color: red;">*</font></label>
                                     <input type="text" id="bank_account" name="bank_account"
                                         class="form-control @error('bank_account') is-invalid @enderror"
-                                        value="{{ $data->bank_account }}" required>
+                                        value="{{ $data->vendor->bank }}" required disabled readonly>
                                     @error('bank_account')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -250,6 +267,12 @@
     <script>
         $(document).ready(function() {
             mask_angka();
+
+            $('#beneficiary').change(function() {
+                var selectedOption = $(this).find(':selected');
+                var bankValue = selectedOption.data('bank');
+                $('#bank_account').val(bankValue)
+            })
         });
 
         var data = @json($data->desc);

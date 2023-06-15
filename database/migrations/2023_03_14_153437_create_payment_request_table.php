@@ -21,8 +21,6 @@ class CreatePaymentRequestTable extends Migration
             $table->datetime('date_pr')->nullable();
             $table->bigInteger('no_pr')->default(0);
             $table->unsignedBigInteger('id_division');
-            $table->string('name_beneficiary')->nullable();
-            $table->string('bank_account')->nullable();
             $table->string('for')->nullable();
             $table->bigInteger('due_date')->default(0);
             $table->bigInteger('bank_charge')->default(0);
@@ -30,10 +28,12 @@ class CreatePaymentRequestTable extends Migration
             $table->integer('vat')->default(0);
             $table->unsignedBigInteger('wht_id')->nullable();
             $table->unsignedBigInteger('bank_id')->nullable();
+            $table->unsignedBigInteger('vendor_id')->nullable();
             $table->timestamps();
             $table->foreign('wht_id')->references('id')->on('whts')->cascadeOnUpdate()->nullOnDelete();
             $table->foreign('id_division')->references('id')->on('division')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreign('bank_id')->references('id')->on('banks')->cascadeOnUpdate()->nullOnDelete();
+            $table->foreign('vendor_id')->references('id')->on('vendors')->cascadeOnUpdate()->nullOnDelete();
         });
     }
 
