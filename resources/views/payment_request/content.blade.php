@@ -112,7 +112,7 @@
         </td>
     </tr>
     @php
-        $sisa = 19 - count($data->desc);
+        $sisa = 21 - count($data->desc);
     @endphp
     @foreach ($data->desc as $item)
         <tr>
