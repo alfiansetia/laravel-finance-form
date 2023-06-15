@@ -23,8 +23,8 @@ class PaymentRequestModel extends Model
     public function getDeadlineAttribute()
     {
         if ($this->due_date > 0) {
-            $invoice_date = Carbon::parse($this->invoice_date);
-            return $invoice_date->addDays($this->due_date)->format('d-M-y');
+            $received_date = Carbon::parse($this->received_date);
+            return $received_date->addDays($this->due_date)->format('d-M-y');
         } else {
             return 'ASAP';
         }
