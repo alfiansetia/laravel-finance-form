@@ -12,7 +12,7 @@
     $total = $data->total + $vat_value - $wht_value;
     $grand_total = $data->total + $data->bank_charge + $vat_value - $wht_value;
     
-    function breakTextIntoLines($text, $maxCharactersPerLine = 60)
+    function breakTextIntoLines($text, $maxCharactersPerLine = 50)
     {
         $words = explode(' ', $text);
         $lines = [];
@@ -37,7 +37,7 @@
     
     $text = $data->vendor->bank;
     
-    $lines = breakTextIntoLines($text, 60);
+    $lines = breakTextIntoLines($text, 50);
     
 @endphp
 {{-- 
