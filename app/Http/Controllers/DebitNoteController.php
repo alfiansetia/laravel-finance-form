@@ -90,7 +90,7 @@ class DebitNoteController extends Controller
 
         $counti = 1;
         if ($count) {
-            $counti = ($count->getOriginal('no_debit_note') ?? 0) + 1;
+            $counti = ($count->getRawOriginal('no_debit_note') ?? 0) + 1;
         }
 
         $vat_value = 0;

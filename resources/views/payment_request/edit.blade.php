@@ -172,8 +172,8 @@
                                     </div>
                                     <div class="form-group col-md-6 price_form">
                                         <label>Price <font style="color: red;">*</font></label>
-                                        <input type="number" name="price[]" class="form-control" min="1"
-                                            value="{{ $item->price }}" required>
+                                        <input type="text" name="price[]" class="form-control mask-angka"
+                                            min="1" value="{{ $item->price }}" required>
                                     </div>
                                 @endforeach
                                 <div class="form-group col-md-12" id="before">
@@ -222,9 +222,9 @@
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="bank_charge">Bank Charges <font style="color: red;">*</font></label>
-                                    <input type="number" id="bank_charge" name="bank_charge"
-                                        class="form-control @error('bank_charge') is-invalid @enderror" min="0"
-                                        value="{{ $data->bank_charge ?? 0 }}" required>
+                                    <input type="text" id="bank_charge" name="bank_charge"
+                                        class="form-control mask-angka @error('bank_charge') is-invalid @enderror"
+                                        min="0" value="{{ $data->bank_charge ?? 0 }}" required>
                                     @error('bank_charge')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -246,7 +246,12 @@
     </div>
 @endsection
 @push('js')
+    <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
     <script>
+        $(document).ready(function() {
+            mask_angka();
+        });
+
         var data = @json($data->desc);
 
         let totalDesc = data.length;
@@ -255,16 +260,17 @@
             if (totalDesc < 15) {
                 totalDesc++;
                 var form = $(`
-                        <div class="form-group col-md-6 desc_form">
-                            <label>Description</label>
-                            <input type="text" name="description[]" class="form-control" maxlength="120" required>
-                        </div>
-                        <div class="form-group col-md-6 price_form">
-                            <label>Price</label>
-                            <input type="number" name="price[]" class="form-control" min="1" required>
-                        </div>
-        `);
+                    <div class="form-group col-md-6 desc_form">
+                        <label>Description</label>
+                        <input type="text" name="description[]" class="form-control" maxlength="120" required>
+                    </div>
+                    <div class="form-group col-md-6 price_form">
+                        <label>Price</label>
+                        <input type="text" name="price[]" class="form-control mask-angka" min="1" required>
+                    </div>
+                `);
                 $('#before').before(form);
+                mask_angka()
             } else {
                 alert('input description can not be more than 15');
             }
@@ -276,6 +282,17 @@
                 $('#add_desc_form').find('.price_form').last().remove()
                 totalDesc--;
             }
+        }
+
+        function mask_angka() {
+            $('.mask-angka').inputmask({
+                alias: 'numeric',
+                groupSeparator: '.',
+                autoGroup: true,
+                digits: 0,
+                rightAlign: false,
+                removeMaskOnSubmit: true,
+            });
         }
     </script>
 @endpush

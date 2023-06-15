@@ -161,7 +161,8 @@
                                 </div>
                                 <div class="form-group col-md-6 price_form">
                                     <label>Price *</label>
-                                    <input type="number" name="price[]" class="form-control" min="1" required>
+                                    <input type="text" name="price[]" class="form-control mask-angka" min="1"
+                                        required>
                                 </div>
                                 <div class="form-group col-md-12" id="before">
                                     <a id="add_form_desc" onclick="addDesc()"
@@ -215,8 +216,8 @@
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="bank_charge">Bank Charges *</label>
-                                    <input type="number" id="bank_charge" name="bank_charge"
-                                        class="form-control @error('bank_charge') is-invalid @enderror"
+                                    <input type="text" id="bank_charge" name="bank_charge"
+                                        class="form-control mask-angka @error('bank_charge') is-invalid @enderror"
                                         value="{{ old('bank_charge', 0) }}" min="0" required>
                                     @error('bank_charge')
                                         <div class="invalid-feedback">
@@ -239,10 +240,13 @@
     </div>
 @endsection
 @push('js')
+    <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             var today = new Date().toISOString().split('T')[0];
             $('input[type=date]').val(today);
+
+            mask_angka()
         });
 
 
@@ -258,10 +262,11 @@
                         </div>
                         <div class="form-group col-md-6 price_form">
                             <label>Price *</label>
-                            <input type="number" name="price[]" class="form-control" min="1" required>
+                            <input type="text" name="price[]" class="form-control mask-angka" min="1" required>
                         </div>
         `);
                 $('#before').before(form);
+                mask_angka()
             } else {
                 alert('input description can not be more than 15');
             }
@@ -273,6 +278,17 @@
                 $('#add_desc_form').find('.price_form').last().remove()
                 totalDesc--;
             }
+        }
+
+        function mask_angka() {
+            $('.mask-angka').inputmask({
+                alias: 'numeric',
+                groupSeparator: '.',
+                autoGroup: true,
+                digits: 0,
+                rightAlign: false,
+                removeMaskOnSubmit: true,
+            });
         }
     </script>
 @endpush

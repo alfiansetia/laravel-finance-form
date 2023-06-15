@@ -167,10 +167,9 @@ class PaymentRequestController extends Controller
             ->whereMonth('date_pr', $month)
             ->orderByDesc('no_pr')
             ->first();
-
         $counti = 1;
         if ($count) {
-            $counti = ($count->getOriginal('no_pr') ?? 0) + 1;
+            $counti = ($count->getRawOriginal('no_pr') ?? 0) + 1;
         }
 
         $vat_value = 0;
