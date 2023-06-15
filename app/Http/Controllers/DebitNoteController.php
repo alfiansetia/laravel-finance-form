@@ -65,6 +65,7 @@ class DebitNoteController extends Controller
             'vat'                   => 'required|in:yes,no',
             'wht'                   => 'nullable|integer|exists:whts,id',
             'bank_charge'           => 'required|integer|gte:0',
+            'received_from'         => 'required|max:100',
             'description'           => 'required|array|min:1',
             'price'                 => 'required|array|min:1',
             'description.*'         => 'required|max:120',
@@ -171,6 +172,7 @@ class DebitNoteController extends Controller
             'vat'                   => 'required|gte:0',
             'wht'                   => 'nullable|integer|exists:whts,id',
             'bank_charge'           => 'required|integer|gte:0',
+            'received_from'         => 'required|max:100',
             'description'           => 'required|array|min:1',
             'price'                 => 'required|array|min:1',
             'description.*'         => 'required|max:120',
@@ -201,6 +203,7 @@ class DebitNoteController extends Controller
             'wht_id'                => $request->wht,
             'vat'                   => $request->vat,
             'bank_charge'           => $request->bank_charge,
+            'received_from'         => $request->received_from,
         ]);
 
         if ($debit) {

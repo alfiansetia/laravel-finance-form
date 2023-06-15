@@ -11,6 +11,14 @@
     }
     $total = $data->total + $vat_value - $wht_value;
     $grand_total = $data->total + $data->bank_charge + $vat_value - $wht_value;
+    
+@endphp
+
+@php
+    $line = '';
+    for ($i = 0; $i < 50; $i++) {
+        $line .= '&nbsp;';
+    }
 @endphp
 <tbody>
     <tr>
@@ -28,11 +36,11 @@
     <tr>
         <td colspan="7"
             style="border-top: none;border-right: none;border-bottom: none;border-image: initial;border-left: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
-            <strong><span class="pd-small">PAID TO :</span></strong>
+            <strong><span class="pd-small">RECEIVED FROM :</span></strong>
         </td>
         <td
             style="border-top: 1pt solid black;border-right: 1pt solid black;border-bottom: 1pt solid black;border-image: initial;border-left: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
-            <span class="pd-small">NO</span>
+            <span class="pd-small">VOUCHER</span>
         </td>
         <td
             style="text-align: right;border-top: 1pt solid black;border-right: 1pt solid black;border-bottom: 1pt solid black;border-image: initial;border-left: none;padding: 0mm;height: 13pt;vertical-align: middle;">
@@ -42,7 +50,7 @@
     <tr>
         <td colspan="7"
             style="border-top: none;border-right: none;border-bottom: none;border-image: initial;border-left: 1pt solid black;padding: 0mm;height: 3pt;vertical-align: middle;">
-            <strong><span class="pd-small">{{ $data->name_beneficiary }}</span></strong>
+            <strong><span class="pd-small">{{ $data->received_from }}</span></strong>
         </td>
 
         <td
@@ -67,7 +75,7 @@
         </td>
         <td
             style="text-align: center;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
-            <strong><span class="pd-small">Price</span></strong>
+            <strong><span class="pd-small">AMOUNT</span></strong>
         </td>
     </tr>
     <tr>
@@ -188,7 +196,7 @@
     </tr>
     <tr>
         <td colspan="8" class="bold-no-border" style="border-bottom: 3pt solid black;border-top: 1pt solid black">
-            <strong><span class="pd-small">TOTAL
+            <strong><span class="pd-small">TOTAL RECEIVED
                     {{ $data->currency == 'idr' ? 'Rp' : ($data->currency == 'usd' ? '$' : 'S$') }}</span></strong>
         </td>
         <td class="bold-border" style="border-bottom: 3pt solid black">
@@ -230,13 +238,13 @@
         </td>
         <td colspan="1"
             style="border-top: none;border-bottom: none;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 11pt;vertical-align: middle;">
-            <span class="pd-xs">: 01-May-23</span>
+            <span class="pd-xs">: {{ $data->no_invoice }}</span>
         </td>
     </tr>
     <tr>
         <td colspan="6"
             style="white-space: nowrap;border-top: none;border-left: 1pt solid black;border-bottom: none;border-right: 1pt solid black;padding: 0mm;height: 11pt;vertical-align: middle;">
-            <span class="pd-small"></span>
+            <span class="pd-small">{{ $data->bank->name }}</span>
         </td>
         <td colspan="2"
             style="border-top: none;border-bottom: none;border-left: 1pt solid black;border-image: initial;border-right: none;padding: 0mm;height: 11pt;vertical-align: middle;">
@@ -244,7 +252,7 @@
         </td>
         <td colspan="1"
             style="border-top: none;border-bottom: none;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 11pt;vertical-align: middle;">
-            <span class="pd-xs">: 01-May-23</span>
+            <span class="pd-xs">: {{ date('d-M-y', strtotime($data->invoice_date)) }}</span>
         </td>
     </tr>
     <tr>
@@ -258,7 +266,7 @@
         </td>
         <td colspan="1"
             style="border-top: none;border-bottom: none;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 11pt;vertical-align: middle;">
-            <span class="pd-xs">: 01-May-23</span>
+            <span class="pd-xs">: {{ $data->tax_invoice_serial_no }}</span>
         </td>
     </tr>
     <tr>
@@ -272,7 +280,7 @@
         </td>
         <td colspan="1"
             style="border-top: none;border-bottom: none;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 11pt;vertical-align: middle;">
-            <span class="pd-xs">: 01-May-23</span>
+            <span class="pd-xs">: {{ date('d-M-y', strtotime($data->tax_invoice_date)) }}</span>
         </td>
     </tr>
     <tr>
@@ -286,7 +294,7 @@
         </td>
         <td colspan="1"
             style="border-top: none;border-bottom: none;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 11pt;vertical-align: middle;">
-            <span class="pd-xs">: 01-May-23</span>
+            <span class="pd-xs">:</span>
         </td>
     </tr>
 
@@ -303,7 +311,7 @@
         </td>
         <td colspan="1"
             style="border-top: none;border-bottom: 1pt solid black;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 11pt;vertical-align: middle;">
-            <span class="pd-xs">: 01-May-23</span>
+            <span class="pd-xs">:</span>
         </td>
     </tr>
     <tr>
@@ -321,7 +329,7 @@
         </td>
         <td
             style="text-align: center;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 9.6pt;vertical-align: middle;">
-            <span class="pd-small">{{ date('d-M-y', strtotime($data->received_date)) }}</span>
+            <span class="pd-small">{{ date('d-M-y', strtotime($data->invoice_date)) }}</span>
         </td>
         <td
             style="width: 30px;border-top: none;border-bottom: none;border-left: none;border-image: initial;border-right: none;padding: 0mm;height: 9.6pt;vertical-align: middle;">
@@ -329,7 +337,7 @@
         </td>
         <td colspan="2"
             style="border-top: none;border-bottom: none;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 9.6pt;vertical-align: middle;">
-            <span></span>
+            <span><u>{!! $line !!}</u></span>
         </td>
     </tr>
     <tr>
@@ -364,7 +372,7 @@
         </td>
         <td colspan="2"
             style="border-top: none;border-bottom: none;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 9.6pt;vertical-align: middle;">
-            <span>__</span>
+            <span><u>{!! $line !!}</u></span>
         </td>
     </tr>
     <tr>
@@ -380,7 +388,7 @@
         </td>
         <td colspan="2"
             style="border-top: none;border-bottom: none;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 9.6pt;vertical-align: middle;">
-            <span>__</span>
+            <span><u>{!! $line !!}</u></span>
         </td>
     </tr>
     <tr>
@@ -396,7 +404,7 @@
         </td>
         <td colspan="2"
             style="border-top: none;border-bottom: none;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 9.6pt;vertical-align: middle;">
-            <span>__</span>
+            <span><u>{!! $line !!}</u></span>
         </td>
     </tr>
     <tr>
@@ -412,7 +420,7 @@
         </td>
         <td colspan="2"
             style="border-top: none;border-bottom: none;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 9.6pt;vertical-align: middle;">
-            <span>__</span>
+            <span><u>{!! $line !!}</u></span>
         </td>
     </tr>
     <tr>
@@ -428,7 +436,7 @@
         </td>
         <td colspan="2"
             style="height: 5px;border-top: none;border-bottom: none;border-left: none;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 9.6pt;vertical-align: middle;">
-            <span>__</span>
+            <span><u>{!! $line !!}</u></span>
         </td>
     </tr>
     <tr>
