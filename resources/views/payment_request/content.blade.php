@@ -11,7 +11,42 @@
     }
     $total = $data->total + $vat_value - $wht_value;
     $grand_total = $data->total + $data->bank_charge + $vat_value - $wht_value;
+    
+    function breakTextIntoLines($text, $maxCharactersPerLine = 60)
+    {
+        $words = explode(' ', $text);
+        $lines = [];
+        $currentLine = '';
+    
+        foreach ($words as $word) {
+            $newLine = $currentLine . ' ' . $word;
+            $newLineLength = strlen($newLine);
+    
+            if ($newLineLength <= $maxCharactersPerLine) {
+                $currentLine = $newLine;
+            } else {
+                $lines[] = trim($currentLine);
+                $currentLine = $word;
+            }
+        }
+    
+        $lines[] = trim($currentLine);
+    
+        return $lines;
+    }
+    
+    $text = $data->vendor->bank;
+    
+    $lines = breakTextIntoLines($text, 60);
+    
 @endphp
+{{-- 
+{{ count($lines) }}
+
+@foreach ($lines as $item)
+    <br>
+    {{ $item }}
+@endforeach --}}
 <tbody>
     <tr>
         <td colspan="9"
@@ -77,7 +112,7 @@
         </td>
     </tr>
     @php
-        $sisa = 21 - count($data->desc);
+        $sisa = 19 - count($data->desc);
     @endphp
     @foreach ($data->desc as $item)
         <tr>
@@ -254,9 +289,14 @@
             <span class="pd-small">{{ $data->division->name }}</span>
         </td>
         <td colspan="3" style="white-space: nowrap;border: none;padding: 0mm;height: 11pt;vertical-align: middle;">
-            <span class="pd-small">{{ $data->vendor->bank }}</span>
+            <span class="pd-small">
+                @if (count($lines) < 2)
+                    {{ $data->vendor->bank }}
+                @elseif(count($lines) > 1)
+                    {{ $lines[0] }}
+                @endif
+            </span>
         </td>
-
         <td colspan="3"
             style="border-top: none;border-bottom: none;border-left: 1pt solid black;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 11pt;vertical-align: middle;">
             <span class="pd-xs">[ &nbsp; &nbsp; &nbsp;] ORIGINAL INVOICE + MATERAI</span>
@@ -269,10 +309,12 @@
                 <span class="pd-small"></span>
             </p>
         </td>
-        <td colspan="3" style="border: none;padding: 0mm;height: 11pt;vertical-align: middle;">
-            <p style='margin:0mm;margin-left:8.7pt;line-height:8.6pt;'>
-                <span class="pd-small"></span>
-            </p>
+        <td colspan="3" style="white-space: nowrap;border: none;padding: 0mm;height: 11pt;vertical-align: middle;">
+            <span class="pd-small">
+                @if (count($lines) >= 2)
+                    {{ $lines[1] }}
+                @endif
+            </span>
         </td>
         <td colspan="3"
             style="border-top: none;border-bottom: none;border-left: 1pt solid black;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 11pt;vertical-align: middle;">
@@ -286,8 +328,12 @@
                 <span class="pd-small"></span>
             </p>
         </td>
-        <td colspan="3" style="border: none;padding: 0mm;height: 11pt;vertical-align: middle;">
-            <span class="pd-small"></span>
+        <td colspan="3" style="white-space: nowrap;border: none;padding: 0mm;height: 11pt;vertical-align: middle;">
+            <span class="pd-small">
+                @if (count($lines) >= 3)
+                    {{ $lines[2] }}
+                @endif
+            </span>
         </td>
         <td colspan="3"
             style="border-top: none;border-bottom: none;border-left: 1pt solid black;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 11pt;vertical-align: middle;">
@@ -305,9 +351,11 @@
         </td>
         <td colspan="3"
             style="border: none;border-bottom: 1pt solid black;padding: 0mm;height: 11pt;vertical-align: middle;">
-            <p style='margin:0mm;margin-left:8.7pt;line-height:8.6pt;'>
-                <span class="pd-small"></span>
-            </p>
+            <span class="pd-small">
+                @if (count($lines) >= 4)
+                    {{ $lines[3] }}
+                @endif
+            </span>
         </td>
         <td colspan="3"
             style="border-top: none;border-bottom: none;border-left: 1pt solid black;border-image: initial;border-right: 1pt solid black;padding: 0mm;height: 11pt;vertical-align: middle;">

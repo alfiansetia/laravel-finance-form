@@ -19,7 +19,7 @@
                                     <label for="name_beneficary">Name Beneficary <font style="color: red;">*</font></label>
                                     <input type="text" id="name_beneficary" name="name_beneficary"
                                         class="form-control @error('name_beneficary') is-invalid @enderror"
-                                        value="{{ $data->beneficary }}" placeholder="Input Name Beneficary" required>
+                                        value="{{ $data->beneficary }}" placeholder="Input Name Beneficary" maxlength="50" required>
                                     @error('name_beneficary')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -30,7 +30,7 @@
                                     <label for="bank">Bank Account <font style="color: red;">*</font></label>
                                     <input type="text" id="bank" name="bank"
                                         class="form-control @error('bank') is-invalid @enderror" value="{{ $data->bank }}"
-                                        placeholder="Input Bank Account" required>
+                                        placeholder="Input Bank Account" maxlength="150" required>
                                     @error('bank')
                                         <div class="invalid-feedback">
                                             {{ $message }}

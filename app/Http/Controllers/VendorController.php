@@ -45,7 +45,7 @@ class VendorController extends Controller
         $this->validate($request, [
             'name_beneficary'   => 'required|max:50',
             'bank'      => [
-                'required', 'max:50',
+                'required', 'max:150',
                 Rule::unique('vendors')->where(function ($query) use ($request) {
                     return $query->where('beneficary', $request->name_beneficary);
                 })
@@ -103,7 +103,7 @@ class VendorController extends Controller
         $this->validate($request, [
             'name_beneficary'   => 'required|max:50',
             'bank'      => [
-                'required', 'max:50',
+                'required', 'max:150',
                 Rule::unique('vendors')->where(function ($query) use ($request, $vendor) {
                     return $query->where('beneficary', $request->name_beneficary)->where('id', '!=', $vendor->id);
                 })
