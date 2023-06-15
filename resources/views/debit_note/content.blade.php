@@ -177,8 +177,9 @@
 
     <tr>
         <td colspan="8" class="bold-no-border">
-            <strong><span class="pd-small">Convert to
-                    {{ $data->currency == 'idr' ? 'Rp' : ($data->currency == 'usd' ? '$' : 'S$') }}</span></strong>
+            <strong><span class="pd-small">Convert to Rp
+                    {{-- {{ $data->currency == 'idr' ? 'Rp' : ($data->currency == 'usd' ? '$' : 'S$') }} --}}
+                </span></strong>
         </td>
         <td class="bold-border">
             <strong><span class="pd-small"></span></strong>
