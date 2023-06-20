@@ -63,7 +63,7 @@
             font-family: "Calibri", sans-serif;
             padding-left: 5pt;
             padding-right: 5pt;
-            font-size: 9px;
+            font-size: 10px;
         }
 
         .pd-big {
