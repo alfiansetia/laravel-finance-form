@@ -36,7 +36,7 @@
                                             <td class="text-center"> {{ date('d-M-Y', strtotime($item->date_pr)) }} </td>
                                             <td class="text-center">{{ $item->no_pr }}</td>
                                             <td class="text-center">{{ $item->vendor->beneficary }}</td>
-                                            <td class="text-center">{{ $item->vendor->bank }}</td>
+                                            <td class="text-center">{{ substr($item->vendor->bank, 0, 30) }}</td>
                                             <td class="text-center">{{ $item->bank->name }}</td>
                                             <td class="text-center">
                                                 <div class="btn-group" role="group" aria-label="Basic example">

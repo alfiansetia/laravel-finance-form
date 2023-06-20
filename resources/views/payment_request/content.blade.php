@@ -363,13 +363,13 @@
         </td>
     </tr>
     <tr>
-        <td colspan="2"
+        <td 
             style="border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0mm;height: 9.55pt;vertical-align: middle;">
             <span class="pd-small">Paid by</span>
         </td>
-        <td
+        <td colspan="2"
             style="white-space: nowrap;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 9.55pt;vertical-align: middle;">
-            <span class="pd-small">{{-- Internet Banking --}}</span>
+            <span class="pd-small">Internet Banking</span>
         </td>
         <td colspan="2"
             style="border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 9.55pt;vertical-align: middle;">
@@ -390,7 +390,7 @@
             <span class="pd-small">Due Date (days)</span>
         </td>
         <td
-            style="text-align: center;width: 30px;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 9.6pt;vertical-align: middle;">
+            style="width: 30px;text-align: center;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 9.6pt;vertical-align: middle;">
             <span class="pd-small" style="color: red">{{ $data->due_date }}
             </span>
         </td>
@@ -411,14 +411,14 @@
             <span class="pd-xs">[ &nbsp; &nbsp; &nbsp;] COPY OF PURCHASE ORDER</span>
         </td>
     </tr>
-    <tr>
-        <td style="height: 1pt;border-left:1pt solid black;border-bottom:1pt solid black;" colspan="3">
+    {{-- <tr>
+        <td style="height: 0.5pt;border-left:1pt solid black;border-bottom:1pt solid black;" colspan="3">
         </td>
         <td colspan="2"></td>
         <td style="height: 1pt;border-right:1pt solid black;border-bottom:1pt solid black;" colspan="1">
         </td>
         <td style="height: 1pt;border-right:1pt solid black;" colspan="3"></td>
-    </tr>
+    </tr> --}}
     <tr>
         <td colspan="2"
             style="text-align: center;border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0mm;height: 13.4pt;vertical-align: middle;">
