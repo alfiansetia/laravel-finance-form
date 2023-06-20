@@ -129,9 +129,9 @@
                                     <select class="form-control select2 @error('beneficiary') is-invalid @enderror"
                                         id="beneficiary" name="beneficiary" style="width: 100%;" required>
                                         <option value="">Select beneficiary</option>
-                                        @foreach ($vendor as $item)
+                                        @foreach ($vendor as $key => $item)
                                             <option data-bank="{{ $item->bank }}" value="{{ $item->id }}">
-                                                {{ $item->beneficary }}</option>
+                                                {{ $item->beneficary }} ({{ $key + 1 }})</option>
                                         @endforeach
                                     </select>
                                     @error('beneficiary')
