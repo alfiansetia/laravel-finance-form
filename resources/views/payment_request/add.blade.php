@@ -1,5 +1,8 @@
 @extends('components.template')
-
+@push('css')
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endpush
 @section('content')
     <div class="page-inner">
         <div class="row">
@@ -37,7 +40,8 @@
                                         <option value="">Select Bank</option>
                                         @foreach ($bank as $item)
                                             <option {{ old('beneficiary_bank') == $item->id ? 'selected' : '' }}
-                                                value="{{ $item->id }}">{{ $item->name }} {{ $item->division->name }}
+                                                value="{{ $item->id }}">{{ $item->name }}
+                                                {{ $item->division->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -122,8 +126,8 @@
                                 </div> --}}
                                 <div class="form-group col-md-6">
                                     <label for="beneficiary">Name Beneficiary <font style="color: red;">*</font></label>
-                                    <select class="custom-select @error('beneficiary') is-invalid @enderror"
-                                        id="beneficiary" name="beneficiary" required>
+                                    <select class="form-control select2 @error('beneficiary') is-invalid @enderror"
+                                        id="beneficiary" name="beneficiary" style="width: 100%;" required>
                                         <option value="">Select beneficiary</option>
                                         @foreach ($vendor as $item)
                                             <option data-bank="{{ $item->bank }}" value="{{ $item->id }}">
@@ -140,9 +144,8 @@
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="bank_account">Bank A/C <font style="color: red;">*</font></label>
-                                    <input type="text" id="bank_account" name="bank_account"
-                                        class="form-control @error('bank_account') is-invalid @enderror"
-                                        value="{{ old('bank_account') }}" required disabled readonly>
+                                    <textarea class="form-control @error('bank_account') is-invalid @enderror" name="bank_account" id="bank_account"
+                                        disabled readonly required>{{ old('bank_account') }}</textarea>
                                     @error('bank_account')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -266,6 +269,7 @@
     </div>
 @endsection
 @push('js')
+    <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
     <script>
         $(document).ready(function() {
@@ -278,6 +282,10 @@
                 var selectedOption = $(this).find(':selected');
                 var bankValue = selectedOption.data('bank');
                 $('#bank_account').val(bankValue)
+            })
+
+            $('.select2').select2({
+                theme: 'bootstrap4'
             })
         });
 
