@@ -62,12 +62,22 @@
                                         </div>
                                     @enderror
                                 </div>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-3">
                                     <label for="due_date">Due Date <font style="color: red;">*</font></label>
                                     <input type="number" id="due_date" name="due_date"
                                         class="form-control @error('due_date') is-invalid @enderror" min="0"
                                         value="{{ $data->due_date ?? 0 }}" required>
                                     @error('due_date')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="deadline">Deadline</label>
+                                    <input type="date" id="deadline" name="deadline"
+                                        class="form-control @error('deadline') is-invalid @enderror" required readonly>
+                                    @error('deadline')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -267,9 +277,12 @@
 @push('js')
     <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             mask_angka();
+
+            set_deadline()
 
             $('#beneficiary').change(function() {
                 var selectedOption = $(this).find(':selected');
@@ -280,7 +293,22 @@
             $('.select2').select2({
                 theme: 'bootstrap4'
             })
+
+            $('#received_date').change(function() {
+                set_deadline()
+            })
+
+            $('#due_date').change(function() {
+                set_deadline()
+            })
         });
+
+        function set_deadline() {
+            var received_date = moment($('#received_date').val());
+            var dueDate = parseInt($('#due_date').val())
+            var deadline = received_date.clone().add(dueDate, 'days');
+            $('#deadline').val(deadline.format('YYYY-MM-DD'));
+        }
 
         var data = @json($data->desc);
 
