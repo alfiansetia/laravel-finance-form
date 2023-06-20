@@ -18,7 +18,8 @@
                                     <label for="name_beneficary">Name Beneficary <font style="color: red;">*</font></label>
                                     <input type="text" id="name_beneficary" name="name_beneficary"
                                         class="form-control @error('name_beneficary') is-invalid @enderror"
-                                        value="{{ old('name_beneficary') }}" placeholder="Input Name Beneficary" maxlength="50" required>
+                                        value="{{ old('name_beneficary') }}" placeholder="Input Name Beneficary"
+                                        maxlength="50" required>
                                     @error('name_beneficary')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -31,6 +32,18 @@
                                         class="form-control @error('bank') is-invalid @enderror" value="{{ old('bank') }}"
                                         placeholder="Input Bank Account" maxlength="150" required>
                                     @error('bank')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="detail">Detail Account <font style="color: red;">*</font></label>
+                                    <textarea placeholder="Input Detail Account" name="detail" id="detail"
+                                        class="form-control @error('detail') is-invalid @enderror">{{ old('detail') }}</textarea>
+                                    @error('detail')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>

@@ -21,6 +21,7 @@
                                         <th class="text-center" style="width: 30px;">No.</th>
                                         <th class="text-center">Name Beneficary</th>
                                         <th class="text-center">Bank Account</th>
+                                        <th class="text-center">Detail</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -30,6 +31,7 @@
                                             <td class="text-center"> {{ $key + 1 }} </td>
                                             <td class="text-center">{{ $item->beneficary }}</td>
                                             <td class="text-center">{{ $item->bank }}</td>
+                                            <td class="text-center">{{ $item->detail }}</td>
                                             <td class="text-center">
                                                 <div class="btn-group" role="group" aria-label="Basic example">
                                                     <a href="{{ route('vendor.edit', $item->id) }}"
@@ -64,11 +66,11 @@
             $('#table').DataTable({
                 "columnDefs": [{
                         "orderable": false,
-                        "targets": [3]
+                        "targets": [4]
                     },
                     {
                         "searchable": false,
-                        "targets": [3]
+                        "targets": [4]
                     },
                 ]
             });

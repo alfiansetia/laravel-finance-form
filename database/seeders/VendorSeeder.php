@@ -16,22 +16,26 @@ class VendorSeeder extends Seeder
     {
         Vendor::create([
             'beneficary' => 'PT JAYA',
-            'bank'       => 'BRI 1234566789'
+            'bank'       => 'BRI 1234566789',
+            'detail'     => 'A'
         ]);
 
         Vendor::create([
             'beneficary' => 'PT JAYA',
-            'bank'       => 'BCA 1234566789'
+            'bank'       => 'BCA 1234566789',
+            'detail'     => 'B'
         ]);
 
         Vendor::create([
             'beneficary' => 'PT MAKMUR',
-            'bank'       => 'BRI 1234566789'
+            'bank'       => 'BRI 1234566789',
+            'detail'     => 'C'
         ]);
 
         Vendor::create([
             'beneficary' => 'PT MAKMUR',
-            'bank'       => 'BNI 1234566789'
+            'bank'       => 'BNI 1234566789',
+            'detail'     => 'D'
         ]);
     }
 }

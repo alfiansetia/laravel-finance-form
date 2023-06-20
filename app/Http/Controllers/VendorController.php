@@ -44,6 +44,7 @@ class VendorController extends Controller
     {
         $this->validate($request, [
             'name_beneficary'   => 'required|max:50',
+            'detail'    => 'nullable|max:100',
             'bank'      => [
                 'required', 'max:150',
                 Rule::unique('vendors')->where(function ($query) use ($request) {
@@ -54,6 +55,7 @@ class VendorController extends Controller
         $vendor = Vendor::create([
             'beneficary'    => $request->name_beneficary,
             'bank'          => $request->bank,
+            'detail'        => $request->detail,
         ]);
         if ($vendor) {
             return redirect()->route('vendor.index')->with(['success' => 'Data berhasil diubah!']);
@@ -102,6 +104,7 @@ class VendorController extends Controller
         }
         $this->validate($request, [
             'name_beneficary'   => 'required|max:50',
+            'detail'    => 'nullable|max:100',
             'bank'      => [
                 'required', 'max:150',
                 Rule::unique('vendors')->where(function ($query) use ($request, $vendor) {
@@ -113,6 +116,7 @@ class VendorController extends Controller
         $vendor = $vendor->update([
             'beneficary'    => $request->name_beneficary,
             'bank'          => $request->bank,
+            'detail'        => $request->detail,
         ]);
 
         if ($vendor) {

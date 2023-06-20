@@ -130,7 +130,7 @@
                                         @foreach ($vendor as $key => $item)
                                             <option {{ $data->vendor_id == $item->id ? 'selected' : '' }}
                                                 data-bank="{{ $item->bank }}" value="{{ $item->id }}">
-                                                {{ $key + 1 }}. {{ $item->beneficary }}</option>
+                                                {{ $item->beneficary }} ({{ $item->detail }})</option>
                                         @endforeach
                                     </select>
                                     @error('beneficiary')

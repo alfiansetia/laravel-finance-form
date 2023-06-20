@@ -17,6 +17,7 @@ class CreateVendorsTable extends Migration
             $table->id();
             $table->string('beneficary');
             $table->string('bank');
+            $table->string('detail')->nullable();
             $table->timestamps();
         });
     }
