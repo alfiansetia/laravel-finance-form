@@ -173,7 +173,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="form-row" id="add_desc_form">
+                            <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="currency">Type Currency <font style="color: red;">*</font></label>
                                     <select class="form-control @error('currency') is-invalid @enderror" id="currency"
