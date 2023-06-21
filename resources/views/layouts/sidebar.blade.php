@@ -91,13 +91,13 @@
                             </ul>
                         </div>
                     </li>
-                    <li class="nav-item {{ $title == 'Vendor' ? 'active' : '' }}">
+                    <li class="nav-item {{ $title == 'Beneficiary' ? 'active' : '' }}">
                         <a href="{{ route('vendor.index') }}">
                             <i class="fas fa-store"></i>
                             <p>Beneficiary</p>
                         </a>
                     </li>
-                    <li class="nav-item {{ $title == 'User' ? 'active' : '' }}">
+                    <li class="nav-item {{ $title == 'Role Management' ? 'active' : '' }}">
                         <a href="{{ route('user.index') }}">
                             <i class="fas fa-user-alt"></i>
                             <p>Role Management</p>

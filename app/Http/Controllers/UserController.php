@@ -11,7 +11,7 @@ use Illuminate\Validation\Rules\Password;
 class UserController extends Controller
 {
 
-    private $title = 'User';
+    private $title = 'Role Management';
 
     public function __construct()
     {

@@ -8,7 +8,7 @@ use Illuminate\Validation\Rule;
 
 class VendorController extends Controller
 {
-    private $title = 'Vendor';
+    private $title = 'Beneficiary';
     public function __construct()
     {
         $this->middleware('role');
