@@ -94,13 +94,13 @@
                     <li class="nav-item {{ $title == 'Beneficiary' ? 'active' : '' }}">
                         <a href="{{ route('vendor.index') }}">
                             <i class="fas fa-store"></i>
-                            <p>Beneficiary</p>
+                            <p>Vendor</p>
                         </a>
                     </li>
                     <li class="nav-item {{ $title == 'Role Management' ? 'active' : '' }}">
                         <a href="{{ route('user.index') }}">
                             <i class="fas fa-user-alt"></i>
-                            <p>Role Management</p>
+                            <p>User Account</p>
                         </a>
                     </li>
                 @endif
