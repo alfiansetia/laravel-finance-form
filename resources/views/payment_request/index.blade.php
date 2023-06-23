@@ -24,7 +24,7 @@
                                         <th class="text-center">No PR Voucher</th>
                                         <th class="text-center">Name Beneficiary</th>
                                         <th class="text-center">Bank A/C</th>
-                                        <th class="text-center">Bank</th>
+                                        <th class="text-center">For</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
