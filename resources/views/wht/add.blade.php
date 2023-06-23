@@ -28,9 +28,9 @@
                                 <div class="form-group col-md-6">
                                     <label for="value">Value <font style="color: red;">*</font></label>
                                     <div class="input-group">
-                                        <input type="number" id="value" name="value" value="{{ old('value', 0) }}"
+                                        <input type="text" id="value" name="value" value="{{ old('value', 0) }}"
                                             class="form-control @error('value') is-invalid @enderror" min="0"
-                                            required>
+                                            required pattern="[0-9]+(\.[0-9]+)?" step="any">
                                         <div class="input-group-append">
                                             <span class="input-group-text" id="inputGroupPrepend3">%</span>
                                         </div>

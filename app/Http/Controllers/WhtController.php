@@ -46,12 +46,11 @@ class WhtController extends Controller
     {
         $this->validate($request, [
             'name'  => 'required',
-            'value' => 'required|integer|gt:0',
+            'value' => "required|numeric|gt:0|regex:/^\d+(\.\d{1})?$/",
         ], [
             'name.required'     => 'Name Wajib diisi',
-            'name.unique'       => 'Name sudah ada!',
             'value.required'    => 'Value Wajib diisi!',
-            'value.integer'     => 'Value harus berupa angka!',
+            'value.numeric'     => 'Value harus berupa numeric!',
             'value.gt'          => 'Value harus lebih dari 0!',
         ]);
         $wht = Wht::create([
@@ -105,12 +104,11 @@ class WhtController extends Controller
         }
         $this->validate($request, [
             'name'  => 'required',
-            'value' => 'required|integer|gt:0',
+            'value' => "required|numeric|gt:0|regex:/^\d+(\.\d{1})?$/",
         ], [
             'name.required'     => 'Name Wajib diisi',
-            'name.unique'       => 'Name sudah ada!',
             'value.required'    => 'Value Wajib diisi!',
-            'value.integer'     => 'Value harus berupa angka!',
+            'value.numeric'     => 'Value harus berupa numeric!',
             'value.gt'          => 'Value harus lebih dari 0!',
         ]);
         $wht = $wht->update([

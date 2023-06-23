@@ -16,7 +16,7 @@ class CreateWhtsTable extends Migration
         Schema::create('whts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('value')->default(0);
+            $table->float('value', 8, 1)->default(0);
             $table->timestamps();
         });
     }
