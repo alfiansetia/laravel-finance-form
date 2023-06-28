@@ -46,7 +46,7 @@ class WhtController extends Controller
     {
         $this->validate($request, [
             'name'  => 'required',
-            'value' => "required|numeric|gt:0|regex:/^\d+(\.\d{1})?$/",
+            'value' => "required|numeric|gt:0|regex:/^\d+(\.\d{2})?$/",
         ], [
             'name.required'     => 'Name Wajib diisi',
             'value.required'    => 'Value Wajib diisi!',
@@ -104,7 +104,7 @@ class WhtController extends Controller
         }
         $this->validate($request, [
             'name'  => 'required',
-            'value' => "required|numeric|gt:0|regex:/^\d+(\.\d{1})?$/",
+            'value' => "required|numeric|gt:0|regex:/^\d+(\.\d{2})?$/",
         ], [
             'name.required'     => 'Name Wajib diisi',
             'value.required'    => 'Value Wajib diisi!',
