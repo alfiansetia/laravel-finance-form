@@ -90,8 +90,16 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex align-items-center">
-                            <h4 class="card-title">Detail {{ $title }} {{ $data->no_pr }}</h4>
-                            <a href="{{ route('payment.edit', $data->id) }}" class="btn btn-secondary btn-round ml-auto">
+                            <h4 class="card-title">Detail {{ $title }} {{ $data->no_pr }} <span
+                                    class="badge badge-info">{{ $data->status }}</span></h4>
+
+                            @if ($data->status != 'paid')
+                                <button class="btn btn-warning btn-round ml-auto" data-toggle="modal"
+                                    data-target="#exampleModal">
+                                    <i class="fas fa-thumbs-up mr-1"></i>State</button>
+                            @endif
+                            <a href="{{ route('payment.edit', $data->id) }}"
+                                class="btn btn-secondary btn-round ml-2 {{ $data->status != 'paid' ? '' : 'ml-auto' }}">
                                 <i class="fas fa-edit mr-1"></i>Edit
                             </a>
                             <a href="{{ route('payment.download', $data->id) }}" class="btn btn-primary btn-round ml-2"
@@ -113,4 +121,57 @@
             </div>
         </div>
     </div>
+
+    @if ($data->status != 'paid')
+        <form method="POST" action="{{ route('payment.status', $data->id) }}">
+            @csrf
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ubah Status</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Status</label>
+                                <div class="form-inline">
+                                    <div class="form-check mr-3">
+                                        <input class="form-check-input" type="radio" name="status" id="status1"
+                                            value="pending" {{ $data->status == 'pending' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="status1">Pending</label>
+                                    </div>
+                                    <div class="form-check mr-3">
+                                        <input class="form-check-input" type="radio" name="status" id="status2"
+                                            value="processing" {{ $data->status == 'processing' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="status2">Processing</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="status" id="status3"
+                                            value="paid" {{ $data->status == 'paid' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="status3">Paid</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="status" id="status4"
+                                            value="reject" {{ $data->status == 'reject' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="status4">Reject</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="note">Note</label>
+                                <textarea class="form-control" name="note" id="note" rows="3" maxlength="150"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    @endif
 @endsection

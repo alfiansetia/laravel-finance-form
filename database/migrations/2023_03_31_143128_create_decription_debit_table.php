@@ -17,6 +17,7 @@ class CreateDecriptionDebitTable extends Migration
             $table->id();
             $table->string('value');
             $table->bigInteger('price')->default(0);
+            $table->enum('type', ['reg', 'add'])->default('reg');
             $table->unsignedBigInteger('id_debit_note');
             $table->timestamps();
             $table->foreign('id_debit_note')->references('id')->on('debit_note')->cascadeOnUpdate()->cascadeOnDelete();

@@ -93,7 +93,6 @@
             swal({
                 title: 'Delete Data?',
                 icon: "warning",
-                type: 'warning',
                 buttons: {
                     confirm: {
                         text: 'Yes',

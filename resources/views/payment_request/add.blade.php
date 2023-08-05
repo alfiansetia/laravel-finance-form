@@ -202,8 +202,7 @@
                                 </div>
                                 <div class="form-group col-md-6 price_form">
                                     <label>Price <font style="color: red;">*</font></label>
-                                    <input type="text" name="price[]" class="form-control mask-angka" min="1"
-                                        required>
+                                    <input type="text" name="price[]" class="form-control mask-angka" required>
                                 </div>
                                 <div class="form-group col-md-12" id="before">
                                     <a id="add_form_desc" onclick="addDesc()"
@@ -265,6 +264,12 @@
                                         </div>
                                     @enderror
                                 </div>
+                                <div class="form-group col-md-6 align-items-end">
+                                    <button type="button" id="btn_add" class="btn btn-primary">Show Additional</button>
+                                </div>
+                            </div>
+                            <div class="form-row" id="add_desc_form_add" style="display: none">
+
                             </div>
                             <div class="text-right">
                                 <a href="{{ route('payment.index') }}" class="btn btn-md btn-secondary ml-auto mr-2"><i
@@ -308,7 +313,46 @@
             $('#due_date').change(function() {
                 set_deadline()
             })
+
+            var show = false
+
+            $('#btn_add').click(function() {
+                let html = element_form()
+                if (show) {
+                    $('#add_desc_form_add').html('')
+                    $('#add_desc_form_add').hide()
+                    show = false
+                    $(this).text('Show Additonal')
+                } else {
+                    $('#add_desc_form_add').html(html)
+                    $('#add_desc_form_add').show()
+                    show = true
+                    $(this).text('Hide Additonal')
+                }
+                cek_desc()
+            })
         });
+
+        function element_form() {
+            return `<div class="form-group col-md-6 desc_form_add">
+                                    <label>Description <font style="color: red;">*</font></label>
+                                    <input type="text" name="description_add[]" class="form-control" maxlength="120"
+                                        required>
+                                </div>
+                                <div class="form-group col-md-6 price_form">
+                                    <label>Price <font style="color: red;">*</font></label>
+                                    <input type="text" name="price_add[]" class="form-control mask-angka" required>
+                                </div>
+                                <div class="form-group col-md-12" id="before_add">
+                                    <a id="add_form_desc_add" onclick="addDesc_add()"
+                                        class="btn btn-sm btn-success float-right mt-2" style="color: white;">Add
+                                        Description</a>
+                                    <a id="remove_form_desc_add" onclick="removeDesc_add()"
+                                        class="btn btn-sm btn-danger float-right mt-2 mr-1" style="color: white;">Remove
+                                        Description</a>
+                                </div>`
+        }
+
 
         function set_deadline() {
             var received_date = moment($('#received_date').val());
@@ -317,12 +361,12 @@
             $('#deadline').val(deadline.format('YYYY-MM-DD'));
         }
 
-
-        let totalDesc = 1;
+        var desc = 0
+        var desc_add = 0
 
         function addDesc(count) {
-            if (totalDesc < 16) {
-                totalDesc++;
+            let totalDesc = desc + desc_add
+            if (totalDesc < 15) {
                 var form = $(`
                             <div class="form-group col-md-6 desc_form">
                                 <label>Description <font style="color: red;">*</font></label>
@@ -330,7 +374,7 @@
                             </div>
                             <div class="form-group col-md-6 price_form">
                                 <label>Price <font style="color: red;">*</font></label>
-                                <input type="text" name="price[]" class="form-control mask-angka" min="1" required>
+                                <input type="text" name="price[]" class="form-control mask-angka" required>
                             </div>
             `);
                 $('#before').before(form);
@@ -338,14 +382,51 @@
             } else {
                 alert('input description can not be more than 15');
             }
+            cek_desc()
         }
 
         function removeDesc() {
-            if (totalDesc > 1) {
+            if (desc > 1) {
                 $('#add_desc_form').find('.desc_form').last().remove()
                 $('#add_desc_form').find('.price_form').last().remove()
-                totalDesc--;
             }
+            cek_desc()
+        }
+
+        function addDesc_add(count) {
+            let totalDesc = desc + desc_add
+            if (totalDesc < 15) {
+                var form = $(`
+                            <div class="form-group col-md-6 desc_form_add">
+                                <label>Description <font style="color: red;">*</font></label>
+                                <input type="text" name="description_add[]" class="form-control" maxlength="120" required>
+                            </div>
+                            <div class="form-group col-md-6 price_form_add">
+                                <label>Price <font style="color: red;">*</font></label>
+                                <input type="text" name="price_add[]" class="form-control mask-angka" required>
+                            </div>
+                        `);
+                $('#before_add').before(form);
+                mask_angka()
+            } else {
+                alert('input description can not be more than 15');
+            }
+            cek_desc()
+        }
+
+        function removeDesc_add() {
+            if (desc_add > 1) {
+                $('#add_desc_form_add').find('.desc_form_add').last().remove()
+                $('#add_desc_form_add').find('.price_form_add').last().remove()
+                // totalDesc--;
+            }
+            cek_desc()
+        }
+
+        function cek_desc() {
+            desc = $('.desc_form').length ?? 0
+            desc_add = $('.desc_form_add').length ?? 0
+            console.log(desc, desc_add);
         }
 
         function mask_angka() {

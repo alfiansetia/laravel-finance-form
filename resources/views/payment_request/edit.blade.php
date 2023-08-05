@@ -202,7 +202,7 @@
                                     <div class="form-group col-md-6 price_form">
                                         <label>Price <font style="color: red;">*</font></label>
                                         <input type="text" name="price[]" class="form-control mask-angka"
-                                            min="1" value="{{ $item->price }}" required>
+                                            value="{{ $item->price }}" required>
                                     </div>
                                 @endforeach
                                 <div class="form-group col-md-12" id="before">
@@ -255,6 +255,15 @@
                                         class="form-control mask-angka @error('bank_charge') is-invalid @enderror"
                                         min="0" value="{{ $data->bank_charge ?? 0 }}" required>
                                     @error('bank_charge')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="note">Note</label>
+                                    <textarea name="note" id="note" class="form-control @error('note') is-invalid @enderror" maxlength="150">{{ $data->note }}</textarea>
+                                    @error('note')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -324,7 +333,7 @@
                     </div>
                     <div class="form-group col-md-6 price_form">
                         <label>Price</label>
-                        <input type="text" name="price[]" class="form-control mask-angka" min="1" required>
+                        <input type="text" name="price[]" class="form-control mask-angka" required>
                     </div>
                 `);
                 $('#before').before(form);

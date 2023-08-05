@@ -120,7 +120,6 @@
                     }
                 },
             });
-            alert("{{ session('error') }}")
         </script>
     @endif
 

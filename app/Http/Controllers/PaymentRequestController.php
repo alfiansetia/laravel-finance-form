@@ -26,7 +26,8 @@ class PaymentRequestController extends Controller
     public function index()
     {
         $data = PaymentRequestModel::all();
-        return view('payment_request.index', compact('data'))->with(['title' => $this->title]);
+        $reject = PaymentRequestModel::where('status', 'reject')->count();
+        return view('payment_request.index', compact(['data', 'reject']))->with(['title' => $this->title]);
     }
 
     public function create()
@@ -58,8 +59,8 @@ class PaymentRequestController extends Controller
         $bank = Bank::where('division_id', $payment->id_division)->get();
         $wht = Wht::all();
         $vendor = Vendor::all();
-        $data = $payment;
-        return view('payment_request.edit', compact('data', 'wht', 'bank', 'vendor'))->with(['title' => $this->title]);
+        $data = $payment->load('desc');
+        return view('payment_request.edit', compact(['data', 'wht', 'bank', 'vendor']))->with(['title' => $this->title]);
     }
 
     public function update(Request $request, PaymentRequestModel $payment)
@@ -81,7 +82,7 @@ class PaymentRequestController extends Controller
             'description'       => 'required|array|min:1',
             'price'             => 'required|array|min:1',
             'description.*'     => 'required|max:120',
-            'price.*'           => 'required|integer|gt:0',
+            'price.*'           => 'required|integer',
         ]);
 
         $descData  = $payment->desc;
@@ -138,7 +139,11 @@ class PaymentRequestController extends Controller
             'description'       => 'required|array|min:1',
             'price'             => 'required|array|min:1',
             'description.*'     => 'required|max:120',
-            'price.*'           => 'required|integer|gt:0',
+            'price.*'           => 'required|integer',
+            'description_add'   => 'nullable|array|min:1',
+            'price_add'         => 'nullable|array|min:1',
+            'description_add.*' => 'required|max:120',
+            'price_add.*'       => 'required|integer',
         ]);
 
         $dateTime = new DateTime($request->date_pr);
@@ -200,8 +205,18 @@ class PaymentRequestController extends Controller
                 'id_payment_request'    => $payment->id,
                 'value'                 => $request->description[$i],
                 'price'                 => $request->price[$i],
+                'type'                  => 'reg',
             ]);
         }
+        for ($i = 0; $i < count($request->description_add ?? []); $i++) {
+            DescriptionModel::create([
+                'id_payment_request'    => $payment->id,
+                'value'                 => $request->description_add[$i],
+                'price'                 => $request->price_add[$i],
+                'type'                  => 'add',
+            ]);
+        }
+
         if ($payment) {
             return redirect()->route('payment.index')->with(['success' => 'Data berhasil ditambah!']);
         } else {
@@ -224,6 +239,9 @@ class PaymentRequestController extends Controller
 
     public function download(PaymentRequestModel $payment)
     {
+        if ($payment->status != 'pending' || $payment->status != 'reject') {
+            return redirect()->route('payment.index')->with(['error' => 'PR Belum di approve!']);
+        }
         $payment = $payment;
         if (!$payment) {
             abort(404);
@@ -234,5 +252,24 @@ class PaymentRequestController extends Controller
             'path_logo' => public_path('logo.jpg'),
         ])->setPaper('A4', 'portrait');
         return $pdf->download($payment->id . '_' . date('ymdHis') . '.pdf');
+    }
+
+    public function status(Request $request, PaymentRequestModel $payment)
+    {
+        $this->validate($request, [
+            'status'   => 'required|in:pending,reject,processing,paid',
+            'note'     => 'nullable|max:150',
+        ]);
+
+        $payment = $payment->update([
+            'status'   => $request->status,
+            'note'     => $request->note,
+        ]);
+
+        if ($payment) {
+            return redirect()->route('payment.index')->with(['success' => 'Status berhasil diubah!']);
+        } else {
+            return redirect()->route('payment.index')->with(['error' => 'Status Gagal diubah!']);
+        }
     }
 }

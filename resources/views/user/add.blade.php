@@ -54,6 +54,8 @@
                                         class="form-control @error('role') is-invalid @enderror" required>
                                         <option {{ old('role') == 'admin' ? 'selected' : '' }} value="admin">admin</option>
                                         <option {{ old('role') == 'user' ? 'selected' : '' }} value="user">user</option>
+                                        <option {{ old('role') == 'supervisor' ? 'selected' : '' }} value="supervisor">
+                                            supervisor</option>
                                     </select>
                                     @error('role')
                                         <div class="invalid-feedback">

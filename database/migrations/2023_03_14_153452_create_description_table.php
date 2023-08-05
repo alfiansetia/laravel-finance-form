@@ -17,6 +17,7 @@ class CreateDescriptionTable extends Migration
             $table->id();
             $table->string('value');
             $table->bigInteger('price')->default(0);
+            $table->enum('type', ['reg', 'add'])->default('reg');
             $table->unsignedBigInteger('id_payment_request');
             $table->timestamps();
             $table->foreign('id_payment_request')->references('id')->on('payment_request')->cascadeOnUpdate()->cascadeOnDelete();

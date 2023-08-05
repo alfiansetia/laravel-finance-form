@@ -40,7 +40,7 @@ class UserController extends Controller
             'name'      => 'required|max:50',
             'email'     => 'required|max:50|unique:users,email',
             'password'  => 'required|min:5',
-            'role'      => 'required|in:admin,user',
+            'role'      => 'required|in:admin,user,supervisor',
         ]);
 
         $user = User::create([
@@ -75,7 +75,7 @@ class UserController extends Controller
             'name'      => 'required|max:50',
             'email'     => 'required|max:50|unique:users,email,' . $user->id,
             'password'  => 'min:5|nullable',
-            'role'      => 'required|in:admin,user',
+            'role'      => 'required|in:admin,user,supervisor',
         ]);
 
         if ($request->filled('password')) {

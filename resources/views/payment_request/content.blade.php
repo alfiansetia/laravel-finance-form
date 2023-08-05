@@ -115,17 +115,19 @@
         $sisa = 21 - count($data->desc);
     @endphp
     @foreach ($data->desc as $item)
-        <tr>
-            <td colspan="8"
-                style="border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0mm;height: 13pt;vertical-align: middle;">
-                <span class="pd-small">{{ $item->value }}</span>
-            </td>
-            <td
-                style="text-align: right;width: 82pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
-                <span
-                    class="pd-small">{{ number_format($item->price, $data->currency != 'idr' ? 2 : 0, ',', ',') }}</span>
-            </td>
-        </tr>
+        @if ($item->type == 'reg')
+            <tr>
+                <td colspan="8"
+                    style="border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0mm;height: 13pt;vertical-align: middle;">
+                    <span class="pd-small">{{ $item->value }}</span>
+                </td>
+                <td
+                    style="text-align: right;width: 82pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
+                    <span
+                        class="pd-small">{{ number_format($item->price, $data->currency != 'idr' ? 2 : 0, ',', ',') }}</span>
+                </td>
+            </tr>
+        @endif
     @endforeach
     @if ($vat_value > 0)
         @php
@@ -162,6 +164,35 @@
             </td>
         </tr>
     @endif
+    @php
+        $sisa = $sisa - 1;
+    @endphp
+    <tr>
+        <td colspan="8"
+            style="border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0mm;height: 13pt;vertical-align: middle;">
+            <span class="pd-small"></span>
+        </td>
+        <td
+            style="border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
+            <span class="pd-small"></span>
+        </td>
+    </tr>
+
+    @foreach ($data->desc as $item)
+        @if ($item->type == 'add')
+            <tr>
+                <td colspan="8"
+                    style="border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0mm;height: 13pt;vertical-align: middle;">
+                    <span class="pd-small">{{ $item->value }}</span>
+                </td>
+                <td
+                    style="text-align: right;width: 82pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
+                    <span
+                        class="pd-small">{{ number_format($item->price, $data->currency != 'idr' ? 2 : 0, ',', ',') }}</span>
+                </td>
+            </tr>
+        @endif
+    @endforeach
     @for ($i = 0; $i < $sisa; $i++)
         <tr>
             <td colspan="8"
@@ -363,7 +394,7 @@
         </td>
     </tr>
     <tr>
-        <td 
+        <td
             style="border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0mm;height: 9.55pt;vertical-align: middle;">
             <span class="pd-small">Paid by</span>
         </td>

@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes([
     'register' => false,
-    'reset' => false,
+    'reset' => true,
     'verify' => false,
     'confirm' => false
 ]);
@@ -54,6 +54,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('payment', PaymentRequestController::class);
     Route::get('payment/{payment}/download', [PaymentRequestController::class, 'download'])->name('payment.download');
+    Route::post('payment/{payment}/status', [PaymentRequestController::class, 'status'])->name('payment.status');
 
     Route::resource('debit', DebitNoteController::class);
     Route::get('debit/{debit}/download', [DebitNoteController::class, 'download'])->name('debit.download');
