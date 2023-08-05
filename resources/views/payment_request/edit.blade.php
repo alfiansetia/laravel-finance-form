@@ -194,16 +194,18 @@
                             </div>
                             <div class="form-row" id="add_desc_form">
                                 @foreach ($data->desc as $item)
-                                    <div class="form-group col-md-6 desc_form">
-                                        <label>Description <font style="color: red;">*</font></label>
-                                        <input type="text" name="description[]" class="form-control" maxlength="120"
-                                            value="{{ $item->value }}" required>
-                                    </div>
-                                    <div class="form-group col-md-6 price_form">
-                                        <label>Price <font style="color: red;">*</font></label>
-                                        <input type="text" name="price[]" class="form-control mask-angka"
-                                            value="{{ $item->price }}" required>
-                                    </div>
+                                    @if ($item->type == 'reg')
+                                        <div class="form-group col-md-6 desc_form">
+                                            <label>Description <font style="color: red;">*</font></label>
+                                            <input type="text" name="description[]" class="form-control"
+                                                maxlength="120" value="{{ $item->value }}" required>
+                                        </div>
+                                        <div class="form-group col-md-6 price_form">
+                                            <label>Price <font style="color: red;">*</font></label>
+                                            <input type="text" name="price[]" class="form-control mask-angka"
+                                                value="{{ $item->price }}" required>
+                                        </div>
+                                    @endif
                                 @endforeach
                                 <div class="form-group col-md-12" id="before">
                                     <a id="add_form_desc" onclick="addDesc()"
@@ -261,13 +263,39 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="note">Note</label>
+                                    <button type="button" id="btn_add" class="btn btn-primary">
+                                        Show Additional</button>
+                                    {{-- <label for="note">Note</label>
                                     <textarea name="note" id="note" class="form-control @error('note') is-invalid @enderror" maxlength="150">{{ $data->note }}</textarea>
                                     @error('note')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
-                                    @enderror
+                                    @enderror --}}
+                                </div>
+                            </div>
+                            <div class="form-row" id="add_desc_form_add">
+                                @foreach ($data->desc as $item)
+                                    @if ($item->type == 'add')
+                                        <div class="form-group col-md-6 desc_form_add">
+                                            <label>Description <font style="color: red;">*</font></label>
+                                            <input type="text" name="description_add[]" class="form-control"
+                                                maxlength="120" value="{{ $item->value }}" required>
+                                        </div>
+                                        <div class="form-group col-md-6 price_form_add">
+                                            <label>Price <font style="color: red;">*</font></label>
+                                            <input type="text" name="price_add[]" class="form-control mask-angka"
+                                                value="{{ $item->price }}" required>
+                                        </div>
+                                    @endif
+                                @endforeach
+                                <div class="form-group col-md-12" id="before_add">
+                                    <a id="add_form_desc_add" onclick="addDesc_add()"
+                                        class="btn btn-sm btn-success float-right mt-2" style="color: white;">Add
+                                        Description</a>
+                                    <a id="remove_form_desc_add" onclick="removeDesc_add()"
+                                        class="btn btn-sm btn-danger float-right mt-2 mr-1" style="color: white;">Remove
+                                        Description</a>
                                 </div>
                             </div>
                             <div class="text-right">
@@ -310,7 +338,50 @@
             $('#due_date').change(function() {
                 set_deadline()
             })
+
+
+
         });
+
+
+        var data = @json($data->desc);
+        var add = 0
+        for (let i = 0; i < data.length ?? 0; i++) {
+            if (data[i]['type'] == 'add') {
+                add = add + 1
+            }
+        }
+
+
+        var show = true
+
+        if (add > 0) {
+            show = false
+        }
+
+        set_text_btn()
+
+        $('#btn_add').click(function() {
+            set_text_btn()
+        })
+
+        function set_text_btn() {
+            let html = element_form()
+            if (show) {
+                $('#add_desc_form_add').html('')
+                $('#add_desc_form_add').hide()
+                show = false
+                $('#btn_add').text('Show Additonal')
+            } else {
+                $('#add_desc_form_add').html(html)
+                $('#add_desc_form_add').show()
+                show = true
+                $('#btn_add').text('Hide Additonal')
+            }
+            mask_angka()
+            cek_desc()
+        }
+
 
         function set_deadline() {
             var received_date = moment($('#received_date').val());
@@ -319,36 +390,121 @@
             $('#deadline').val(deadline.format('YYYY-MM-DD'));
         }
 
-        var data = @json($data->desc);
-
-        let totalDesc = data.length;
-
-        function addDesc(count) {
-            if (totalDesc < 15) {
-                totalDesc++;
-                var form = $(`
-                    <div class="form-group col-md-6 desc_form">
-                        <label>Description</label>
-                        <input type="text" name="description[]" class="form-control" maxlength="120" required>
+        function element_form() {
+            let htm = ''
+            if (add > 0) {
+                data.forEach(item => {
+                    if (item.type == 'add') {
+                        htm += `<div class="form-group col-md-6 desc_form_add">
+                        <label>Description <font style="color: red;">*</font></label>
+                        <input type="text" name="description_add[]" class="form-control" maxlength="120"
+                          value="${item.value}" required>
                     </div>
                     <div class="form-group col-md-6 price_form">
-                        <label>Price</label>
-                        <input type="text" name="price[]" class="form-control mask-angka" required>
+                        <label>Price <font style="color: red;">*</font></label>
+                        <input type="text" name="price_add[]" class="form-control mask-angka" value="${item.price}" required>
+                    </div>`
+                    }
+                });
+                htm += `<div class="form-group col-md-12" id="before_add">
+                        <a id="add_form_desc_add" onclick="addDesc_add()"
+                            class="btn btn-sm btn-success float-right mt-2" style="color: white;">Add
+                            Description</a>
+                        <a id="remove_form_desc_add" onclick="removeDesc_add()"
+                            class="btn btn-sm btn-danger float-right mt-2 mr-1" style="color: white;">Remove
+                            Description</a>
+                    </div>`
+            } else {
+                htm = element_form_blank()
+            }
+            return htm
+        }
+
+        function element_form_blank() {
+            return `<div class="form-group col-md-6 desc_form_add">
+                        <label>Description <font style="color: red;">*</font></label>
+                        <input type="text" name="description_add[]" class="form-control" maxlength="120"
+                            required>
                     </div>
-                `);
+                    <div class="form-group col-md-6 price_form">
+                        <label>Price <font style="color: red;">*</font></label>
+                        <input type="text" name="price_add[]" class="form-control mask-angka" required>
+                    </div>
+                    <div class="form-group col-md-12" id="before_add">
+                        <a id="add_form_desc_add" onclick="addDesc_add()"
+                            class="btn btn-sm btn-success float-right mt-2" style="color: white;">Add
+                            Description</a>
+                        <a id="remove_form_desc_add" onclick="removeDesc_add()"
+                            class="btn btn-sm btn-danger float-right mt-2 mr-1" style="color: white;">Remove
+                            Description</a>
+                    </div>`
+        }
+
+        var desc = 0
+        var desc_add = 0
+
+        function addDesc(count) {
+            let totalDesc = desc + desc_add
+            if (totalDesc < 15) {
+                var form = $(`
+                            <div class="form-group col-md-6 desc_form">
+                                <label>Description <font style="color: red;">*</font></label>
+                                <input type="text" name="description[]" class="form-control" maxlength="120" required>
+                            </div>
+                            <div class="form-group col-md-6 price_form">
+                                <label>Price <font style="color: red;">*</font></label>
+                                <input type="text" name="price[]" class="form-control mask-angka" required>
+                            </div>
+            `);
                 $('#before').before(form);
                 mask_angka()
             } else {
                 alert('input description can not be more than 15');
             }
+            cek_desc()
         }
 
         function removeDesc() {
-            if (totalDesc > 1) {
+            if (desc > 1) {
                 $('#add_desc_form').find('.desc_form').last().remove()
                 $('#add_desc_form').find('.price_form').last().remove()
-                totalDesc--;
             }
+            cek_desc()
+        }
+
+        function addDesc_add(count) {
+            let totalDesc = desc + desc_add
+            if (totalDesc < 15) {
+                var form = $(`
+                            <div class="form-group col-md-6 desc_form_add">
+                                <label>Description <font style="color: red;">*</font></label>
+                                <input type="text" name="description_add[]" class="form-control" maxlength="120" required>
+                            </div>
+                            <div class="form-group col-md-6 price_form_add">
+                                <label>Price <font style="color: red;">*</font></label>
+                                <input type="text" name="price_add[]" class="form-control mask-angka" required>
+                            </div>
+                        `);
+                $('#before_add').before(form);
+                mask_angka()
+            } else {
+                alert('input description can not be more than 15');
+            }
+            cek_desc()
+        }
+
+        function removeDesc_add() {
+            if (desc_add > 1) {
+                $('#add_desc_form_add').find('.desc_form_add').last().remove()
+                $('#add_desc_form_add').find('.price_form_add').last().remove()
+            }
+            cek_desc()
+        }
+
+        function cek_desc() {
+            desc = $('.desc_form').length ?? 0
+            desc_add = $('.desc_form_add').length ?? 0
+            console.log(desc, desc_add);
         }
 
         function mask_angka() {

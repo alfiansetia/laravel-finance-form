@@ -16,7 +16,7 @@
                     <div class="card-body">
                         @if ($reject > 0)
                             <div class="alert alert-danger" role="alert">
-                                Ada Payment Request yang di reject!
+                                Ada <b>{{ $reject }}</b> Payment Request yang di reject!
                             </div>
                         @endif
                         <div class="form-row mb-3">

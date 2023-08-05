@@ -264,7 +264,7 @@
                                         </div>
                                     @enderror
                                 </div>
-                                <div class="form-group col-md-6 align-items-end">
+                                <div class="form-group col-md-6">
                                     <button type="button" id="btn_add" class="btn btn-primary">Show Additional</button>
                                 </div>
                             </div>
@@ -329,28 +329,29 @@
                     show = true
                     $(this).text('Hide Additonal')
                 }
+                mask_angka()
                 cek_desc()
             })
         });
 
         function element_form() {
             return `<div class="form-group col-md-6 desc_form_add">
-                                    <label>Description <font style="color: red;">*</font></label>
-                                    <input type="text" name="description_add[]" class="form-control" maxlength="120"
-                                        required>
-                                </div>
-                                <div class="form-group col-md-6 price_form">
-                                    <label>Price <font style="color: red;">*</font></label>
-                                    <input type="text" name="price_add[]" class="form-control mask-angka" required>
-                                </div>
-                                <div class="form-group col-md-12" id="before_add">
-                                    <a id="add_form_desc_add" onclick="addDesc_add()"
-                                        class="btn btn-sm btn-success float-right mt-2" style="color: white;">Add
-                                        Description</a>
-                                    <a id="remove_form_desc_add" onclick="removeDesc_add()"
-                                        class="btn btn-sm btn-danger float-right mt-2 mr-1" style="color: white;">Remove
-                                        Description</a>
-                                </div>`
+                        <label>Description <font style="color: red;">*</font></label>
+                        <input type="text" name="description_add[]" class="form-control" maxlength="120"
+                            required>
+                    </div>
+                    <div class="form-group col-md-6 price_form">
+                        <label>Price <font style="color: red;">*</font></label>
+                        <input type="text" name="price_add[]" class="form-control mask-angka" required>
+                    </div>
+                    <div class="form-group col-md-12" id="before_add">
+                        <a id="add_form_desc_add" onclick="addDesc_add()"
+                            class="btn btn-sm btn-success float-right mt-2" style="color: white;">Add
+                            Description</a>
+                        <a id="remove_form_desc_add" onclick="removeDesc_add()"
+                            class="btn btn-sm btn-danger float-right mt-2 mr-1" style="color: white;">Remove
+                            Description</a>
+                    </div>`
         }
 
 
@@ -418,7 +419,6 @@
             if (desc_add > 1) {
                 $('#add_desc_form_add').find('.desc_form_add').last().remove()
                 $('#add_desc_form_add').find('.price_form_add').last().remove()
-                // totalDesc--;
             }
             cek_desc()
         }

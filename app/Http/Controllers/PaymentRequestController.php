@@ -83,6 +83,10 @@ class PaymentRequestController extends Controller
             'price'             => 'required|array|min:1',
             'description.*'     => 'required|max:120',
             'price.*'           => 'required|integer',
+            'description_add'   => 'nullable|array|min:1',
+            'price_add'         => 'nullable|array|min:1',
+            'description_add.*' => 'required|max:120',
+            'price_add.*'       => 'required|integer',
         ]);
 
         $descData  = $payment->desc;
@@ -96,6 +100,15 @@ class PaymentRequestController extends Controller
                 'id_payment_request'    => $payment->id,
                 'value'                 => $request->description[$i],
                 'price'                 => $request->price[$i],
+                'type'                  => 'reg',
+            ]);
+        }
+        for ($i = 0; $i < count($request->description_add ?? []); $i++) {
+            DescriptionModel::create([
+                'id_payment_request'    => $payment->id,
+                'value'                 => $request->description_add[$i],
+                'price'                 => $request->price_add[$i],
+                'type'                  => 'add',
             ]);
         }
 
