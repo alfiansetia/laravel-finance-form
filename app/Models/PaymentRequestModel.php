@@ -63,4 +63,9 @@ class PaymentRequestModel extends Model
     {
         return $this->belongsTo(Vendor::class);
     }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
 }

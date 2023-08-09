@@ -5,6 +5,7 @@ use App\Http\Controllers\DebitNoteController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentRequestController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VatController;
 use App\Http\Controllers\VendorController;
@@ -63,4 +64,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('user/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::post('user/profile', [UserController::class, 'profileUpdate'])->name('user.profile.update');
     Route::post('user/password', [UserController::class, 'passwordUpdate'])->name('user.password.update');
+
+    Route::get('report/payment', [ReportController::class, 'payment'])->name('report.payment.index');
 });

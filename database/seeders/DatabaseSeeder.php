@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             VendorSeeder::class,
             BankSeeder::class,
             UsersSeeder::class,
+            StatusSeeder::class,
             WhtSeeder::class,
             VatSeeder::class,
         ]);

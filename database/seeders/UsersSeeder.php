@@ -27,5 +27,12 @@ class UsersSeeder extends Seeder
             'password'  => bcrypt('12345678'),
             'role'      => 'user',
         ]);
+
+        $spv = User::create([
+            'name'      => 'supervisor',
+            'email'     => 'supervisor@finance.form',
+            'password'  => bcrypt('12345678'),
+            'role'      => 'supervisor',
+        ]);
     }
 }

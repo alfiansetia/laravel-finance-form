@@ -29,13 +29,15 @@ class CreatePaymentRequestTable extends Migration
             $table->unsignedBigInteger('wht_id')->nullable();
             $table->unsignedBigInteger('bank_id')->nullable();
             $table->unsignedBigInteger('vendor_id')->nullable();
-            $table->enum('status', ['pending', 'reject', 'processing', 'paid'])->default('pending');
+            $table->unsignedBigInteger('status_id');
+            // $table->enum('status', ['pending', 'reject', 'processing', 'paid'])->default('pending');
             $table->string('note')->nullable();
             $table->timestamps();
             $table->foreign('wht_id')->references('id')->on('whts')->cascadeOnUpdate()->nullOnDelete();
             $table->foreign('id_division')->references('id')->on('division')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreign('bank_id')->references('id')->on('banks')->cascadeOnUpdate()->nullOnDelete();
             $table->foreign('vendor_id')->references('id')->on('vendors')->cascadeOnUpdate()->nullOnDelete();
+            $table->foreign('status_id')->references('id')->on('statuses')->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 

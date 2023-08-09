@@ -23,10 +23,9 @@
                             <div class="col-7">
                                 <select id="status_filter" class="form-control">
                                     <option value="">All Status</option>
-                                    <option value="pending">Pending Approval</option>
-                                    <option value="reject">Reject</option>
-                                    <option value="processing">Processing</option>
-                                    <option value="paid">Paid</option>
+                                    @foreach ($status as $item)
+                                        <option value="{{ $item->name }}">{{ $item->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col  col-lg-2">
@@ -55,15 +54,19 @@
                                         <tr>
                                             <td class="text-center"> {{ $key + 1 }} </td>
                                             <td class="text-center">{{ $item->division->name }}</td>
-                                            <td class="text-center"> {{ date('d-M-Y', strtotime($item->date_pr)) }} </td>
+                                            <td class="text-center">{{ date('d-M-Y', strtotime($item->date_pr)) }}</td>
                                             <td class="text-center">{{ $item->no_pr }}</td>
                                             <td class="text-center">{{ $item->vendor->beneficary }}</td>
                                             <td class="text-center">{{ substr($item->vendor->bank, 0, 30) }}</td>
                                             <td class="text-center">{{ $item->for }}</td>
-                                            <td class="text-center">{{ $item->status }}</td>
+                                            <td class="text-center">
+                                                <font color="{{ $item->status->color }}">
+                                                    <i class="fas fa-circle"></i>{{ $item->status->name }}
+                                                </font>
+                                            </td>
                                             <td class="text-center">
                                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                                    @if ($item->status == 'paid')
+                                                    @if ($item->status_id == 4)
                                                         <a href="{{ route('payment.download', $item->id) }}"
                                                             class="btn btn-sm btn-secondary" title="Download"
                                                             target="_blank"><i class="fas fa-file-pdf"></i></a>

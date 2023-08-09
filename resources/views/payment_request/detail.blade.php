@@ -90,22 +90,39 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex align-items-center">
-                            <h4 class="card-title">Detail {{ $title }} {{ $data->no_pr }} <span
-                                    class="badge badge-info">{{ $data->status }}</span></h4>
+                            <h4 class="card-title">Action</h4>
+                        </div>
+                    </div>
+                    <div class="card-body text-center">
 
-                            @if ($data->status != 'paid')
-                                <button class="btn btn-warning btn-round ml-auto" data-toggle="modal"
-                                    data-target="#exampleModal">
-                                    <i class="fas fa-thumbs-up mr-1"></i>State</button>
-                            @endif
-                            <a href="{{ route('payment.edit', $data->id) }}"
-                                class="btn btn-secondary btn-round ml-2 {{ $data->status != 'paid' ? '' : 'ml-auto' }}">
-                                <i class="fas fa-edit mr-1"></i>Edit
-                            </a>
-                            <a href="{{ route('payment.download', $data->id) }}" class="btn btn-primary btn-round ml-2"
-                                target="_blank">
-                                <i class="fas fa-file-pdf mr-1"></i>Download
-                            </a>
+                        @if (
+                            ($data->status_id == 1 && auth()->user()->role == 'supervisor') ||
+                                ($data->status_id == 2 &&
+                                    $data->status_id != 4 &&
+                                    (auth()->user()->role == 'admin' || auth()->user()->role == 'user')))
+                            <button class="btn btn-warning btn-round" data-toggle="modal" data-target="#exampleModal">
+                                <i class="fas fa-thumbs-up mr-1"></i>Ubah Status</button>
+                        @endif
+
+                        <a href="{{ route('payment.edit', $data->id) }}" class="btn btn-secondary btn-round ml-2">
+                            <i class="fas fa-edit mr-1"></i>Edit
+                        </a>
+                        <a href="{{ route('payment.download', $data->id) }}" class="btn btn-primary btn-round ml-2"
+                            target="_blank">
+                            <i class="fas fa-file-pdf mr-1"></i>Download
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <h4 class="card-title">
+                                Detail {{ $title }} {{ $data->no_pr }} <span class="badge ml-2"
+                                    style="background-color: {{ $data->status->color }};">
+                                    <font color="white"><i class="fas fa-circle mr-1"></i>{{ $data->status->name }}</font>
+                                </span>
+                            </h4>
                         </div>
                     </div>
                     <div class="card-body">
@@ -122,7 +139,7 @@
         </div>
     </div>
 
-    @if ($data->status != 'paid')
+    @if ($data->status_id != 4)
         <form method="POST" action="{{ route('payment.status', $data->id) }}">
             @csrf
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -138,26 +155,31 @@
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Status</label>
                                 <div class="form-inline">
-                                    <div class="form-check mr-3">
-                                        <input class="form-check-input" type="radio" name="status" id="status1"
-                                            value="pending" {{ $data->status == 'pending' ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="status1">Pending</label>
-                                    </div>
-                                    <div class="form-check mr-3">
-                                        <input class="form-check-input" type="radio" name="status" id="status2"
-                                            value="processing" {{ $data->status == 'processing' ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="status2">Processing</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="status" id="status3"
-                                            value="paid" {{ $data->status == 'paid' ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="status3">Paid</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="status" id="status4"
-                                            value="reject" {{ $data->status == 'reject' ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="status4">Reject</label>
-                                    </div>
+
+                                    @if (auth()->user()->role == 'supervisor')
+                                        <div class="form-check mr-3">
+                                            <input class="form-check-input" type="radio" name="status" id="status2"
+                                                value="2" {{ $data->status_id == 2 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="status2">2 Accept</label>
+                                        </div>
+
+                                        <div class="form-check mr-3">
+                                            <input class="form-check-input" type="radio" name="status" id="status3"
+                                                value="3" {{ $data->status_id == 3 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="status3">3 Reject</label>
+                                        </div>
+                                    @endif
+
+                                    @if (auth()->user()->role == 'user' || auth()->user()->role == 'admin')
+                                        @if ($data->status_id == 2)
+                                            <div class="form-check mr-3">
+                                                <input class="form-check-input" type="radio" name="status" id="status4"
+                                                    value="4">
+                                                <label class="form-check-label" for="status4">4 Paid</label>
+                                            </div>
+                                        @endif
+                                    @endif
+
                                 </div>
                             </div>
                             <div class="form-group">

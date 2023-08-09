@@ -6,6 +6,7 @@ use App\Models\Bank;
 use App\Models\DescriptionModel;
 use App\Models\DivisionModel;
 use App\Models\PaymentRequestModel;
+use App\Models\Status;
 use App\Models\Vat;
 use App\Models\Vendor;
 use App\Models\Wht;
@@ -26,8 +27,9 @@ class PaymentRequestController extends Controller
     public function index()
     {
         $data = PaymentRequestModel::all();
-        $reject = PaymentRequestModel::where('status', 'reject')->count();
-        return view('payment_request.index', compact(['data', 'reject']))->with(['title' => $this->title]);
+        $reject = PaymentRequestModel::where('status_id', 3)->count();
+        $status = Status::all();
+        return view('payment_request.index', compact(['data', 'reject', 'status']))->with(['title' => $this->title]);
     }
 
     public function create()
@@ -36,7 +38,8 @@ class PaymentRequestController extends Controller
         $wht = Wht::all();
         $vendor = Vendor::all();
         $division = DivisionModel::all();
-        return view('payment_request.add', compact('division', 'wht', 'bank', 'vendor'))->with(['title' => $this->title]);
+        $status = Status::all();
+        return view('payment_request.add', compact('division', 'wht', 'bank', 'vendor', 'status'))->with(['title' => $this->title]);
     }
 
     public function show(PaymentRequestModel $payment)
@@ -48,6 +51,7 @@ class PaymentRequestController extends Controller
             'title'     => $this->title,
             'data'      => $payment,
             'path_logo' => asset('logo.jpg'),
+            'status'    => Status::all(),
         ]);
     }
 
@@ -124,6 +128,7 @@ class PaymentRequestController extends Controller
             'wht_id'            => $request->wht,
             'due_date'          => $request->due_date,
             'bank_charge'       => $request->bank_charge,
+            'status_id'         => 1,
         ]);
 
 
@@ -211,6 +216,7 @@ class PaymentRequestController extends Controller
             'due_date'          => $request->due_date,
             'bank_charge'       => $request->bank_charge,
             'vat'               => $vat_value,
+            'status_id'         => 1,
         ]);
 
         for ($i = 0; $i < count($request->description); $i++) {
@@ -252,8 +258,8 @@ class PaymentRequestController extends Controller
 
     public function download(PaymentRequestModel $payment)
     {
-        if ($payment->status != 'pending' || $payment->status != 'reject') {
-            return redirect()->route('payment.index')->with(['error' => 'PR Belum di approve!']);
+        if ($payment->status_id != 4) {
+            return redirect()->route('payment.index')->with(['error' => $this->title . ' Belum di approve!']);
         }
         $payment = $payment;
         if (!$payment) {
@@ -270,13 +276,21 @@ class PaymentRequestController extends Controller
     public function status(Request $request, PaymentRequestModel $payment)
     {
         $this->validate($request, [
-            'status'   => 'required|in:pending,reject,processing,paid',
+            'status'   => 'required|integer|exists:statuses,id',
             'note'     => 'nullable|max:150',
         ]);
 
+        if ($payment->status_id == 4) {
+            return redirect()->route('payment.index')->with(['error' => 'Status tidak bisa diubah!']);
+        }
+
+        if (auth()->user()->role != 'supervisor' && ($request->status == 2 || $request->status == 3)) {
+            return redirect()->route('payment.index')->with(['error' => 'Tidak ada akses!']);
+        }
+
         $payment = $payment->update([
-            'status'   => $request->status,
-            'note'     => $request->note,
+            'status_id' => $request->status,
+            'note'      => $request->note,
         ]);
 
         if ($payment) {
