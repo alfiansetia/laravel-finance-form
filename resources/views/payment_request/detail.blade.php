@@ -114,6 +114,12 @@
                     </div>
                 </div>
 
+                @if (!empty($data->note))
+                    <div class="alert alert-danger" role="alert">
+                        {{ $data->note }}
+                    </div>
+                @endif
+
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex align-items-center">
