@@ -1,5 +1,45 @@
 @extends('components.template')
 
+@push('css')
+    <style>
+        .track-line {
+            height: 4px !important;
+            background-color: #488978;
+            opacity: 1;
+        }
+
+        .dot {
+            height: 20px;
+            width: 20px;
+            margin-left: 3px;
+            margin-right: 3px;
+            margin-top: 0px;
+            background-color: #488978;
+            border-radius: 50%;
+            display: inline-block
+        }
+
+        .big-dot {
+            height: 25px;
+            width: 25px;
+            margin-left: 0px;
+            margin-right: 0px;
+            margin-top: 0px;
+            background-color: #488978;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .big-dot i {
+            font-size: 12px;
+        }
+
+        .card-stepper {
+            z-index: 0
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="page-inner">
         <div class="row">
@@ -19,7 +59,7 @@
                                 Ada <b>{{ $reject }}</b> Payment Request yang di reject!
                             </div>
                         @endif
-                        <div class="form-row mb-3">
+                        {{-- <div class="form-row mb-3">
                             <div class="col-7">
                                 <select id="status_filter" class="form-control">
                                     <option value="">All Status</option>
@@ -32,6 +72,41 @@
                                 <button type="button" id="btn_filter" class="btn btn-primary btn-block">
                                     <i class="fas fa-filter mr-1"></i>Filter
                                 </button>
+                            </div>
+                        </div> --}}
+                        <div class="form-row mb-3">
+
+                            <div class="card-body p-4">
+
+                                <div
+                                    class="d-flex flex-row justify-content-between align-items-center align-content-center">
+                                    <span class="dot"></span>
+                                    <hr class="flex-fill track-line"><span class="dot"></span>
+                                    <hr class="flex-fill track-line"><span class="dot"></span>
+                                    <hr class="flex-fill track-line"><span
+                                        class="d-flex justify-content-center align-items-center big-dot dot">
+                                        <i class="fa fa-check text-white"></i></span>
+                                </div>
+
+                                <div class="d-flex flex-row justify-content-between align-items-center">
+                                    <div class="d-flex flex-column align-items-start">
+                                        <span>Pending</span>
+                                        <button class="btn btn-info btn-sm mt-1" id="btn1">Pending</button>
+                                    </div>
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <span>Processing</span>
+                                        <button class="btn btn-warning btn-sm mt-1" id="btn2">Processing</button>
+                                    </div>
+                                    <div class="d-flex flex-column justify-content-center align-items-center">
+                                        <span>Reject</span>
+                                        <button class="btn btn-danger btn-sm mt-1" id="btn3">Reject</button>
+                                    </div>
+                                    <div class="d-flex flex-column align-items-end">
+                                        <span>Paid</span>
+                                        <button class="btn btn-success btn-sm mt-1" id="btn4">Paid</button>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -118,6 +193,22 @@
             $('#btn_filter').click(function() {
                 var selectedStatus = $('#status_filter').val();
                 table.column(7).search(selectedStatus).draw();
+            });
+
+            $('#btn1').click(function() {
+                table.column(7).search('Pending Approval').draw();
+            });
+
+            $('#btn2').click(function() {
+                table.column(7).search('Processing').draw();
+            });
+
+            $('#btn3').click(function() {
+                table.column(7).search('Reject').draw();
+            });
+
+            $('#btn4').click(function() {
+                table.column(7).search('Paid').draw();
             });
 
 
