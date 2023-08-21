@@ -112,7 +112,7 @@
                             <i class="fas fa-file-pdf mr-1"></i>Download
                         </a>
                         <button type="button" class="btn btn-info btn-round ml-2" data-toggle="modal"
-                            data-target="#exampleModal">
+                            data-target="#exampleModal2">
                             <i class="fas fa-upload mr-1"></i>Upload File
                         </button>
                     </div>
@@ -245,14 +245,14 @@
         </form>
     @endif
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <form action="{{ route('filepr.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="payment" id="payment" value="{{ $data->id }}">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Upload File</h5>
+                        <h5 class="modal-title" id="exampleModal2Label">Upload File</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -313,7 +313,7 @@
     @if ($errors->has('file'))
         <script>
             $(document).ready(function() {
-                $('#exampleModal').modal('show');
+                $('#exampleModal2').modal('show');
             });
         </script>
     @endif
