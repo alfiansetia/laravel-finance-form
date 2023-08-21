@@ -68,4 +68,9 @@ class PaymentRequestModel extends Model
     {
         return $this->belongsTo(Status::class);
     }
+
+    public function filepr()
+    {
+        return $this->hasMany(Filepr::class, 'payment_id');
+    }
 }

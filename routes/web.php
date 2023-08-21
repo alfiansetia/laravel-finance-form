@@ -3,6 +3,7 @@
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\DebitNoteController;
 use App\Http\Controllers\DivisionController;
+use App\Http\Controllers\FileprController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentRequestController;
 use App\Http\Controllers\ReportController;
@@ -66,4 +67,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('user/password', [UserController::class, 'passwordUpdate'])->name('user.password.update');
 
     Route::get('report/payment', [ReportController::class, 'payment'])->name('report.payment.index');
+
+    Route::post('filepr', [FileprController::class, 'store'])->name('filepr.store');
+    Route::get('filepr/{filepr}', [FileprController::class, 'show'])->name('filepr.show');
+    Route::delete('filepr/{filepr}', [FileprController::class, 'destroy'])->name('filepr.destroy');
+
 });

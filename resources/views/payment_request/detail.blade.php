@@ -111,6 +111,10 @@
                             target="_blank">
                             <i class="fas fa-file-pdf mr-1"></i>Download
                         </a>
+                        <button type="button" class="btn btn-info btn-round ml-2" data-toggle="modal"
+                            data-target="#exampleModal">
+                            <i class="fas fa-upload mr-1"></i>Upload File
+                        </button>
                     </div>
                 </div>
 
@@ -119,6 +123,44 @@
                         {{ $data->note }}
                     </div>
                 @endif
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <h4 class="card-title">File</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover" style="width: 100%;">
+                            <tbody>
+                                @forelse ($data->filepr as $item)
+                                    <tr>
+                                        <td style="width: 40px;"><i class="fas fa-file-pdf text-danger"></i></td>
+                                        <td>{{ $item->name }}</td>
+                                        <td>
+                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                <a href="{{ route('filepr.show', $item->id) }}" target="_blank">
+                                                    <i class="fas fa-download text-primary"></i>
+                                                </a>
+                                                <form id="form{{ $item->id }}" method="POST"
+                                                    action="{{ route('filepr.destroy', $item->id) }}">
+                                                    @method('DELETE')
+                                                    @csrf
+                                                    <i class="fas fa-trash-alt text-danger ml-2"
+                                                        onclick="deleteData('{{ $item->id }}')" style="cursor: pointer;"></i>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <div class="alert alert-danger" role="alert">
+                                        File belum tersedia!
+                                    </div>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
                 <div class="card">
                     <div class="card-header">
@@ -179,8 +221,8 @@
                                     @if (auth()->user()->role == 'user' || auth()->user()->role == 'admin')
                                         @if ($data->status_id == 2)
                                             <div class="form-check mr-3">
-                                                <input class="form-check-input" type="radio" name="status" id="status4"
-                                                    value="4">
+                                                <input class="form-check-input" type="radio" name="status"
+                                                    id="status4" value="4">
                                                 <label class="form-check-label" for="status4">4 Paid</label>
                                             </div>
                                         @endif
@@ -202,4 +244,78 @@
             </div>
         </form>
     @endif
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <form action="{{ route('filepr.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="payment" id="payment" value="{{ $data->id }}">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Upload File</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="file">File</label>
+                            <div class="custom-file">
+                                <input name="file" type="file" id="file" required
+                                    class="custom-file-input @error('file') is-invalid @enderror">
+                                <label class="custom-file-label" for="file">Choose file</label>
+                                @error('file')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection
+@push('js')
+    <script src="{{ asset('assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
+    <script>
+        bsCustomFileInput.init();
+
+        function deleteData(idform) {
+            swal({
+                title: 'Delete File?',
+                icon: "warning",
+                buttons: {
+                    confirm: {
+                        text: 'Yes',
+                        className: 'btn btn-success'
+                    },
+                    cancel: {
+                        visible: true,
+                        className: 'btn btn-danger'
+                    }
+                }
+            }).then((value) => {
+                if (value) {
+                    $('#form' + idform).submit();
+                } else {
+                    swal.close();
+                }
+            });
+        }
+    </script>
+
+    @if ($errors->has('file'))
+        <script>
+            $(document).ready(function() {
+                $('#exampleModal').modal('show');
+            });
+        </script>
+    @endif
+
+@endpush
