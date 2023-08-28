@@ -51,6 +51,7 @@ class PaymentRequestController extends Controller
             'title'     => $this->title,
             'data'      => $payment,
             'path_logo' => asset('logo.jpg'),
+            'paid'      => asset('paid.png'),
             'status'    => Status::all(),
         ]);
     }
@@ -269,6 +270,7 @@ class PaymentRequestController extends Controller
             'title'     => 'Detail ' . $payment->no_pr,
             'data'      => $payment,
             'path_logo' => public_path('logo.jpg'),
+            'paid'      => public_path('paid.png'),
         ])->setPaper('A4', 'portrait');
         return $pdf->download($payment->id . '_' . date('ymdHis') . '.pdf');
     }

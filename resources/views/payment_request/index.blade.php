@@ -135,8 +135,7 @@
                                             <td class="text-center">{{ substr($item->vendor->bank, 0, 30) }}</td>
                                             <td class="text-center">{{ $item->for }}</td>
                                             <td class="text-center">
-                                                <font color="{{ $item->status->color }}">
-                                                    <i class="fas fa-circle"></i>{{ $item->status->name }}
+                                                <font color="{{ $item->status->color }}">{{ $item->status->name }}
                                                 </font>
                                             </td>
                                             <td class="text-center">

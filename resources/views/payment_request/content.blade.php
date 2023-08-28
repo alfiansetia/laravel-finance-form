@@ -216,7 +216,10 @@
         </td>
     </tr>
     <tr>
-        <td colspan="8" class="bold-no-border">
+        <td rowspan="4" colspan="7" class="bold-no-border" style="border-right: none;vertical-align: middle">
+            <img src="{{ $paid }}" alt="" width="80" style="position: relative">
+        </td>
+        <td class="bold-no-border" style="border-left: none">
             <strong><span class="pd-small">To be Paid
                     {{ $data->currency == 'idr' ? 'Rp' : ($data->currency == 'usd' ? '$' : 'S$') }}</span></strong>
         </td>
@@ -226,7 +229,7 @@
         </td>
     </tr>
     <tr>
-        <td colspan="8" class="bold-no-border">
+        <td class="bold-no-border" style="border-left: none">
             <strong><span class="pd-small">Forex at</span></strong>
         </td>
         <td class="bold-border">
@@ -235,7 +238,7 @@
     </tr>
 
     <tr>
-        <td colspan="8" class="bold-no-border">
+        <td class="bold-no-border" style="border-left: none">
             <strong><span class="pd-small">Convert to Rp
                     {{-- {{ $data->currency == 'idr' ? 'Rp' : ($data->currency == 'usd' ? '$' : 'S$') }} --}}
                 </span></strong>
@@ -245,7 +248,7 @@
         </td>
     </tr>
     <tr>
-        <td colspan="8" class="bold-no-border">
+        <td class="bold-no-border" style="border-left: none">
             <strong><span class="pd-small">Bank charges
                     {{ $data->currency == 'idr' ? 'Rp' : ($data->currency == 'usd' ? '$' : 'S$') }}</span></strong>
         </td>
