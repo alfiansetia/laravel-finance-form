@@ -85,7 +85,7 @@
 
     @error('to')
         <script>
-            alert('from')
+            alert('to')
         </script>
     @enderror
 @endsection
@@ -103,8 +103,19 @@
     <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 
+    @php
+        $fromDate = request('from') ?? now()->startOfMonth();
+        $toDate = request('to') ?? now();
+        
+        $formattedFromDate = $fromDate->format('Y-m-d');
+        $formattedToDate = $toDate->format('Y-m-d');
+    @endphp
     <script>
         $(document).ready(function() {
+
+            document.title =
+                "{{ $title }} {{ $formattedFromDate }} - {{ $formattedToDate }}"
+
             if ($("#range").length) {
                 $('#range').daterangepicker({
                     locale: {
@@ -150,7 +161,18 @@
                     autoWidth: false,
                     responsive: true,
                     // order: [[1, 'asc']],
-                    buttons: ["csv", "excel", "pdf", "print"]
+                    buttons: ["csv", "excel", "pdf", {
+                        extend: "print",
+                        text: 'Print',
+                        // customize: function(win) {
+                        //     var style = $('<style>')
+                        //         .attr('type', 'text/css')
+                        //         .text(
+                        //             '@media print { table thead { background-color: #007bff; color: #fff; } }'
+                        //         );
+                        //     $(win.document.head).append(style);
+                        // }
+                    }]
                 }).buttons().container().appendTo('.col-md-6:eq(0)');
 
             }

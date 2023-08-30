@@ -104,17 +104,21 @@
                                 <i class="fas fa-thumbs-up mr-1"></i>Ubah Status</button>
                         @endif
 
-                        <a href="{{ route('payment.edit', $data->id) }}" class="btn btn-secondary btn-round ml-2">
-                            <i class="fas fa-edit mr-1"></i>Edit
-                        </a>
-                        <a href="{{ route('payment.download', $data->id) }}" class="btn btn-primary btn-round ml-2"
-                            target="_blank">
-                            <i class="fas fa-file-pdf mr-1"></i>Download
-                        </a>
-                        <button type="button" class="btn btn-info btn-round ml-2" data-toggle="modal"
-                            data-target="#exampleModal2">
-                            <i class="fas fa-upload mr-1"></i>Upload File
-                        </button>
+                        @if ($data->status_id == 4)
+                            <a href="{{ route('payment.download', $data->id) }}" class="btn btn-primary btn-round ml-2"
+                                target="_blank">
+                                <i class="fas fa-file-pdf mr-1"></i>Download
+                            </a>
+                        @endif
+                        @if (auth()->user()->role != 'supervisor')
+                            <a href="{{ route('payment.edit', $data->id) }}" class="btn btn-secondary btn-round ml-2">
+                                <i class="fas fa-edit mr-1"></i>Edit
+                            </a>
+                            <button type="button" class="btn btn-info btn-round ml-2" data-toggle="modal"
+                                data-target="#exampleModal2">
+                                <i class="fas fa-upload mr-1"></i>Upload File
+                            </button>
+                        @endif
                     </div>
                 </div>
 
@@ -147,7 +151,8 @@
                                                     @method('DELETE')
                                                     @csrf
                                                     <i class="fas fa-trash-alt text-danger ml-2"
-                                                        onclick="deleteData('{{ $item->id }}')" style="cursor: pointer;"></i>
+                                                        onclick="deleteData('{{ $item->id }}')"
+                                                        style="cursor: pointer;"></i>
                                                 </form>
                                             </div>
                                         </td>
@@ -227,12 +232,11 @@
                                             </div>
                                         @endif
                                     @endif
-
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="note">Note</label>
-                                <textarea class="form-control" name="note" id="note" rows="3" maxlength="150"></textarea>
+                                <textarea class="form-control" name="note" id="note" rows="3" maxlength="150">{{ $data->note }}</textarea>
                             </div>
                         </div>
                         <div class="modal-footer">

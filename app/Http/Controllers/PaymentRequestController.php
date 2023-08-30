@@ -61,6 +61,9 @@ class PaymentRequestController extends Controller
         if (!$payment) {
             abort(404);
         }
+        if (auth()->user()->role == 'supervisor') {
+            abort(403, 'Unauthorize!');
+        }
         $bank = Bank::where('division_id', $payment->id_division)->get();
         $wht = Wht::all();
         $vendor = Vendor::all();
@@ -129,14 +132,14 @@ class PaymentRequestController extends Controller
             'wht_id'            => $request->wht,
             'due_date'          => $request->due_date,
             'bank_charge'       => $request->bank_charge,
-            'status_id'         => 1,
+            // 'status_id'         => 1,
         ]);
 
 
         if ($payment) {
-            return redirect()->route('payment.index')->with(['success' => 'Data berhasil diubah!']);
+            return redirect()->route('payment.index')->with(['success' => __('lang.success_update')]);
         } else {
-            return redirect()->route('payment.index')->with(['error' => 'Data gagal diubah!']);
+            return redirect()->route('payment.index')->with(['error' =>  __('lang.failed_update')]);
         }
     }
 
@@ -238,9 +241,9 @@ class PaymentRequestController extends Controller
         }
 
         if ($payment) {
-            return redirect()->route('payment.index')->with(['success' => 'Data berhasil ditambah!']);
+            return redirect()->route('payment.index')->with(['success' =>  __('lang.success_insert')]);
         } else {
-            return redirect()->route('payment.index')->with(['error' => 'Data gagal ditambah!']);
+            return redirect()->route('payment.index')->with(['error' =>  __('lang.failed_insert')]);
         }
     }
 
@@ -251,16 +254,16 @@ class PaymentRequestController extends Controller
         }
         $payment = $payment->delete();
         if ($payment) {
-            return redirect()->route('payment.index')->with(['success' => 'Data Berhasil dihapus!']);
+            return redirect()->route('payment.index')->with(['success' =>  __('lang.success_destroy')]);
         } else {
-            return redirect()->route('payment.index')->with(['error' => 'Data Gagal dihapus!']);
+            return redirect()->route('payment.index')->with(['error' =>  __('lang.failed_destroy')]);
         }
     }
 
     public function download(PaymentRequestModel $payment)
     {
         if ($payment->status_id != 4) {
-            return redirect()->route('payment.index')->with(['error' => $this->title . ' Belum di approve!']);
+            return redirect()->route('payment.index')->with(['error' => $this->title . ' ' .  __('lang.belum_approve')]);
         }
         $payment = $payment;
         if (!$payment) {
@@ -282,12 +285,16 @@ class PaymentRequestController extends Controller
             'note'     => 'nullable|max:150',
         ]);
 
+        if (count($payment->filepr ?? []) < 1) {
+            return redirect()->back()->with(['error' => __('lang.file_notfound')]);
+        }
+
         if ($payment->status_id == 4) {
-            return redirect()->route('payment.index')->with(['error' => 'Status tidak bisa diubah!']);
+            return redirect()->route('payment.index')->with(['error' =>  __('lang.status_unavailable')]);
         }
 
         if (auth()->user()->role != 'supervisor' && ($request->status == 2 || $request->status == 3)) {
-            return redirect()->route('payment.index')->with(['error' => 'Tidak ada akses!']);
+            return redirect()->route('payment.index')->with(['error' => __('lang.no_action')]);
         }
 
         $payment = $payment->update([
@@ -296,9 +303,9 @@ class PaymentRequestController extends Controller
         ]);
 
         if ($payment) {
-            return redirect()->route('payment.index')->with(['success' => 'Status berhasil diubah!']);
+            return redirect()->route('payment.index')->with(['success' => __('lang.success_status')]);
         } else {
-            return redirect()->route('payment.index')->with(['error' => 'Status Gagal diubah!']);
+            return redirect()->route('payment.index')->with(['error' => __('lang.failed_status')]);
         }
     }
 }

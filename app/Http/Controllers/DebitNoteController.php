@@ -126,9 +126,9 @@ class DebitNoteController extends Controller
             ]);
         }
         if ($debitNote) {
-            return redirect()->route('debit.index')->with(['success' => 'Data berhasil ditambah!']);
+            return redirect()->route('debit.index')->with(['success' => __('lang.succes_insert')]);
         } else {
-            return redirect()->route('debit.index')->with(['error' => 'Data gagal ditambah!']);
+            return redirect()->route('debit.index')->with(['error' => __('lang.failed_insert')]);
         }
     }
 
@@ -139,9 +139,9 @@ class DebitNoteController extends Controller
         }
         $debit = $debit->delete();
         if ($debit) {
-            return redirect()->route('debit.index')->with(['success' => 'Data Berhasil dihapus!']);
+            return redirect()->route('debit.index')->with(['success' => __('lang.succes_destroy')]);
         } else {
-            return redirect()->route('debit.index')->with(['error' => 'Data Gagal dihapus!']);
+            return redirect()->route('debit.index')->with(['error' => __('lang.failed_destroy')]);
         }
     }
 
@@ -207,9 +207,9 @@ class DebitNoteController extends Controller
         ]);
 
         if ($debit) {
-            return redirect()->route('debit.index')->with(['success' => 'Data berhasil diubah!']);
+            return redirect()->route('debit.index')->with(['success' => __('lang.succes_update')]);
         } else {
-            return redirect()->route('debit.index')->with(['error' => 'Data gagal diubah!']);
+            return redirect()->route('debit.index')->with(['error' => __('lang.failed_update')]);
         }
     }
 
