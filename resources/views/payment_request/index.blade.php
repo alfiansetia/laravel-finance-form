@@ -149,7 +149,7 @@
                                                         class="btn btn-sm btn-info" title="Detail"><i
                                                             class="fas fa-eye"></i></a>
                                                     @if (auth()->user()->role != 'supervisor')
-                                                        @if ($data->status_id != 4)
+                                                        @if ($item->status_id != 4)
                                                             <a href="{{ route('payment.edit', $item->id) }}"
                                                                 class="btn btn-sm btn-warning" title="Edit"><i
                                                                     class="fas fa-edit"></i></a>
