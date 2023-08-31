@@ -216,8 +216,11 @@
         </td>
     </tr>
     <tr>
-        <td rowspan="4" colspan="7" class="bold-no-border" style="border-right: none;vertical-align: middle">
-            <img src="{{ $paid }}" alt="" width="80" style="position: relative">
+        <td rowspan="4" colspan="7" class="bold-no-border"
+            style="border-right: none;vertical-align: middle;text-align: center">
+            {{-- @if ($data->status_id == 4) --}}
+            <font color="{{ $data->status->color }}" size="25">{{ $data->status->name }}</font>
+            {{-- @endif --}}
         </td>
         <td class="bold-no-border" style="border-left: none">
             <strong><span class="pd-small">To be Paid
