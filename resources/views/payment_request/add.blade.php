@@ -264,14 +264,12 @@
                                         </div>
                                     @enderror
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <button type="button" id="btn_add" class="btn btn-primary">Show Additional</button>
-                                </div>
                             </div>
                             <div class="form-row" id="add_desc_form_add" style="display: none">
 
                             </div>
-                            <div class="text-right">
+                            <div class="text-right mt-2">
+                                <button type="button" id="btn_add" class="btn btn-primary">Show Additional</button>
                                 <a href="{{ route('payment.index') }}" class="btn btn-md btn-secondary ml-auto mr-2"><i
                                         class="fas fa-backward mr-1"></i>Back</a>
                                 <button type="submit" class="btn btn-md btn-primary float-right"><i
