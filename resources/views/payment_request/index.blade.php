@@ -148,23 +148,47 @@
                                                     <a href="{{ route('payment.show', $item->id) }}"
                                                         class="btn btn-sm btn-info" title="Detail"><i
                                                             class="fas fa-eye"></i></a>
-                                                    @if (auth()->user()->role != 'supervisor')
+
+                                                    @if (auth()->user()->role == 'admin')
                                                         @if ($item->status_id != 4)
                                                             <a href="{{ route('payment.edit', $item->id) }}"
                                                                 class="btn btn-sm btn-warning" title="Edit"><i
                                                                     class="fas fa-edit"></i></a>
                                                         @endif
-                                                        <form id="form{{ $item->id }}"
-                                                            action="{{ route('payment.destroy', $item->id) }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="button"
-                                                                onclick="deleteData('{{ $item->id }}');"
-                                                                class="btn btn-sm btn-danger" title="Delete">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </button>
-                                                        </form>
+                                                        @if ($item->status_id != 2)
+                                                            <form id="form{{ $item->id }}"
+                                                                action="{{ route('payment.destroy', $item->id) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="button"
+                                                                    onclick="deleteData('{{ $item->id }}');"
+                                                                    class="btn btn-sm btn-danger" title="Delete">
+                                                                    <i class="fas fa-trash-alt"></i>
+                                                                </button>
+                                                            </form>
+                                                        @endif
+                                                    @endif
+
+                                                    @if (auth()->user()->role == 'user')
+                                                        @if ($item->status_id != 4)
+                                                            <a href="{{ route('payment.edit', $item->id) }}"
+                                                                class="btn btn-sm btn-warning" title="Edit"><i
+                                                                    class="fas fa-edit"></i></a>
+                                                        @endif
+                                                        @if ($item->status_id == 3)
+                                                            <form id="form{{ $item->id }}"
+                                                                action="{{ route('payment.destroy', $item->id) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="button"
+                                                                    onclick="deleteData('{{ $item->id }}');"
+                                                                    class="btn btn-sm btn-danger" title="Delete">
+                                                                    <i class="fas fa-trash-alt"></i>
+                                                                </button>
+                                                            </form>
+                                                        @endif
                                                     @endif
                                                 </div>
                                             </td>

@@ -50,9 +50,9 @@ class FileprController extends Controller
             'name'          => $image,
         ]);
         if ($filepr) {
-            return redirect()->back()->with(['success' => 'File berhasil ditambah!']);
+            return redirect()->back()->with(['success' => 'Success Add File!']);
         } else {
-            return redirect()->back()->with(['error' => 'File gagal ditambah!']);
+            return redirect()->back()->with(['error' => 'Failed Add File!']);
         }
     }
 

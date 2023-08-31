@@ -30,7 +30,7 @@
                         @if (count($data ?? []) > 0)
                             <div class="table-responsive">
                                 <table id="table" class="display table table-striped table-hover">
-                                    <thead>
+                                    <thead class="bg-primary" style="color: white">
                                         <tr>
                                             <th class="text-center" style="width: 30px;">No. PR</th>
                                             <th class="text-center">PR Voucher</th>
@@ -44,15 +44,31 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($data as $item)
+                                            @php
+                                                $vat_value = 0;
+                                                $wht_value = 0;
+                                                $total = 0;
+                                                $grand_total = 0;
+                                                if ($item->vat > 0) {
+                                                    $vat_value = ($item->total * $item->vat) / 100;
+                                                }
+                                                if ($item->wht) {
+                                                    $wht_value = ($item->total * $item->wht->value) / 100;
+                                                }
+                                                $total = $item->total + $vat_value - $wht_value;
+                                                $grand_total = $item->total + $item->bank_charge + $vat_value - $wht_value;
+                                            @endphp
+
                                             <tr>
                                                 <td>{{ $item->no_pr }}</td>
                                                 <td>{{ date('d-M-Y', strtotime($item->date_pr)) }}</td>
                                                 <td>{{ $item->vendor->beneficary }}</td>
                                                 <td>{{ substr($item->vendor->bank, 0, 30) }}</td>
                                                 <td>{{ $item->for }}</td>
-                                                <td>{{ $item->total }}</td>
-                                                <td>{{ $item->vat }}</td>
-                                                <td>{{ $item->wht->value ?? 0 }}</td>
+                                                <td>{{ $grand_total > 0 ? number_format($grand_total, 2, ',', ',') : 0 }}
+                                                </td>
+                                                <td>{{ $vat_value > 0 ? number_format($vat_value, 2, ',', ',') : 0 }}</td>
+                                                <td>{{ $wht_value > 0 ? number_format($wht_value, 2, ',', ',') : 0 }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -106,9 +122,8 @@
     @php
         $fromDate = request('from') ?? now()->startOfMonth();
         $toDate = request('to') ?? now();
-        
-        $formattedFromDate = $fromDate->format('Y-m-d');
-        $formattedToDate = $toDate->format('Y-m-d');
+        $formattedFromDate = \Carbon\Carbon::parse($fromDate)->format('Y-m-d');
+        $formattedToDate = \Carbon\Carbon::parse($toDate)->format('Y-m-d');
     @endphp
     <script>
         $(document).ready(function() {
