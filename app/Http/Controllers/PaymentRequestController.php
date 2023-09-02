@@ -339,6 +339,7 @@ class PaymentRequestController extends Controller
 
         $payment = $payment->update([
             'status_id' => 4,
+            'paid_date' => now(),
         ]);
 
         if ($payment) {

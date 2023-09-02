@@ -124,7 +124,7 @@
                                             </td>
                                             <td class="text-center">
                                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                                    @if ($item->status_id == 4)
+                                                    @if ($item->status_id != 3)
                                                         <a href="{{ route('debit.download', $item->id) }}"
                                                             class="btn btn-sm btn-secondary" title="Download"
                                                             target="_blank"><i class="fas fa-file-pdf"></i></a>

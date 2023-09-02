@@ -12,6 +12,7 @@ class UserController extends Controller
 {
 
     private $title = 'Role Management';
+    private $title_profile = 'User';
 
     public function __construct()
     {
@@ -116,7 +117,7 @@ class UserController extends Controller
 
     public function profile()
     {
-        return view('user.profile')->with(['title' => $this->title]);
+        return view('user.profile')->with(['title' => $this->title_profile]);
     }
 
     public function profileUpdate(Request $request)

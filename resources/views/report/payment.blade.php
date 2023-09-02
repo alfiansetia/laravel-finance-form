@@ -34,6 +34,7 @@
                                         <tr>
                                             <th class="text-center">No. PR</th>
                                             <th class="text-center">PR Voucher</th>
+                                            <th class="text-center">Paid Date</th>
                                             <th class="text-center">Name Beneficiary</th>
                                             <th class="text-center">Bank A/C</th>
                                             <th class="text-center">For</th>
@@ -62,6 +63,7 @@
                                             <tr>
                                                 <td class="text-center">{{ $item->no_pr }}</td>
                                                 <td class="text-center">{{ date('d-M-Y', strtotime($item->date_pr)) }}</td>
+                                                <td class="text-center">{{ date('d-M-Y', strtotime($item->paid_date)) }}</td>
                                                 <td class="text-center">{{ $item->vendor->beneficary }}</td>
                                                 <td class="text-center">{{ substr($item->vendor->bank, 0, 30) }}</td>
                                                 <td class="text-center">{{ $item->for }}</td>

@@ -32,6 +32,7 @@ class CreatePaymentRequestTable extends Migration
             $table->unsignedBigInteger('status_id');
             // $table->enum('status', ['pending', 'reject', 'processing', 'paid'])->default('pending');
             $table->string('note')->nullable();
+            $table->datetime('paid_date')->nullable();
             $table->timestamps();
             $table->foreign('wht_id')->references('id')->on('whts')->cascadeOnUpdate()->nullOnDelete();
             $table->foreign('id_division')->references('id')->on('division')->cascadeOnUpdate()->cascadeOnDelete();
