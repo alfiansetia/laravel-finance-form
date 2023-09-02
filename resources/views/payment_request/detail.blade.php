@@ -150,14 +150,16 @@
                                                 <a href="{{ route('filepr.show', $item->id) }}" target="_blank">
                                                     <i class="fas fa-download text-primary"></i>
                                                 </a>
-                                                <form id="form{{ $item->id }}" method="POST"
-                                                    action="{{ route('filepr.destroy', $item->id) }}">
-                                                    @method('DELETE')
-                                                    @csrf
-                                                    <i class="fas fa-trash-alt text-danger ml-2"
-                                                        onclick="deleteData('{{ $item->id }}')"
-                                                        style="cursor: pointer;"></i>
-                                                </form>
+                                                @if (auth()->user()->role != 'supervisor')
+                                                    <form id="form{{ $item->id }}" method="POST"
+                                                        action="{{ route('filepr.destroy', $item->id) }}">
+                                                        @method('DELETE')
+                                                        @csrf
+                                                        <i class="fas fa-trash-alt text-danger ml-2"
+                                                            onclick="deleteData('{{ $item->id }}')"
+                                                            style="cursor: pointer;"></i>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
