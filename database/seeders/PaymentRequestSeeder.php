@@ -2,9 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Models\Bank;
+use App\Models\DescriptionModel;
+use App\Models\DivisionModel;
 use App\Models\FinanceModel;
 use App\Models\PaymentRequestModel;
+use App\Models\Vendor;
 use Carbon\Carbon;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 
 class PaymentRequestSeeder extends Seeder
@@ -16,30 +21,33 @@ class PaymentRequestSeeder extends Seeder
      */
     public function run()
     {
-        PaymentRequestModel::truncate();
+        $vendors = Vendor::all();
+        $banks = Bank::all();
 
-        $datas = [
-            [
-                'invoice_date' => Carbon::now()->format('Y-m-d'),
-                'received_date' => Carbon::now()->format('Y-m-d'),
-                "contract" => "contract",
-                'date_pr' => Carbon::now()->format('Y-m-d'),
-                "no_pr" => "no_pr_voucher",
-                "id_division" => 1,
-                "name_beneficiary" => "name_beneficiary",
-                "bank_account" => "bank_account",
-                "for" => "for",
-                "result_vat" => 5000,
-                "total_wht" => 5000,
-                "result_wht" => 5000,
-                "beneficiary_bank" => "beneficiary_bank",
-                "due_date" => 1,
-                'deadline' => Carbon::now()->format('Y-m-d'),
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            ],
-        ];
+        for ($i = 0; $i < 20; $i++) {
+            $status = rand(1, 4);
+            $bank = $banks->random();
+            $payment = PaymentRequestModel::factory()->create([
+                'no_pr'         => $i,
+                'bank_id'       => $bank->id,
+                'id_division'   => $bank->division_id,
+                'vendor_id'     => $vendors->random(),
+                'status_id'     => $status,
+                'paid_date'     => $status == 4 ? now() : null,
+            ]);
 
-        PaymentRequestModel::insert($datas);
+            for ($j = 0; $j < 2; $j++) {
+                DescriptionModel::factory()->create([
+                    'id_payment_request'    => $payment->id,
+                    'type'                  => 'reg'
+                ]);
+            }
+            for ($k = 0; $k < 2; $k++) {
+                DescriptionModel::factory()->create([
+                    'id_payment_request'    => $payment->id,
+                    'type'                  => 'add'
+                ]);
+            }
+        }
     }
 }

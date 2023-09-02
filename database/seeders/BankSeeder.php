@@ -21,10 +21,12 @@ class BankSeeder extends Seeder
             'BCA 12345678',
         ];
         foreach ($name as $item) {
-            Bank::create([
-                'name'          => $item,
-                'division_id'   => random_int(1, 4),
-            ]);
+            for ($i = 1; $i < 5; $i++) {
+                Bank::create([
+                    'name'          => $item,
+                    'division_id'   => $i,
+                ]);
+            }
         }
     }
 }

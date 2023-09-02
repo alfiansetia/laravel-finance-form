@@ -30,7 +30,7 @@ class ReportController extends Controller
                 'to'    => 'required|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
             ]);
             $from = Carbon::parse($request->from);
-            $to = Carbon::parse($request->to);
+            $to = Carbon::parse($request->to)->addDay();
         }
         $data = PaymentRequestModel::where('status_id', 4)
             ->whereBetween('date_pr', [$from, $to])
@@ -54,7 +54,7 @@ class ReportController extends Controller
                 'to'    => 'required|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
             ]);
             $from = Carbon::parse($request->from);
-            $to = Carbon::parse($request->to);
+            $to = Carbon::parse($request->to)->addDay();
         }
         $data = DebitNoteModel::where('status_id', 4)
             ->whereBetween('debit_note_date', [$from, $to])
