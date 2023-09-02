@@ -32,14 +32,17 @@
                                 <table id="table" class="display table table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">No. PR</th>
-                                            <th class="text-center">PR Voucher</th>
-                                            <th class="text-center">Name Beneficiary</th>
-                                            <th class="text-center">Bank A/C</th>
+                                            <th class="text-center">No. DN</th>
+                                            <th class="text-center">Debit Note Date</th>
+                                            <th class="text-center">Received From</th>
                                             <th class="text-center">For</th>
                                             <th class="text-center">Total Price</th>
                                             <th class="text-center">VAT</th>
                                             <th class="text-center">WHT</th>
+                                            <th class="text-center">Tax Invoice Serial No</th>
+                                            <th class="text-center">Tax Invoice Date</th>
+                                            <th class="text-center">WHT No</th>
+                                            <th class="text-center">WHT Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -60,10 +63,10 @@
                                             @endphp
 
                                             <tr>
-                                                <td class="text-center">{{ $item->no_pr }}</td>
-                                                <td class="text-center">{{ date('d-M-Y', strtotime($item->date_pr)) }}</td>
-                                                <td class="text-center">{{ $item->vendor->beneficary }}</td>
-                                                <td class="text-center">{{ substr($item->vendor->bank, 0, 30) }}</td>
+                                                <td class="text-center">{{ $item->no_debit_note }}</td>
+                                                <td class="text-center">
+                                                    {{ date('d-M-Y', strtotime($item->debit_note_date)) }}</td>
+                                                <td class="text-center">{{ $item->received_from }}</td>
                                                 <td class="text-center">{{ $item->for }}</td>
                                                 <td class="text-center">
                                                     {{ $grand_total > 0 ? number_format($grand_total, 2, ',', ',') : 0 }}
@@ -72,6 +75,12 @@
                                                     {{ $vat_value > 0 ? number_format($vat_value, 2, ',', ',') : 0 }}</td>
                                                 <td class="text-center">
                                                     {{ $wht_value > 0 ? number_format($wht_value, 2, ',', ',') : 0 }}</td>
+                                                <td class="text-center">{{ $item->tax_invoice_serial_no }}</td>
+                                                <td class="text-center">
+                                                    {{ date('d-M-Y', strtotime($item->tax_invoice_date)) }}</td>
+                                                <td class="text-center">{{ $item->wht_no }}</td>
+                                                <td class="text-center">{{ date('d-M-Y', strtotime($item->wht_date)) }}
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -179,7 +188,11 @@
                     autoWidth: false,
                     responsive: true,
                     // order: [[1, 'asc']],
-                    buttons: ["csv", "excel", "pdf", {
+                    buttons: ["csv", "excel", {
+                        extend: 'pdf',
+                        orientation: 'landscape',
+                        pageSize: 'A4'
+                    }, {
                         extend: "print",
                         text: 'Print',
                         // customize: function(win) {

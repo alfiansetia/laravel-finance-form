@@ -95,13 +95,17 @@
                     </div>
                     <div class="card-body text-center">
 
-                        @if (
-                            ($data->status_id == 1 && auth()->user()->role == 'supervisor') ||
-                                ($data->status_id == 2 &&
-                                    $data->status_id != 4 &&
-                                    (auth()->user()->role == 'admin' || auth()->user()->role == 'user')))
+                        @if ($data->status_id == 1 && auth()->user()->role == 'supervisor')
                             <button class="btn btn-warning btn-round" data-toggle="modal" data-target="#exampleModal">
-                                <i class="fas fa-thumbs-up mr-1"></i>Ubah Status</button>
+                                <i class="fas fa-thumbs-up mr-1"></i>Change Status</button>
+                        @endif
+
+                        @if (
+                            $data->status_id == 2 &&
+                                $data->status_id != 4 &&
+                                (auth()->user()->role == 'admin' || auth()->user()->role == 'user'))
+                            <button id="set_paid" class="btn btn-success btn-round">
+                                <i class="fas fa-thumbs-up mr-1"></i>Set Paid</button>
                         @endif
 
                         @if ($data->status_id == 4)
@@ -110,7 +114,7 @@
                                 <i class="fas fa-file-pdf mr-1"></i>Download
                             </a>
                         @endif
-                        @if (auth()->user()->role != 'supervisor')
+                        @if (auth()->user()->role != 'supervisor' && $data->status_id != 4)
                             <a href="{{ route('payment.edit', $data->id) }}" class="btn btn-secondary btn-round ml-2">
                                 <i class="fas fa-edit mr-1"></i>Edit
                             </a>
@@ -199,7 +203,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Ubah Status</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Change Status</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -213,24 +217,14 @@
                                         <div class="form-check mr-3">
                                             <input class="form-check-input" type="radio" name="status" id="status2"
                                                 value="2" {{ $data->status_id == 2 ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="status2">2 Accept</label>
+                                            <label class="form-check-label" for="status2">Accept</label>
                                         </div>
 
                                         <div class="form-check mr-3">
                                             <input class="form-check-input" type="radio" name="status" id="status3"
                                                 value="3" {{ $data->status_id == 3 ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="status3">3 Reject</label>
+                                            <label class="form-check-label" for="status3">Reject</label>
                                         </div>
-                                    @endif
-
-                                    @if (auth()->user()->role == 'user' || auth()->user()->role == 'admin')
-                                        @if ($data->status_id == 2)
-                                            <div class="form-check mr-3">
-                                                <input class="form-check-input" type="radio" name="status"
-                                                    id="status4" value="4">
-                                                <label class="form-check-label" for="status4">4 Paid</label>
-                                            </div>
-                                        @endif
                                     @endif
                                 </div>
                             </div>
@@ -284,11 +278,38 @@
             </form>
         </div>
     </div>
+
+    <form id="form_set_paid" action="{{ route('payment.set.paid', $data->id) }}" method="POST">
+        @csrf
+    </form>
 @endsection
 @push('js')
     <script src="{{ asset('assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
     <script>
         bsCustomFileInput.init();
+
+        $('#set_paid').click(function() {
+            swal({
+                title: 'Set Paid?',
+                icon: "warning",
+                buttons: {
+                    confirm: {
+                        text: 'Yes',
+                        className: 'btn btn-success'
+                    },
+                    cancel: {
+                        visible: true,
+                        className: 'btn btn-danger'
+                    }
+                }
+            }).then((value) => {
+                if (value) {
+                    $('#form_set_paid').submit();
+                } else {
+                    swal.close();
+                }
+            });
+        })
 
         function deleteData(idform) {
             swal({

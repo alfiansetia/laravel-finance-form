@@ -424,7 +424,7 @@
         function cek_desc() {
             desc = $('.desc_form').length ?? 0
             desc_add = $('.desc_form_add').length ?? 0
-            console.log(desc, desc_add);
+            // console.log(desc, desc_add);
         }
 
         function mask_angka() {

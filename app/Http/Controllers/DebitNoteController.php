@@ -26,12 +26,16 @@ class DebitNoteController extends Controller
     public function index()
     {
         $data = DebitNoteModel::all();
+        $reject = DebitNoteModel::where('status_id', 3)->count();
         $desc = DescriptionDebitModel::all();
-        return view('debit_note.index', compact('data', 'desc'))->with(['title' => $this->title]);
+        return view('debit_note.index', compact('data', 'desc', 'reject'))->with(['title' => $this->title]);
     }
 
     public function create()
     {
+        if (auth()->user()->role == 'supervisor') {
+            abort(403, 'Unauthorize!');
+        }
         $bank = Bank::all();
         $wht = Wht::all();
         $division = DivisionModel::all();
@@ -52,6 +56,9 @@ class DebitNoteController extends Controller
 
     public function store(Request $request)
     {
+        if (auth()->user()->role == 'supervisor') {
+            abort(403, 'Unauthorize!');
+        }
         $this->validate($request, [
             'id_division'           => 'required|integer|exists:division,id',
             'received_bank'         => 'required|integer|exists:banks,id,division_id,' . $request->id_division,
@@ -69,7 +76,13 @@ class DebitNoteController extends Controller
             'description'           => 'required|array|min:1',
             'price'                 => 'required|array|min:1',
             'description.*'         => 'required|max:120',
-            'price.*'               => 'required|integer|gt:0',
+            'price.*'               => 'required|integer',
+            'description_add'       => 'nullable|array|min:1',
+            'price_add'             => 'nullable|array|min:1',
+            'description_add.*'     => 'required|max:120',
+            'price_add.*'           => 'required|integer',
+            'wht_no'                => 'required',
+            'wht_date'              => 'required|date_format:Y-m-d',
         ]);
 
         $division = DivisionModel::findOrFail($request->id_division);
@@ -116,17 +129,30 @@ class DebitNoteController extends Controller
             'vat'                   => $vat_value,
             'bank_charge'           => $request->bank_charge,
             'received_from'         => $request->received_from,
+            'status_id'             => 1,
+            'wht_no'                => $request->wht_no,
+            'wht_date'              => $request->wht_date,
         ]);
 
-        for ($i = 0; $i < count($request->description); $i++) {
+        for ($i = 0; $i < count($request->description ?? []); $i++) {
             DescriptionDebitModel::create([
+                'id_debit_note' => $debitNote->id,
                 'value'         => $request->description[$i],
                 'price'         => $request->price[$i],
+                'type'          => 'reg'
+            ]);
+        }
+
+        for ($i = 0; $i < count($request->description_add ?? []); $i++) {
+            DescriptionDebitModel::create([
                 'id_debit_note' => $debitNote->id,
+                'value'         => $request->description_add[$i],
+                'price'         => $request->price_add[$i],
+                'type'          => 'add',
             ]);
         }
         if ($debitNote) {
-            return redirect()->route('debit.index')->with(['success' => __('lang.succes_insert')]);
+            return redirect()->route('debit.index')->with(['success' => __('lang.success_store')]);
         } else {
             return redirect()->route('debit.index')->with(['error' => __('lang.failed_insert')]);
         }
@@ -137,9 +163,12 @@ class DebitNoteController extends Controller
         if (!$debit) {
             abort(404);
         }
+        if (auth()->user()->role == 'supervisor') {
+            abort(403, 'Unauthorize!');
+        }
         $debit = $debit->delete();
         if ($debit) {
-            return redirect()->route('debit.index')->with(['success' => __('lang.succes_destroy')]);
+            return redirect()->route('debit.index')->with(['success' => __('lang.success_destroy')]);
         } else {
             return redirect()->route('debit.index')->with(['error' => __('lang.failed_destroy')]);
         }
@@ -149,6 +178,9 @@ class DebitNoteController extends Controller
     {
         if (!$debit) {
             abort(404);
+        }
+        if (auth()->user()->role == 'supervisor' || $debit->status_id == 4) {
+            abort(403, 'Unauthorize!');
         }
         $bank = Bank::where('division_id', $debit->id_division)->get();
         $data = $debit;
@@ -160,6 +192,9 @@ class DebitNoteController extends Controller
     {
         if (!$debit) {
             abort(404);
+        }
+        if (auth()->user()->role == 'supervisor' || $debit->status_id == 4) {
+            abort(403, 'Unauthorize!');
         }
         $this->validate($request, [
             'received_bank'         => 'required|integer|exists:banks,id,division_id,' . $debit->id_division,
@@ -176,20 +211,37 @@ class DebitNoteController extends Controller
             'description'           => 'required|array|min:1',
             'price'                 => 'required|array|min:1',
             'description.*'         => 'required|max:120',
-            'price.*'               => 'required|integer|gt:0',
+            'price.*'               => 'required|integer',
+            'description_add'       => 'nullable|array|min:1',
+            'price_add'             => 'nullable|array|min:1',
+            'description_add.*'     => 'required|max:120',
+            'price_add.*'           => 'required|integer',
+            'wht_no'                => 'required',
+            'wht_date'              => 'required|date_format:Y-m-d',
         ]);
 
         foreach ($debit->desc as $item) {
             DescriptionDebitModel::where('id', $item->id)->delete();
         }
 
-        for ($i = 0; $i < count($request->description); $i++) {
+        for ($i = 0; $i < count($request->description ?? []); $i++) {
             DescriptionDebitModel::create([
                 'id_debit_note' => $debit->id,
                 'value'         => $request->description[$i],
                 'price'         => $request->price[$i],
+                'type'          => 'reg'
             ]);
         }
+
+        for ($i = 0; $i < count($request->description_add ?? []); $i++) {
+            DescriptionDebitModel::create([
+                'id_debit_note' => $debit->id,
+                'value'         => $request->description_add[$i],
+                'price'         => $request->price_add[$i],
+                'type'          => 'add',
+            ]);
+        }
+
 
         $debit = $debit->update([
             'no_invoice'            => $request->no_invoice,
@@ -204,10 +256,14 @@ class DebitNoteController extends Controller
             'vat'                   => $request->vat,
             'bank_charge'           => $request->bank_charge,
             'received_from'         => $request->received_from,
+            'status_id'             => $debit->status_id == 3 ? 1 : $debit->status_id,
+            'wht_no'                => $request->wht_no,
+            'wht_date'              => $request->wht_date,
+            'status_id'             => $debit->status_id == 3 ? 1 : $debit->status_id,
         ]);
 
         if ($debit) {
-            return redirect()->route('debit.index')->with(['success' => __('lang.succes_update')]);
+            return redirect()->route('debit.index')->with(['success' => __('lang.success_update')]);
         } else {
             return redirect()->route('debit.index')->with(['error' => __('lang.failed_update')]);
         }
@@ -215,9 +271,11 @@ class DebitNoteController extends Controller
 
     public function download(DebitNoteModel $debit)
     {
-        $debit = $debit;
         if (!$debit) {
             abort(404);
+        }
+        if ($debit->status_id != 4) {
+            return redirect()->route('debit.index')->with(['error' => $this->title . ' ' .  __('lang.belum_approve')]);
         }
         $pdf = Pdf::loadview('debit_note.download', [
             'title'     => 'Detail ' . $debit->no_pr,
@@ -225,5 +283,36 @@ class DebitNoteController extends Controller
             'path_logo' => public_path('logo.jpg'),
         ])->setPaper('A4', 'portrait');
         return $pdf->download($debit->id . '_' . date('ymdHis') . '.pdf');
+    }
+
+    public function status(Request $request, DebitNoteModel $debit)
+    {
+        $this->validate($request, [
+            'status'   => 'required|integer|exists:statuses,id',
+            'note'     => 'nullable|max:150',
+        ]);
+
+        if (count($debit->filedn ?? []) < 1) {
+            return redirect()->back()->with(['error' => __('lang.file_notfound')]);
+        }
+
+        if ($debit->status_id == 4) {
+            return redirect()->route('debit.index')->with(['error' =>  __('lang.status_unavailable')]);
+        }
+
+        if (auth()->user()->role != 'supervisor' && ($request->status == 2 || $request->status == 3)) {
+            return redirect()->route('debit.index')->with(['error' => __('lang.no_action')]);
+        }
+
+        $debit = $debit->update([
+            'status_id' => $request->status,
+            'note'      => $request->note,
+        ]);
+
+        if ($debit) {
+            return redirect()->route('debit.index')->with(['success' => __('lang.success_status')]);
+        } else {
+            return redirect()->route('debit.index')->with(['error' => __('lang.failed_status')]);
+        }
     }
 }

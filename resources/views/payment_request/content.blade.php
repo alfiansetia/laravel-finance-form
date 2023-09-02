@@ -51,7 +51,16 @@
     <tr>
         <td colspan="9"
             style="border-top: 1pt solid black;border-right: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-bottom: none;padding: 0mm;height: 70pt;vertical-align: middle;">
-            <img src="{{ $path_logo }}" width="114" height="45" style="margin-left: 8pt;margin-top: 0;">
+            <div style="margin: 0px;padding: 0px;width: 100%;"><img src="{{ $path_logo }}" width="114" height="45"
+                    style="margin-left: 8pt;margin-top: 0;">
+                @if ($data->status_id == 4)
+
+                    @for ($i = 0; $i < 50; $i++)
+                        &nbsp;
+                    @endfor
+                    <font size="18" color="green"> PAID</font>
+                @endif
+            </div>
             <div class="pd-header">
                 <span style="font-family:'Calibri', sans-serif;float: left;">
                     {{ $data->division->name }}
@@ -112,7 +121,7 @@
         </td>
     </tr>
     @php
-        $sisa = 21 - count($data->desc);
+        $sisa = 21 - count($data->desc ?? []);
     @endphp
     @foreach ($data->desc as $item)
         @if ($item->type == 'reg')
@@ -216,13 +225,7 @@
         </td>
     </tr>
     <tr>
-        <td rowspan="4" colspan="7" class="bold-no-border"
-            style="border-right: none;vertical-align: middle;text-align: center">
-            {{-- @if ($data->status_id == 4) --}}
-            <font color="{{ $data->status->color }}" size="25">{{ $data->status->name }}</font>
-            {{-- @endif --}}
-        </td>
-        <td class="bold-no-border" style="border-left: none">
+        <td colspan="8" class="bold-no-border">
             <strong><span class="pd-small">To be Paid
                     {{ $data->currency == 'idr' ? 'Rp' : ($data->currency == 'usd' ? '$' : 'S$') }}</span></strong>
         </td>
@@ -232,7 +235,7 @@
         </td>
     </tr>
     <tr>
-        <td class="bold-no-border" style="border-left: none">
+        <td colspan="8" class="bold-no-border">
             <strong><span class="pd-small">Forex at</span></strong>
         </td>
         <td class="bold-border">
@@ -241,7 +244,7 @@
     </tr>
 
     <tr>
-        <td class="bold-no-border" style="border-left: none">
+        <td colspan="8" class="bold-no-border">
             <strong><span class="pd-small">Convert to Rp
                     {{-- {{ $data->currency == 'idr' ? 'Rp' : ($data->currency == 'usd' ? '$' : 'S$') }} --}}
                 </span></strong>
@@ -251,7 +254,7 @@
         </td>
     </tr>
     <tr>
-        <td class="bold-no-border" style="border-left: none">
+        <td colspan="8" class="bold-no-border">
             <strong><span class="pd-small">Bank charges
                     {{ $data->currency == 'idr' ? 'Rp' : ($data->currency == 'usd' ? '$' : 'S$') }}</span></strong>
         </td>

@@ -104,23 +104,32 @@
                         </a>
                     </li>
                 @endif
+                @if (auth()->user()->role != 'supervisor')
+                    <li
+                        class="nav-item {{ $title == 'Report Payment Request' || $title == 'Report Debit Note' ? 'active submenu' : '' }}">
+                        <a data-toggle="collapse" href="#report_menu" class="collapsed" aria-expanded="false">
+                            <i class="fas fa-book"></i>
+                            <p>Report</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse {{ $title == 'Report Payment Request' || $title == 'Report Debit Note' ? 'show' : '' }}"
+                            id="report_menu">
+                            <ul class="nav nav-collapse">
+                                <li class="{{ $title == 'Report Payment Request' ? 'active' : '' }}">
+                                    <a href="{{ route('report.payment.index') }}">
+                                        <span class="sub-item">PR</span>
+                                    </a>
+                                </li>
+                                <li class="{{ $title == 'Report Debit Note' ? 'active' : '' }}">
+                                    <a href="{{ route('report.debit.index') }}">
+                                        <span class="sub-item">DN</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                @endif
 
-                <li class="nav-item {{ $title == 'Report Payment Request' ? 'active submenu' : '' }}">
-                    <a data-toggle="collapse" href="#report_menu" class="collapsed" aria-expanded="false">
-                        <i class="fas fa-book"></i>
-                        <p>Report</p>
-                        <span class="caret"></span>
-                    </a>
-                    <div class="collapse {{ $title == 'Report Payment Request' ? 'show' : '' }}" id="report_menu">
-                        <ul class="nav nav-collapse">
-                            <li class="{{ $title == 'Report Payment Request' ? 'active' : '' }}">
-                                <a href="{{ route('report.payment.index') }}">
-                                    <span class="sub-item">PR</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
             </ul>
         </div>
     </div>

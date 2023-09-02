@@ -34,6 +34,9 @@ class PaymentRequestController extends Controller
 
     public function create()
     {
+        if (auth()->user()->role == 'supervisor') {
+            abort(403, 'Unauthorize!');
+        }
         $bank = Bank::all();
         $wht = Wht::all();
         $vendor = Vendor::all();
@@ -51,7 +54,7 @@ class PaymentRequestController extends Controller
             'title'     => $this->title,
             'data'      => $payment,
             'path_logo' => asset('logo.jpg'),
-            'paid'      => asset('paid.png'),
+            // 'paid'      => asset('paid.png'),
             'status'    => Status::all(),
         ]);
     }
@@ -61,7 +64,7 @@ class PaymentRequestController extends Controller
         if (!$payment) {
             abort(404);
         }
-        if (auth()->user()->role == 'supervisor') {
+        if (auth()->user()->role == 'supervisor' || $payment->status_id == 4) {
             abort(403, 'Unauthorize!');
         }
         $bank = Bank::where('division_id', $payment->id_division)->get();
@@ -75,6 +78,9 @@ class PaymentRequestController extends Controller
     {
         if (!$payment) {
             abort(404);
+        }
+        if (auth()->user()->role == 'supervisor' || $payment->status_id == 4) {
+            abort(403, 'Unauthorize!');
         }
         $this->validate($request, [
             'beneficiary_bank'  => 'required|integer|exists:banks,id,division_id,' . $payment->id_division,
@@ -132,9 +138,8 @@ class PaymentRequestController extends Controller
             'wht_id'            => $request->wht,
             'due_date'          => $request->due_date,
             'bank_charge'       => $request->bank_charge,
-            // 'status_id'         => 1,
+            'status_id'         => $payment->status_id == 3 ? 1 : $payment->status_id
         ]);
-
 
         if ($payment) {
             return redirect()->route('payment.index')->with(['success' => __('lang.success_update')]);
@@ -145,6 +150,9 @@ class PaymentRequestController extends Controller
 
     public function store(Request $request)
     {
+        if (auth()->user()->role == 'supervisor') {
+            abort(403, 'Unauthorize!');
+        }
         $this->validate($request, [
             'id_division'       => 'required|integer|exists:division,id',
             'beneficiary_bank'  => 'required|integer|exists:banks,id,division_id,' . $request->id_division,
@@ -223,7 +231,7 @@ class PaymentRequestController extends Controller
             'status_id'         => 1,
         ]);
 
-        for ($i = 0; $i < count($request->description); $i++) {
+        for ($i = 0; $i < count($request->description ?? []); $i++) {
             DescriptionModel::create([
                 'id_payment_request'    => $payment->id,
                 'value'                 => $request->description[$i],
@@ -241,9 +249,9 @@ class PaymentRequestController extends Controller
         }
 
         if ($payment) {
-            return redirect()->route('payment.index')->with(['success' =>  __('lang.success_insert')]);
+            return redirect()->route('payment.index')->with(['success' =>  __('lang.success_store')]);
         } else {
-            return redirect()->route('payment.index')->with(['error' =>  __('lang.failed_insert')]);
+            return redirect()->route('payment.index')->with(['error' =>  __('lang.failed_store')]);
         }
     }
 
@@ -252,6 +260,13 @@ class PaymentRequestController extends Controller
         if (!$payment) {
             abort(404);
         }
+        if (auth()->user()->role == 'supervisor') {
+            abort(403, 'Unauthorize!');
+        }
+        if ($payment->status_id == 4 && auth()->user()->role != 'admin') {
+            abort(403, 'Unauthorize!');
+        }
+
         $payment = $payment->delete();
         if ($payment) {
             return redirect()->route('payment.index')->with(['success' =>  __('lang.success_destroy')]);
@@ -265,7 +280,6 @@ class PaymentRequestController extends Controller
         if ($payment->status_id != 4) {
             return redirect()->route('payment.index')->with(['error' => $this->title . ' ' .  __('lang.belum_approve')]);
         }
-        $payment = $payment;
         if (!$payment) {
             abort(404);
         }
@@ -273,7 +287,7 @@ class PaymentRequestController extends Controller
             'title'     => 'Detail ' . $payment->no_pr,
             'data'      => $payment,
             'path_logo' => public_path('logo.jpg'),
-            'paid'      => public_path('paid.png'),
+            // 'paid'      => public_path('paid.png'),
         ])->setPaper('A4', 'portrait');
         return $pdf->download($payment->id . '_' . date('ymdHis') . '.pdf');
     }
@@ -300,6 +314,31 @@ class PaymentRequestController extends Controller
         $payment = $payment->update([
             'status_id' => $request->status,
             'note'      => $request->note,
+        ]);
+
+        if ($payment) {
+            return redirect()->route('payment.index')->with(['success' => __('lang.success_status')]);
+        } else {
+            return redirect()->route('payment.index')->with(['error' => __('lang.failed_status')]);
+        }
+    }
+
+    public function paid(Request $request, PaymentRequestModel $payment)
+    {
+        if (count($payment->filepr ?? []) < 1) {
+            return redirect()->back()->with(['error' => __('lang.file_notfound')]);
+        }
+
+        if ($payment->status_id != 2) {
+            return redirect()->route('payment.index')->with(['error' =>  __('lang.status_unavailable')]);
+        }
+
+        if (auth()->user()->role != 'supervisor' && ($request->status == 2 || $request->status == 3)) {
+            return redirect()->route('payment.index')->with(['error' => __('lang.no_action')]);
+        }
+
+        $payment = $payment->update([
+            'status_id' => 4,
         ]);
 
         if ($payment) {

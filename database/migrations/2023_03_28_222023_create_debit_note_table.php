@@ -30,6 +30,9 @@ class CreateDebitNoteTable extends Migration
             $table->unsignedBigInteger('wht_id')->nullable();
             $table->unsignedBigInteger('bank_id')->nullable();
             $table->unsignedBigInteger('status_id');
+            $table->string('wht_no')->nullable();
+            $table->datetime('wht_date')->nullable();
+            $table->string('note')->nullable();
             $table->timestamps();
             $table->foreign('id_division')->references('id')->on('division')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreign('wht_id')->references('id')->on('whts')->cascadeOnUpdate()->nullOnDelete();

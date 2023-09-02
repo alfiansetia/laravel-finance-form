@@ -48,32 +48,19 @@
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <h4 class="card-title">{{ $title }}</h4>
-                            <a href="{{ route('payment.create') }}" class="btn btn-primary btn-round ml-auto">
-                                <i class="fa fa-plus mr-2"></i>Add
-                            </a>
+                            @if (auth()->user()->role != 'supervisor')
+                                <a href="{{ route('payment.create') }}" class="btn btn-primary btn-round ml-auto">
+                                    <i class="fa fa-plus mr-2"></i>Add
+                                </a>
+                            @endif
                         </div>
                     </div>
                     <div class="card-body">
                         @if ($reject > 0)
                             <div class="alert alert-danger" role="alert">
-                                Ada <b>{{ $reject }}</b> Payment Request yang di reject!
+                                There are <b>{{ $reject }}</b> Payment Requests that were rejected!
                             </div>
                         @endif
-                        {{-- <div class="form-row mb-3">
-                            <div class="col-7">
-                                <select id="status_filter" class="form-control">
-                                    <option value="">All Status</option>
-                                    @foreach ($status as $item)
-                                        <option value="{{ $item->name }}">{{ $item->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col  col-lg-2">
-                                <button type="button" id="btn_filter" class="btn btn-primary btn-block">
-                                    <i class="fas fa-filter mr-1"></i>Filter
-                                </button>
-                            </div>
-                        </div> --}}
                         <div class="form-row mb-3">
 
                             <div class="card-body p-4">

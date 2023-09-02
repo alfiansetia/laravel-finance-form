@@ -52,4 +52,9 @@ class DebitNoteModel extends Model
     {
         return $this->belongsTo(Status::class);
     }
+
+    public function filedn()
+    {
+        return $this->hasMany(Filedn::class, 'debit_id');
+    }
 }
