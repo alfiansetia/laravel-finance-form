@@ -1,5 +1,5 @@
 # laravel-finance-form
- 
+ Aplikasi untuk generate invoice finance sederhana
  
 ## Requirement
 - PHP 7.4 | 8.0.2
@@ -39,5 +39,11 @@ password = 12345678
 ### Default User Login
 ```
 email = user@finance.form
+password = 12345678
+```
+
+### Default Supervisor Login
+```
+email = supervisor@finance.form
 password = 12345678
 ```
