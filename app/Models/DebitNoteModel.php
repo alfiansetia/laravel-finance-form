@@ -28,6 +28,17 @@ class DebitNoteModel extends Model
         return $total;
     }
 
+    public function getTotalregAttribute()
+    {
+        $total = 0;
+        foreach ($this->desc as $item) {
+            if ($item->type == 'reg') {
+                $total = $total + $item->price;
+            }
+        }
+        return $total;
+    }
+
     public function division()
     {
         return $this->belongsTo(DivisionModel::class, 'id_division');

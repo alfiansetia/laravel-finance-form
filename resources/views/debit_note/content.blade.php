@@ -4,10 +4,10 @@
     $total = 0;
     $grand_total = 0;
     if ($data->vat > 0) {
-        $vat_value = ($data->total * $data->vat) / 100;
+        $vat_value = ($data->totalreg * $data->vat) / 100;
     }
     if ($data->wht) {
-        $wht_value = ($data->total * $data->wht->value) / 100;
+        $wht_value = ($data->totalreg * $data->wht->value) / 100;
     }
     $total = $data->total + $vat_value - $wht_value;
     $grand_total = $data->total + $data->bank_charge + $vat_value - $wht_value;

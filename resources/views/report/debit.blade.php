@@ -53,10 +53,10 @@
                                                 $total = 0;
                                                 $grand_total = 0;
                                                 if ($item->vat > 0) {
-                                                    $vat_value = ($item->total * $item->vat) / 100;
+                                                    $vat_value = ($item->totalreg * $item->vat) / 100;
                                                 }
                                                 if ($item->wht) {
-                                                    $wht_value = ($item->total * $item->wht->value) / 100;
+                                                    $wht_value = ($item->totalreg * $item->wht->value) / 100;
                                                 }
                                                 $total = $item->total + $vat_value - $wht_value;
                                                 $grand_total = $item->total + $item->bank_charge + $vat_value - $wht_value;
@@ -69,12 +69,12 @@
                                                 <td class="text-center">{{ $item->received_from }}</td>
                                                 <td class="text-center">{{ $item->for }}</td>
                                                 <td class="text-center">
-                                                    {{ $grand_total > 0 ? number_format($grand_total, 2, ',', ',') : 0 }}
+                                                    {{ $grand_total > 0 ? number_format($grand_total, 0, ',', ',') : 0 }}
                                                 </td>
                                                 <td class="text-center">
-                                                    {{ $vat_value > 0 ? number_format($vat_value, 2, ',', ',') : 0 }}</td>
+                                                    {{ $vat_value > 0 ? number_format($vat_value, 0, ',', ',') : 0 }}</td>
                                                 <td class="text-center">
-                                                    {{ $wht_value > 0 ? number_format($wht_value, 2, ',', ',') : 0 }}</td>
+                                                    {{ $wht_value > 0 ? number_format($wht_value, 0, ',', ',') : 0 }}</td>
                                                 <td class="text-center">{{ $item->tax_invoice_serial_no }}</td>
                                                 <td class="text-center">
                                                     {{ date('d-M-Y', strtotime($item->tax_invoice_date)) }}</td>
