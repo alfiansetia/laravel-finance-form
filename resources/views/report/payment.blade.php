@@ -134,8 +134,8 @@
     <script>
         $(document).ready(function() {
 
-            document.title =
-                "{{ $title }} {{ $formattedFromDate }} - {{ $formattedToDate }}"
+            // document.title =
+            //     "{{ $title }} {{ $formattedFromDate }} - {{ $formattedToDate }}"
 
             if ($("#range").length) {
                 $('#range').daterangepicker({
@@ -185,10 +185,32 @@
                     buttons: ["csv", "excel", {
                         extend: 'pdf',
                         orientation: 'landscape',
-                        pageSize: 'A4'
+                        title: `Report Payment Request
+                                    {{ $formattedFromDate }} - {{ $formattedToDate }}`,
+                        pageSize: 'A4',
+                        customize: function(doc) {
+                            doc.defaultStyle.fontSize = 8
+                            doc.styles.tableHeader.fillColor = '#ffffff';
+                            // Mengubah warna teks header menjadi putih (#ffffff)
+                            doc.styles.tableHeader.color = '#000000';
+
+                        },
+                        // messageTop: function() {
+                        //     return `Report Payment Request
+                    //             {{ $formattedFromDate }} - {{ $formattedToDate }}`
+                        // },
+
                     }, {
                         extend: "print",
                         text: 'Print',
+                        title: '',
+                        customize: function(doc) {
+                            doc.defaultStyle.fontSize = 8
+                        },
+                        messageTop: function() {
+                            return `Report Payment Request
+                                    {{ $formattedFromDate }} - {{ $formattedToDate }}`
+                        },
                         // customize: function(win) {
                         //     var style = $('<style>')
                         //         .attr('type', 'text/css')
