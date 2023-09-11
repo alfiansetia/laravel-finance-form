@@ -134,11 +134,9 @@
                                                             class="fas fa-eye"></i></a>
 
                                                     @if (auth()->user()->role == 'admin')
-                                                        @if ($item->status_id != 4)
-                                                            <a href="{{ route('debit.edit', $item->id) }}"
-                                                                class="btn btn-sm btn-warning" title="Edit"><i
-                                                                    class="fas fa-edit"></i></a>
-                                                        @endif
+                                                        <a href="{{ route('debit.edit', $item->id) }}"
+                                                            class="btn btn-sm btn-warning" title="Edit"><i
+                                                                class="fas fa-edit"></i></a>
                                                         @if ($item->status_id != 2)
                                                             <form id="form{{ $item->id }}"
                                                                 action="{{ route('debit.destroy', $item->id) }}"
@@ -155,11 +153,9 @@
                                                     @endif
 
                                                     @if (auth()->user()->role == 'user')
-                                                        @if ($item->status_id != 4)
-                                                            <a href="{{ route('debit.edit', $item->id) }}"
-                                                                class="btn btn-sm btn-warning" title="Edit"><i
-                                                                    class="fas fa-edit"></i></a>
-                                                        @endif
+                                                        <a href="{{ route('debit.edit', $item->id) }}"
+                                                            class="btn btn-sm btn-warning" title="Edit"><i
+                                                                class="fas fa-edit"></i></a>
                                                         @if ($item->status_id == 3)
                                                             <form id="form{{ $item->id }}"
                                                                 action="{{ route('debit.destroy', $item->id) }}"

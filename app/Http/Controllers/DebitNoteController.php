@@ -179,7 +179,7 @@ class DebitNoteController extends Controller
         if (!$debit) {
             abort(404);
         }
-        if (auth()->user()->role == 'supervisor' || $debit->status_id == 4) {
+        if (auth()->user()->role == 'supervisor') {
             abort(403, 'Unauthorize!');
         }
         $bank = Bank::where('division_id', $debit->id_division)->get();
@@ -193,9 +193,34 @@ class DebitNoteController extends Controller
         if (!$debit) {
             abort(404);
         }
-        if (auth()->user()->role == 'supervisor' || $debit->status_id == 4) {
+        if (auth()->user()->role == 'supervisor') {
             abort(403, 'Unauthorize!');
         }
+        if ($debit->status_id == 4) {
+            $this->validate($request, [
+                'no_invoice'            => 'required|integer|gte:0',
+                'invoice_date'          => 'required|date_format:Y-m-d',
+                'tax_invoice_serial_no' => 'required',
+                'tax_invoice_date'      => 'required|date_format:Y-m-d',
+                'wht_no'                => 'required',
+                'wht_date'              => 'required|date_format:Y-m-d',
+            ]);
+            $debit = $debit->update([
+                'no_invoice'            => $request->no_invoice,
+                'invoice_date'          => $request->invoice_date,
+                'tax_invoice_serial_no' => $request->tax_invoice_serial_no,
+                'tax_invoice_date'      => $request->tax_invoice_date,
+                'wht_no'                => $request->wht_no,
+                'wht_date'              => $request->wht_date,
+            ]);
+
+            if ($debit) {
+                return redirect()->route('debit.index')->with(['success' => __('lang.success_update')]);
+            } else {
+                return redirect()->route('debit.index')->with(['error' => __('lang.failed_update')]);
+            }
+        }
+
         $this->validate($request, [
             'received_bank'         => 'required|integer|exists:banks,id,division_id,' . $debit->id_division,
             'no_invoice'            => 'required|integer|gte:0',
@@ -246,7 +271,6 @@ class DebitNoteController extends Controller
         $debit = $debit->update([
             'no_invoice'            => $request->no_invoice,
             'bank_id'               => $request->received_bank,
-            'no_invoice'            => $request->no_invoice,
             'invoice_date'          => $request->invoice_date,
             'tax_invoice_serial_no' => $request->tax_invoice_serial_no,
             'tax_invoice_date'      => $request->tax_invoice_date,
@@ -256,7 +280,6 @@ class DebitNoteController extends Controller
             'vat'                   => $request->vat,
             'bank_charge'           => $request->bank_charge,
             'received_from'         => $request->received_from,
-            'status_id'             => $debit->status_id == 3 ? 1 : $debit->status_id,
             'wht_no'                => $request->wht_no,
             'wht_date'              => $request->wht_date,
             'status_id'             => $debit->status_id == 3 ? 1 : $debit->status_id,
