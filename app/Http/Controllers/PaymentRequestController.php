@@ -277,7 +277,7 @@ class PaymentRequestController extends Controller
 
     public function download(PaymentRequestModel $payment)
     {
-        if ($payment->status_id != 4) {
+        if ($payment->status_id == 3) {
             return redirect()->route('payment.index')->with(['error' => $this->title . ' ' .  __('lang.belum_approve')]);
         }
         if (!$payment) {

@@ -24,7 +24,17 @@
     <tr>
         <td colspan="9"
             style="border-top: 1pt solid black;border-right: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-bottom: none;padding: 0mm;height: 70pt;vertical-align: middle;">
-            <img src="{{ $path_logo }}" width="114" height="45" style="margin-left: 8pt;margin-top: 0;">
+            {{-- <img src="{{ $path_logo }}" width="114" height="45" style="margin-left: 8pt;margin-top: 0;"> --}}
+            <div style="margin: 0px;padding: 0px;width: 100%;"><img src="{{ $path_logo }}" width="114" height="45"
+                    style="margin-left: 8pt;margin-top: 0;">
+                @if ($data->status_id == 4)
+                    {{-- @for ($i = 0; $i < 40; $i++)
+                    &nbsp;
+                @endfor --}}
+                    <span class="pd-header" style="font-family:'Calibri', sans-serif;float: right;"> PAID Date :
+                        {{ date('d-M-y', strtotime($data->paid_date)) }}</span>
+                @endif
+            </div>
             <div class="pd-header">
                 <span style="font-family:'Calibri', sans-serif;float: left;">
                     {{ $data->division->name }}

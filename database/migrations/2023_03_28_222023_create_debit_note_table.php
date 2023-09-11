@@ -33,6 +33,7 @@ class CreateDebitNoteTable extends Migration
             $table->string('wht_no')->nullable();
             $table->datetime('wht_date')->nullable();
             $table->string('note')->nullable();
+            $table->datetime('paid_date')->nullable();
             $table->timestamps();
             $table->foreign('id_division')->references('id')->on('division')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreign('wht_id')->references('id')->on('whts')->cascadeOnUpdate()->nullOnDelete();

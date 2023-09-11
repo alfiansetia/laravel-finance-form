@@ -55,10 +55,11 @@
                     style="margin-left: 8pt;margin-top: 0;">
                 @if ($data->status_id == 4)
 
-                    @for ($i = 0; $i < 50; $i++)
+                    {{-- @for ($i = 0; $i < 40; $i++)
                         &nbsp;
-                    @endfor
-                    <font size="18" color="green"> PAID</font>
+                    @endfor --}}
+                    <span class="pd-header" style="font-family:'Calibri', sans-serif;float: right;"> PAID Date :
+                        {{ date('d-M-y', strtotime($data->paid_date)) }}</span>
                 @endif
             </div>
             <div class="pd-header">
