@@ -9,10 +9,16 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group row">
-                    <label for="range" class="col-sm-3 col-form-label">Range Tanggal</label>
-                    <div class="col-sm-7">
+                    {{-- <label for="range" class="col-sm-3 col-form-label">Range Tanggal</label> --}}
+                    <div class="col-sm-4">
                         <input type="text" class="form-control @error('from') is-invalid @enderror" id="range"
                             placeholder="YYYY-MM-DD" autocomplete="off">
+                    </div>
+                    <div class="col-sm-4">
+                        <select id="status" class="form-control">
+                            <option {{ request('status') == 'paid' ? 'selected' : '' }} value="paid">Paid</option>
+                            <option {{ request('status') == 'unpaid' ? 'selected' : '' }} value="unpaid">Unpaid</option>
+                        </select>
                     </div>
                     <div class="col-sm-2">
                         <button class="btn btn-primary btn-block" id="apply">Apply</button>
@@ -63,7 +69,12 @@
                                             <tr>
                                                 <td class="text-center">{{ $item->no_pr }}</td>
                                                 <td class="text-center">{{ date('d-M-Y', strtotime($item->date_pr)) }}</td>
-                                                <td class="text-center">{{ date('d-M-Y', strtotime($item->paid_date)) }}
+                                                <td class="text-center">
+                                                    @if ($item->status_id != 4)
+                                                        {{ $item->status->name }}
+                                                    @else
+                                                        {{ date('d-M-Y', strtotime($item->paid_date)) }}
+                                                    @endif
                                                 </td>
                                                 <td class="text-center">{{ $item->vendor->beneficary }}</td>
                                                 <td class="text-center">{{ substr($item->vendor->bank, 0, 30) }}</td>
@@ -97,6 +108,7 @@
     <form action="" method="GET" id="form_get_data">
         <input type="hidden" name="from" id="input_from">
         <input type="hidden" name="to" id="input_to">
+        <input type="hidden" name="status" id="input_status">
     </form>
 
     @error('from')
@@ -167,8 +179,11 @@
                 let from = $('#range').data('daterangepicker').startDate.format('YYYY-MM-DD');
                 let to = $('#range').data('daterangepicker').endDate.format('YYYY-MM-DD');
 
+                let status = $('#status').val();
+
                 $('#input_from').val(from)
                 $('#input_to').val(to)
+                $('#input_status').val(status)
                 $('#form_get_data').submit()
             })
 

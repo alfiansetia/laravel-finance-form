@@ -561,7 +561,7 @@
     <tr>
         <td colspan="2"
             style="text-align: center;border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;vertical-align: middle;">
-            <span class="pd-small">Khouw Vivi</span>
+            <span class="pd-small">Vivi Lie</span>
         </td>
         <td
             style="text-align: center;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;vertical-align: middle;">

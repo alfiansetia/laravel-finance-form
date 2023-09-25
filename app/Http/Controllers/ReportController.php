@@ -21,6 +21,7 @@ class ReportController extends Controller
     {
         $data = [];
 
+
         $from = Carbon::parse(date('Y-m-d'))->startOfMonth();
         $to = Carbon::parse(date('Y-m-d'));
 
@@ -32,10 +33,18 @@ class ReportController extends Controller
             $from = Carbon::parse($request->from);
             $to = Carbon::parse($request->to)->addDay();
         }
-        $data = PaymentRequestModel::where('status_id', 4)
-            ->whereBetween('date_pr', [$from, $to])
-            ->orderBy('date_pr', 'asc')
-            ->get();
+        if ($request->status == 'paid') {
+
+            $data = PaymentRequestModel::where('status_id', 4)
+                ->whereBetween('date_pr', [$from, $to])
+                ->orderBy('date_pr', 'asc')
+                ->get();
+        } else {
+            $data = PaymentRequestModel::where('status_id', '!=', 4)
+                ->whereBetween('date_pr', [$from, $to])
+                ->orderBy('date_pr', 'asc')
+                ->get();
+        }
 
 
         return view('report.payment', compact('data'))->with(['title' => $this->title_payment]);
