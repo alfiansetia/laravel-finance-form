@@ -106,7 +106,8 @@
                 <td
                     style="text-align: right;width: 82pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
                     <span
-                        class="pd-small">{{ number_format($item->price, $data->currency != 'idr' ? 2 : 0, ',', ',') }}</span>
+                        class="pd-small">{{ $item->price < 0 ? '(' . number_format(abs($item->price), $data->currency != 'idr' ? 2 : 0, ',', ',') . ')' : number_format($item->price, $data->currency != 'idr' ? 2 : 0, ',', ',') }}
+                    </span>
                 </td>
             </tr>
         @endif
@@ -170,7 +171,8 @@
                 <td
                     style="text-align: right;width: 82pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
                     <span
-                        class="pd-small">{{ number_format($item->price, $data->currency != 'idr' ? 2 : 0, ',', ',') }}</span>
+                        class="pd-small">{{ $item->price < 0 ? '(' . number_format(abs($item->price), $data->currency != 'idr' ? 2 : 0, ',', ',') . ')' : number_format($item->price, $data->currency != 'idr' ? 2 : 0, ',', ',') }}
+                    </span>
                 </td>
             </tr>
         @endif
