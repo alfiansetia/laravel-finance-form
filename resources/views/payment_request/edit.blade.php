@@ -165,7 +165,7 @@
                                     <label for="for">For <font style="color: red;">*</font></label>
                                     <input type="text" id="for" name="for"
                                         class="form-control @error('for') is-invalid @enderror"
-                                        value="{{ $data->for }}" required>
+                                        value="{{ $data->for }}" maxlength="120" required>
                                     @error('for')
                                         <div class="invalid-feedback">
                                             {{ $message }}

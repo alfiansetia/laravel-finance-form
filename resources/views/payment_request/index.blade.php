@@ -96,6 +96,23 @@
 
                             </div>
                         </div>
+                        <div class="form-row mb-3">
+                            <div class="col-md-4">
+                                <select id="filter_division" class="form-control">
+                                    <option value="">All</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select id="filter_vendor" class="form-control">
+                                    <option value="">All</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select id="filter_month" class="form-control">
+                                    <option value="">All</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table id="table" class="display table table-striped table-hover">
                                 <thead>
@@ -192,6 +209,8 @@
 @endsection
 
 @push('js')
+    <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
+
     <script>
         $(document).ready(function() {
             var table = $('#table').DataTable({
@@ -230,6 +249,61 @@
                 table.column(7).search('Paid').draw();
             });
 
+
+            var uniqueDivisions = table.column(1).data().unique()
+                .toArray();
+
+            var selectFilterDivision = $('#filter_division');
+            $.each(uniqueDivisions, function(index, value) {
+                selectFilterDivision.append($('<option>', {
+                    value: value,
+                    text: value
+                }));
+            });
+
+            selectFilterDivision.on('change', function() {
+                var selectedDivision = $(this).val();
+                table.column(1).search(selectedDivision)
+                    .draw();
+            });
+
+            var uniqueVendors = table.column(4).data().unique()
+                .toArray();
+
+            var selectFilterVendor = $('#filter_vendor');
+            $.each(uniqueVendors, function(index, value) {
+                selectFilterVendor.append($('<option>', {
+                    value: value,
+                    text: value
+                }));
+            });
+
+            selectFilterVendor.on('change', function() {
+                var selectedVendor = $(this).val();
+                table.column(4).search(selectedVendor).draw();
+            });
+
+            var allDates = table.column(2).data();
+
+            var uniqueMonths = new Set();
+
+            allDates.each(function(date) {
+                var month = moment(date, 'DD-MMM-YYYY').format(
+                    'MMM');
+                uniqueMonths.add(month);
+            });
+
+            var sortedMonths = Array.from(uniqueMonths).sort();
+
+            var monthFilter = $('#filter_month');
+            sortedMonths.forEach(function(month) {
+                monthFilter.append('<option value="' + month + '">' + month + '</option>');
+            });
+
+            $('#filter_month').on('change', function() {
+                var monthValue = $(this).val();
+                table.column(2).search(monthValue).draw();
+            });
 
         });
 
