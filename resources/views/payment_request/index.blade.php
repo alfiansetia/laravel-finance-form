@@ -203,6 +203,9 @@
                         "searchable": false,
                         "targets": [8]
                     },
+                ],
+                "order": [
+                    [0, "desc"]
                 ]
             });
 

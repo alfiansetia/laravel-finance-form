@@ -191,18 +191,31 @@
                     buttons: ["csv", "excel", {
                         extend: 'pdf',
                         orientation: 'landscape',
-                        pageSize: 'A4'
+                        title: `Report Debit Note
+                                    {{ $formattedFromDate }} - {{ $formattedToDate }}`,
+                        pageSize: 'A4',
+                        customize: function(doc) {
+                            doc.content[1].table.widths =
+                                Array(doc.content[1].table.body[0].length + 1).join('*').split(
+                                    '');
+                            doc.styles.tableBodyEven.alignment = 'center';
+                            doc.styles.tableBodyOdd.alignment = 'center';
+                            doc.defaultStyle.fontSize = 8
+                            doc.styles.tableHeader.fillColor = '#ffffff';
+                            doc.styles.tableHeader.color = '#000000';
+
+                        },
                     }, {
                         extend: "print",
                         text: 'Print',
-                        // customize: function(win) {
-                        //     var style = $('<style>')
-                        //         .attr('type', 'text/css')
-                        //         .text(
-                        //             '@media print { table thead { background-color: #007bff; color: #fff; } }'
-                        //         );
-                        //     $(win.document.head).append(style);
-                        // }
+                        title: '',
+                        customize: function(doc) {
+                            doc.defaultStyle.fontSize = 8
+                        },
+                        messageTop: function() {
+                            return `Report Debit Note
+                                    {{ $formattedFromDate }} - {{ $formattedToDate }}`
+                        },
                     }]
                 }).buttons().container().appendTo('.col-md-6:eq(0)');
 

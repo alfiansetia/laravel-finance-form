@@ -189,17 +189,17 @@
                                     {{ $formattedFromDate }} - {{ $formattedToDate }}`,
                         pageSize: 'A4',
                         customize: function(doc) {
+                            doc.content[1].table.widths =
+                                Array(doc.content[1].table.body[0].length + 1).join('*').split(
+                                    '');
+                            doc.styles.tableBodyEven.alignment = 'center';
+                            doc.styles.tableBodyOdd.alignment = 'center';
                             doc.defaultStyle.fontSize = 8
                             doc.styles.tableHeader.fillColor = '#ffffff';
                             // Mengubah warna teks header menjadi putih (#ffffff)
                             doc.styles.tableHeader.color = '#000000';
 
                         },
-                        // messageTop: function() {
-                        //     return `Report Payment Request
-                    //             {{ $formattedFromDate }} - {{ $formattedToDate }}`
-                        // },
-
                     }, {
                         extend: "print",
                         text: 'Print',
@@ -211,14 +211,6 @@
                             return `Report Payment Request
                                     {{ $formattedFromDate }} - {{ $formattedToDate }}`
                         },
-                        // customize: function(win) {
-                        //     var style = $('<style>')
-                        //         .attr('type', 'text/css')
-                        //         .text(
-                        //             '@media print { table thead { background-color: #007bff; color: #fff; } }'
-                        //         );
-                        //     $(win.document.head).append(style);
-                        // }
                     }]
                 }).buttons().container().appendTo('.col-md-6:eq(0)');
 
