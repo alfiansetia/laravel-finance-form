@@ -118,10 +118,10 @@
                             <a href="{{ route('debit.edit', $data->id) }}" class="btn btn-secondary btn-round ml-2">
                                 <i class="fas fa-edit mr-1"></i>Edit
                             </a>
-                            <button type="button" class="btn btn-info btn-round ml-2" data-toggle="modal"
+                            {{-- <button type="button" class="btn btn-info btn-round ml-2" data-toggle="modal"
                                 data-target="#exampleModal2">
                                 <i class="fas fa-upload mr-1"></i>Upload File
-                            </button>
+                            </button> --}}
                         @endif
                     </div>
                 </div>
@@ -132,7 +132,7 @@
                     </div>
                 @endif
 
-                <div class="card">
+                {{-- <div class="card">
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <h4 class="card-title">File</h4>
@@ -171,7 +171,7 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="card">
                     <div class="card-header">
@@ -244,7 +244,7 @@
         </form>
     @endif
 
-    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label" aria-hidden="true">
+    {{-- <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <form action="{{ route('filedn.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -278,7 +278,7 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div> --}}
 @endsection
 
 @push('js')

@@ -54,7 +54,6 @@
             <div style="margin: 0px;padding: 0px;width: 100%;"><img src="{{ $path_logo }}" width="114" height="45"
                     style="margin-left: 8pt;margin-top: 0;">
                 @if ($data->status_id == 4)
-
                     {{-- @for ($i = 0; $i < 40; $i++)
                         &nbsp;
                     @endfor --}}
@@ -113,7 +112,7 @@
         </td>
         <td
             style="text-align: center;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
-            <strong><span class="pd-small">Price</span></strong>
+            <strong><span class="pd-small">AMOUNT</span></strong>
         </td>
     </tr>
     <tr>

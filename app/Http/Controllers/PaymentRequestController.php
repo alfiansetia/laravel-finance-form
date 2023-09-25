@@ -299,9 +299,9 @@ class PaymentRequestController extends Controller
             'note'     => 'nullable|max:150',
         ]);
 
-        if (count($payment->filepr ?? []) < 1) {
-            return redirect()->back()->with(['error' => __('lang.file_notfound')]);
-        }
+        // if (count($payment->filepr ?? []) < 1) {
+        //     return redirect()->back()->with(['error' => __('lang.file_notfound')]);
+        // }
 
         if ($payment->status_id == 4) {
             return redirect()->route('payment.index')->with(['error' =>  __('lang.status_unavailable')]);
@@ -325,9 +325,9 @@ class PaymentRequestController extends Controller
 
     public function paid(Request $request, PaymentRequestModel $payment)
     {
-        if (count($payment->filepr ?? []) < 1) {
-            return redirect()->back()->with(['error' => __('lang.file_notfound')]);
-        }
+        // if (count($payment->filepr ?? []) < 1) {
+        //     return redirect()->back()->with(['error' => __('lang.file_notfound')]);
+        // }
 
         if ($payment->status_id != 2) {
             return redirect()->route('payment.index')->with(['error' =>  __('lang.status_unavailable')]);
@@ -339,7 +339,7 @@ class PaymentRequestController extends Controller
 
         $payment = $payment->update([
             'status_id' => 4,
-            'paid_date' => now(),
+            'paid_date' => $request->date,
         ]);
 
         if ($payment) {

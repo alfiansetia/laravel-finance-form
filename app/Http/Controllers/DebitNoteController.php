@@ -313,11 +313,12 @@ class DebitNoteController extends Controller
         $this->validate($request, [
             'status'   => 'required|integer|exists:statuses,id',
             'note'     => 'nullable|max:150',
+            'date'     => 'required|date_format:Y-m-d'
         ]);
 
-        if (count($debit->filedn ?? []) < 1) {
-            return redirect()->back()->with(['error' => __('lang.file_notfound')]);
-        }
+        // if (count($debit->filedn ?? []) < 1) {
+        //     return redirect()->back()->with(['error' => __('lang.file_notfound')]);
+        // }
 
         if ($debit->status_id == 4) {
             return redirect()->route('debit.index')->with(['error' =>  __('lang.status_unavailable')]);

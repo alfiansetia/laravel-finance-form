@@ -104,7 +104,8 @@
                             $data->status_id == 2 &&
                                 $data->status_id != 4 &&
                                 (auth()->user()->role == 'admin' || auth()->user()->role == 'user'))
-                            <button id="set_paid" class="btn btn-success btn-round">
+                            <button id="set_paid" class="btn btn-success btn-round" data-toggle="modal"
+                                data-target="#exampleModal3">
                                 <i class="fas fa-thumbs-up mr-1"></i>Set Paid</button>
                         @endif
 
@@ -118,10 +119,10 @@
                             <a href="{{ route('payment.edit', $data->id) }}" class="btn btn-secondary btn-round ml-2">
                                 <i class="fas fa-edit mr-1"></i>Edit
                             </a>
-                            <button type="button" class="btn btn-info btn-round ml-2" data-toggle="modal"
+                            {{-- <button type="button" class="btn btn-info btn-round ml-2" data-toggle="modal"
                                 data-target="#exampleModal2">
                                 <i class="fas fa-upload mr-1"></i>Upload File
-                            </button>
+                            </button> --}}
                         @endif
                     </div>
                 </div>
@@ -132,7 +133,7 @@
                     </div>
                 @endif
 
-                <div class="card">
+                {{-- <div class="card">
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <h4 class="card-title">File</h4>
@@ -171,7 +172,7 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="card">
                     <div class="card-header">
@@ -245,7 +246,7 @@
         </form>
     @endif
 
-    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label" aria-hidden="true">
+    {{-- <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <form action="{{ route('filepr.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -279,7 +280,45 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div> --}}
+
+
+
+    @if (
+        $data->status_id == 2 &&
+            $data->status_id != 4 &&
+            (auth()->user()->role == 'admin' || auth()->user()->role == 'user'))
+        <form method="POST" action="{{ route('payment.set.paid', $data->id) }}">
+            @csrf
+            <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModal3Label"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModal3Label">Change Status</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Paid Date</label>
+                                <input type="date" class="form-control" name="date" id="" required>
+                            </div>
+                            {{-- <div class="form-group">
+                                <label for="note">Note</label>
+                                <textarea class="form-control" name="note" id="note" rows="3" maxlength="150">{{ $data->note }}</textarea>
+                            </div> --}}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    @endif
 
     <form id="form_set_paid" action="{{ route('payment.set.paid', $data->id) }}" method="POST">
         @csrf
@@ -290,28 +329,28 @@
     <script>
         bsCustomFileInput.init();
 
-        $('#set_paid').click(function() {
-            swal({
-                title: 'Set Paid?',
-                icon: "warning",
-                buttons: {
-                    confirm: {
-                        text: 'Yes',
-                        className: 'btn btn-success'
-                    },
-                    cancel: {
-                        visible: true,
-                        className: 'btn btn-danger'
-                    }
-                }
-            }).then((value) => {
-                if (value) {
-                    $('#form_set_paid').submit();
-                } else {
-                    swal.close();
-                }
-            });
-        })
+        // $('#set_paid').click(function() {
+        //     swal({
+        //         title: 'Set Paid?',
+        //         icon: "warning",
+        //         buttons: {
+        //             confirm: {
+        //                 text: 'Yes',
+        //                 className: 'btn btn-success'
+        //             },
+        //             cancel: {
+        //                 visible: true,
+        //                 className: 'btn btn-danger'
+        //             }
+        //         }
+        //     }).then((value) => {
+        //         if (value) {
+        //             $('#form_set_paid').submit();
+        //         } else {
+        //             swal.close();
+        //         }
+        //     });
+        // })
 
         function deleteData(idform) {
             swal({
