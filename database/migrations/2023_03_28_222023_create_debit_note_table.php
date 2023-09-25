@@ -25,7 +25,8 @@ class CreateDebitNoteTable extends Migration
             $table->bigInteger('bank_charge')->default(0);
             $table->String('received_from')->nullable();
             $table->datetime('debit_note_date')->nullable();
-            $table->enum('currency', ['idr', 'usd', 'sgd'])->default('idr');
+            // $table->enum('currency', ['idr', 'usd', 'sgd'])->default('idr');
+            $table->enum('currency', ['idrtoidr', 'idrtosgd', 'idrtousd', 'usdtousd'])->default('idrtoidr');
             $table->integer('vat')->default(0);
             $table->unsignedBigInteger('wht_id')->nullable();
             $table->unsignedBigInteger('bank_id')->nullable();

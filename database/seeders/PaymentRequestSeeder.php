@@ -24,7 +24,10 @@ class PaymentRequestSeeder extends Seeder
         $vendors = Vendor::all();
         $banks = Bank::all();
 
+        $currency = ['idrtoidr', 'idrtosgd', 'idrtousd', 'usdtousd'];
+
         for ($i = 0; $i < 20; $i++) {
+            $rand = rand(0, 3);
             $status = rand(1, 4);
             $bank = $banks->random();
             $payment = PaymentRequestModel::factory()->create([
@@ -34,6 +37,7 @@ class PaymentRequestSeeder extends Seeder
                 'vendor_id'     => $vendors->random(),
                 'status_id'     => $status,
                 'paid_date'     => $status == 4 ? now() : null,
+                'currency'      => $currency[$rand],
             ]);
 
             for ($j = 0; $j < 2; $j++) {

@@ -19,7 +19,7 @@ class PaymentRequestModelFactory extends Factory
             'date_pr'           => $this->faker->dateTimeThisMonth(),
             'for'               => $this->faker->company(),
             'contract'          => $this->faker->randomAscii(),
-            'currency'          => 'idr',
+            'currency'          => 'idrtoidr',
             'bank_charge'       => 1,
             'vat'               => 1,
         ];

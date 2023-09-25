@@ -168,11 +168,17 @@
                                     <label for="currency">Type Currency <font style="color: red;">*</font></label>
                                     <select class="form-control @error('currency') is-invalid @enderror" id="currency"
                                         name="currency" required>
-                                        <option {{ old('currency') == 'idr' ? 'selected' : '' }} value="idr">IDR
+                                        <option {{ old('currency') == 'idrtoidr' ? 'selected' : '' }} value="idrtoidr">IDR
+                                            to IDR
                                         </option>
-                                        <option {{ old('currency') == 'usd' ? 'selected' : '' }} value="usd">USD
+                                        <option {{ old('currency') == 'idrtosgd' ? 'selected' : '' }} value="idrtosgd">IDR
+                                            to SGD
                                         </option>
-                                        <option {{ old('currency') == 'sgd' ? 'selected' : '' }} value="sgd">SGD
+                                        <option {{ old('currency') == 'idrtousd' ? 'selected' : '' }} value="idrtousd">IDR
+                                            to USD
+                                        </option>
+                                        <option {{ old('currency') == 'usdtousd' ? 'selected' : '' }} value="usdtousd">USD
+                                            to USD
                                         </option>
                                     </select>
                                     @error('currency')

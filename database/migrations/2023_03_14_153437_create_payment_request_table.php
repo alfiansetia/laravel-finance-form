@@ -24,7 +24,8 @@ class CreatePaymentRequestTable extends Migration
             $table->string('for')->nullable();
             $table->bigInteger('due_date')->default(0);
             $table->bigInteger('bank_charge')->default(0);
-            $table->enum('currency', ['idr', 'usd', 'sgd'])->default('idr');
+            // $table->enum('currency', ['idr', 'usd', 'sgd'])->default('idr');
+            $table->enum('currency', ['idrtoidr', 'idrtosgd', 'idrtousd', 'usdtousd'])->default('idrtoidr');
             $table->integer('vat')->default(0);
             $table->unsignedBigInteger('wht_id')->nullable();
             $table->unsignedBigInteger('bank_id')->nullable();
