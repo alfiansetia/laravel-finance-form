@@ -240,7 +240,7 @@
                                     <label for="wht">WHT</label>
                                     <select class="custom-select @error('wht') is-invalid @enderror" id="wht"
                                         name="wht">
-                                        <option value="">Select Wht</option>
+                                        <option value="">Select WHT</option>
                                         @foreach ($wht as $item)
                                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
