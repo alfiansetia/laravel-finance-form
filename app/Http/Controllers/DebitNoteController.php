@@ -313,7 +313,7 @@ class DebitNoteController extends Controller
         $this->validate($request, [
             'status'   => 'required|integer|exists:statuses,id',
             'note'     => 'nullable|max:150',
-            'date'     => 'required|date_format:Y-m-d'
+            // 'date'     => 'required|date_format:Y-m-d'
         ]);
 
         // if (count($debit->filedn ?? []) < 1) {
@@ -331,6 +331,7 @@ class DebitNoteController extends Controller
         $debit = $debit->update([
             'status_id' => $request->status,
             'note'      => $request->note,
+            'paid_date' => $debit->invoice_date
         ]);
 
         if ($debit) {

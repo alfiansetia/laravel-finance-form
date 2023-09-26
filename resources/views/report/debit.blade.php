@@ -9,10 +9,15 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group row">
-                    <label for="range" class="col-sm-3 col-form-label">Range Tanggal</label>
-                    <div class="col-sm-7">
+                    <div class="col-sm-4">
                         <input type="text" class="form-control @error('from') is-invalid @enderror" id="range"
                             placeholder="YYYY-MM-DD" autocomplete="off">
+                    </div>
+                    <div class="col-sm-4">
+                        <select id="status" class="form-control">
+                            <option {{ request('status') == 'paid' ? 'selected' : '' }} value="paid">Paid</option>
+                            <option {{ request('status') == 'unpaid' ? 'selected' : '' }} value="unpaid">Unpaid</option>
+                        </select>
                     </div>
                     <div class="col-sm-2">
                         <button class="btn btn-primary btn-block" id="apply">Apply</button>
@@ -103,6 +108,7 @@
     <form action="" method="GET" id="form_get_data">
         <input type="hidden" name="from" id="input_from">
         <input type="hidden" name="to" id="input_to">
+        <input type="hidden" name="status" id="input_status">
     </form>
 
     @error('from')
@@ -172,9 +178,11 @@
             $('#apply').click(function() {
                 let from = $('#range').data('daterangepicker').startDate.format('YYYY-MM-DD');
                 let to = $('#range').data('daterangepicker').endDate.format('YYYY-MM-DD');
+                let status = $('#status').val();
 
                 $('#input_from').val(from)
                 $('#input_to').val(to)
+                $('#input_status').val(status)
                 $('#form_get_data').submit()
             })
 

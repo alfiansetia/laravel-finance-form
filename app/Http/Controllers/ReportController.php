@@ -65,10 +65,18 @@ class ReportController extends Controller
             $from = Carbon::parse($request->from);
             $to = Carbon::parse($request->to)->addDay();
         }
-        $data = DebitNoteModel::where('status_id', 4)
-            ->whereBetween('debit_note_date', [$from, $to])
-            ->orderBy('debit_note_date', 'asc')
-            ->get();
+        if ($request->status == 'paid') {
+
+            $data = DebitNoteModel::where('status_id', 4)
+                ->whereBetween('debit_note_date', [$from, $to])
+                ->orderBy('debit_note_date', 'asc')
+                ->get();
+        } else {
+            $data = DebitNoteModel::where('status_id', '!=', 4)
+                ->whereBetween('debit_note_date', [$from, $to])
+                ->orderBy('debit_note_date', 'asc')
+                ->get();
+        }
 
 
         return view('report.debit', compact('data'))->with(['title' => $this->title_debit]);
