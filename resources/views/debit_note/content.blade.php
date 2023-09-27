@@ -106,7 +106,7 @@
                 <td
                     style="text-align: right;width: 82pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
                     <span
-                        class="pd-small">{{ $item->price < 0 ? '(' . number_format(abs($item->price), $data->currency != 'idr' ? 2 : 0, ',', ',') . ')' : number_format($item->price, $data->currency != 'idr' ? 2 : 0, ',', ',') }}
+                        class="pd-small">{{ $item->price < 0 ? '(' . number_format(abs($item->price), $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') . ')' : number_format($item->price, $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') }}
                     </span>
                 </td>
             </tr>
@@ -124,7 +124,7 @@
             <td
                 style="text-align: right;width: 82pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
                 <span
-                    class="pd-small">{{ number_format($vat_value, $data->currency != 'idr' ? 2 : 0, ',', ',') }}</span>
+                    class="pd-small">{{ number_format($vat_value, $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') }}</span>
 
             </td>
         </tr>
@@ -141,7 +141,7 @@
             <td
                 style="text-align: right;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
                 <span class="pd-small">(
-                    {{ number_format($wht_value, $data->currency != 'idr' ? 2 : 0, ',', ',') }}
+                    {{ number_format($wht_value, $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') }}
                     )</span>
 
             </td>
@@ -171,7 +171,7 @@
                 <td
                     style="text-align: right;width: 82pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
                     <span
-                        class="pd-small">{{ $item->price < 0 ? '(' . number_format(abs($item->price), $data->currency != 'idr' ? 2 : 0, ',', ',') . ')' : number_format($item->price, $data->currency != 'idr' ? 2 : 0, ',', ',') }}
+                        class="pd-small">{{ $item->price < 0 ? '(' . number_format(abs($item->price), $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') . ')' : number_format($item->price, $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') }}
                     </span>
                 </td>
             </tr>
@@ -204,11 +204,18 @@
     <tr>
         <td colspan="8" class="bold-no-border">
             <strong><span class="pd-small">Received Amount
-                    {{ $data->currency == 'idr' ? 'Rp' : ($data->currency == 'usd' ? '$' : 'S$') }}</span></strong>
+                    @if ($data->currency == 'idrtoidr')
+                        Rp
+                    @elseif($data->currency == 'idrtosgd')
+                        SGD
+                    @else
+                        USD
+                    @endif
+                </span></strong>
         </td>
         <td class="bold-border">
             <strong><span
-                    class="pd-small">{{ number_format($total, $data->currency != 'idr' ? 2 : 0, ',', ',') }}</span></strong>
+                    class="pd-small">{{ number_format($total, $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') }}</span></strong>
         </td>
     </tr>
     <tr>
@@ -223,7 +230,7 @@
     <tr>
         <td colspan="8" class="bold-no-border">
             <strong><span class="pd-small">Convert to Rp
-                    {{-- {{ $data->currency == 'idr' ? 'Rp' : ($data->currency == 'usd' ? '$' : 'S$') }} --}}
+                    {{-- {{ $data->currency == 'idrtoidr' ? 'Rp' : ($data->currency == 'usd' ? '$' : 'S$') }} --}}
                 </span></strong>
         </td>
         <td class="bold-border">
@@ -233,21 +240,38 @@
     <tr>
         <td colspan="8" class="bold-no-border">
             <strong><span class="pd-small">Bank charges
-                    {{ $data->currency == 'idr' ? 'Rp' : ($data->currency == 'usd' ? '$' : 'S$') }}</span></strong>
+                    @if ($data->currency != 'usdtousd')
+                        Rp
+                    @else
+                        USD
+                    @endif
+                </span></strong>
         </td>
         <td class="bold-border">
             <strong><span
-                    class="pd-small">{{ $data->bank_charge > 0 ? number_format($data->bank_charge, $data->currency != 'idr' ? 2 : 0, ',', ',') : '' }}</span></strong>
+                    class="pd-small">{{ $data->bank_charge > 0 ? number_format($data->bank_charge, $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') : '' }}</span></strong>
         </td>
     </tr>
     <tr>
         <td colspan="8" class="bold-no-border" style="border-bottom: 3pt solid black;border-top: 1pt solid black">
-            <strong><span class="pd-small">TOTAL RECEIVED
-                    {{ $data->currency == 'idr' ? 'Rp' : ($data->currency == 'usd' ? '$' : 'S$') }}</span></strong>
+            <strong><span class="pd-small">TOTAL
+                    @if ($data->currency == 'idrtoidr')
+                        Received Rp
+                    @elseif($data->currency == 'idrtosgd')
+                        Rp
+                    @elseif($data->currency == 'idrtousd')
+                        Rp
+                    @else
+                        USD
+                    @endif
+                </span></strong>
         </td>
         <td class="bold-border" style="border-bottom: 3pt solid black">
-            <strong><span
-                    class="pd-small">{{ number_format($grand_total, $data->currency != 'idr' ? 2 : 0, ',', ',') }}</span></strong>
+            <strong><span class="pd-small">
+                    @if ($data->currency == 'idrtoidr')
+                        {{ number_format($grand_total, $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') }}
+                    @endif
+                </span></strong>
         </td>
     </tr>
 
