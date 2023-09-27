@@ -283,7 +283,9 @@
                     @if ($data->currency == 'idrtoidr')
                         Received Rp
                     @elseif($data->currency == 'idrtosgd')
-                        SGD
+                        SGD Rp
+                    @elseif($data->currency == 'idrtousd')
+                        USD Rp
                     @else
                         USD
                     @endif
