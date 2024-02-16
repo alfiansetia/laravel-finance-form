@@ -52,6 +52,7 @@ class WhtController extends Controller
             'value.required'    => 'Value Wajib diisi!',
             'value.numeric'     => 'Value harus berupa numeric!',
             'value.gt'          => 'Value harus lebih dari 0!',
+            'value.regex'       => 'Format tidak valid, dibelakang koma harus 2 angka!',
         ]);
         $wht = Wht::create([
             'name'  => $request->name,
@@ -110,6 +111,7 @@ class WhtController extends Controller
             'value.required'    => 'Value Wajib diisi!',
             'value.numeric'     => 'Value harus berupa numeric!',
             'value.gt'          => 'Value harus lebih dari 0!',
+            'value.regex'       => 'Format tidak valid, dibelakang koma harus 2 angka!',
         ]);
         $wht = $wht->update([
             'name'  => $request->name,

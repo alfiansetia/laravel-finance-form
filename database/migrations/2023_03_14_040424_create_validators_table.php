@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVatsTable extends Migration
+class CreateValidatorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateVatsTable extends Migration
      */
     public function up()
     {
-        Schema::create('vats', function (Blueprint $table) {
+        Schema::create('validators', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->default('VAT');
-            $table->integer('value')->default(0);
+            $table->string('prepared_by');
+            $table->string('checked_by');
+            $table->string('approved_by');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateVatsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vats');
+        Schema::dropIfExists('validators');
     }
 }

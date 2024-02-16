@@ -21,7 +21,6 @@ class PaymentRequestModelFactory extends Factory
             'contract'          => $this->faker->randomAscii(),
             'currency'          => 'idrtoidr',
             'bank_charge'       => 1,
-            'vat'               => 1,
         ];
     }
 }

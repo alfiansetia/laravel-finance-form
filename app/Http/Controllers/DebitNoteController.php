@@ -6,6 +6,7 @@ use App\Models\Bank;
 use App\Models\DebitNoteModel;
 use App\Models\DescriptionDebitModel;
 use App\Models\DivisionModel;
+use App\Models\Validator;
 use App\Models\Vat;
 use App\Models\Wht;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -33,20 +34,16 @@ class DebitNoteController extends Controller
 
     public function create()
     {
-        if (auth()->user()->role == 'supervisor') {
-            abort(403, 'Unauthorize!');
-        }
         $bank = Bank::all();
         $wht = Wht::all();
+        $vat = Vat::all();
         $division = DivisionModel::all();
-        return view('debit_note.add', compact('division', 'wht', 'bank'))->with(['title' => $this->title]);
+        $validators = Validator::all();
+        return view('debit_note.add', compact('division', 'wht', 'bank', 'vat', 'validators'))->with(['title' => $this->title]);
     }
 
     public function show(DebitNoteModel $debit)
     {
-        if (!$debit) {
-            abort(404);
-        }
         return view('debit_note.detail')->with([
             'title'     => $this->title,
             'data'      => $debit,
@@ -56,9 +53,6 @@ class DebitNoteController extends Controller
 
     public function store(Request $request)
     {
-        if (auth()->user()->role == 'supervisor') {
-            abort(403, 'Unauthorize!');
-        }
         $this->validate($request, [
             'id_division'           => 'required|integer|exists:division,id',
             'received_bank'         => 'required|integer|exists:banks,id,division_id,' . $request->id_division,
@@ -69,20 +63,33 @@ class DebitNoteController extends Controller
             'tax_invoice_date'      => 'required|date_format:Y-m-d',
             'for'                   => 'required|max:120',
             'currency'              => 'required|in:idrtoidr,idrtosgd,idrtousd,usdtousd',
-            'vat'                   => 'required|in:yes,no',
+            // 'vat'                   => 'required|in:yes,no',
             'wht'                   => 'nullable|integer|exists:whts,id',
-            'bank_charge'           => 'required|integer|gte:0',
+            'vat'                   => 'nullable|integer|exists:vats,id',
+            'bank_charge'           => 'required|gte:0',
             'received_from'         => 'required|max:100',
             'description'           => 'required|array|min:1',
             'price'                 => 'required|array|min:1',
             'description.*'         => 'required|max:120',
-            'price.*'               => 'required|integer',
+            'price.*'               => 'required',
             'description_add'       => 'nullable|array|min:1',
             'price_add'             => 'nullable|array|min:1',
             'description_add.*'     => 'required|max:120',
-            'price_add.*'           => 'required|integer',
+            'price_add.*'           => 'required',
             'wht_no'                => 'required',
             'wht_date'              => 'required|date_format:Y-m-d',
+            'validator'             => 'required|integer|exists:validators,id',
+
+            'vat_add'           => 'nullable|array|min:1',
+            'wht_add'           => 'nullable|array|min:1',
+            'vat_add.*'         => 'nullable|exists:vats,id',
+            'wht_add.*'         => 'nullable|exists:whts,id',
+
+            'pr_serial'         => 'nullable|array|min:1',
+            'tax_date'          => 'nullable|array|min:1',
+            'pr_serial.*'       => 'required|max:200',
+            'tax_date.*'        => 'required|date_format:Y-m-d',
+
         ]);
 
         $division = DivisionModel::findOrFail($request->id_division);
@@ -107,12 +114,12 @@ class DebitNoteController extends Controller
             $counti = ($count->getRawOriginal('no_debit_note') ?? 0) + 1;
         }
 
-        $vat_value = 0;
+        // $vat_value = 0;
 
-        if ($request->vat == 'yes') {
-            $vat = Vat::first();
-            $vat_value = $vat->value ?? 0;
-        }
+        // if ($request->vat == 'yes') {
+        //     $vat = Vat::first();
+        //     $vat_value = $vat->value ?? 0;
+        // }
 
         $debitNote = DebitNoteModel::create([
             'no_debit_note'         => $counti,
@@ -126,12 +133,16 @@ class DebitNoteController extends Controller
             'for'                   => $request->for,
             'currency'              => $request->currency,
             'wht_id'                => $request->wht,
-            'vat'                   => $vat_value,
+            'vat_id'                => $request->vat,
+            // 'vat'                   => $vat_value,
             'bank_charge'           => $request->bank_charge,
             'received_from'         => $request->received_from,
             'status_id'             => 1,
             'wht_no'                => $request->wht_no,
             'wht_date'              => $request->wht_date,
+            'validator_id'          => $request->validator,
+            'checked_id'            => $request->checked,
+            'prepared_id'           => $request->prepared,
         ]);
 
         for ($i = 0; $i < count($request->description ?? []); $i++) {
@@ -149,6 +160,10 @@ class DebitNoteController extends Controller
                 'value'         => $request->description_add[$i],
                 'price'         => $request->price_add[$i],
                 'type'          => 'add',
+                'vat_id'        => $request->vat_add[$i],
+                'wht_id'        => $request->wht_add[$i],
+                'pr_serial'     => $request->pr_serial[$i],
+                'tax_date'      => $request->tax_date[$i],
             ]);
         }
         if ($debitNote) {
@@ -160,12 +175,6 @@ class DebitNoteController extends Controller
 
     public function destroy(DebitNoteModel $debit)
     {
-        if (!$debit) {
-            abort(404);
-        }
-        if (auth()->user()->role == 'supervisor') {
-            abort(403, 'Unauthorize!');
-        }
         $debit = $debit->delete();
         if ($debit) {
             return redirect()->route('debit.index')->with(['success' => __('lang.success_destroy')]);
@@ -176,26 +185,16 @@ class DebitNoteController extends Controller
 
     public function edit(DebitNoteModel $debit)
     {
-        if (!$debit) {
-            abort(404);
-        }
-        if (auth()->user()->role == 'supervisor') {
-            abort(403, 'Unauthorize!');
-        }
         $bank = Bank::where('division_id', $debit->id_division)->get();
         $data = $debit;
         $wht = Wht::all();
-        return view('debit_note.edit', compact('data', 'wht', 'bank'))->with(['title' => $this->title]);
+        $vat = Vat::all();
+        $validators = Validator::all();
+        return view('debit_note.edit', compact('data', 'wht', 'bank', 'vat', 'validators'))->with(['title' => $this->title]);
     }
 
     public function update(Request $request, DebitNoteModel $debit)
     {
-        if (!$debit) {
-            abort(404);
-        }
-        if (auth()->user()->role == 'supervisor') {
-            abort(403, 'Unauthorize!');
-        }
         if ($debit->status_id == 4) {
             $this->validate($request, [
                 'no_invoice'            => 'required|integer|gte:0',
@@ -204,6 +203,7 @@ class DebitNoteController extends Controller
                 'tax_invoice_date'      => 'required|date_format:Y-m-d',
                 'wht_no'                => 'required',
                 'wht_date'              => 'required|date_format:Y-m-d',
+                'validator'             => 'required|integer|exists:validators,id',
             ]);
             $debit = $debit->update([
                 'no_invoice'            => $request->no_invoice,
@@ -212,6 +212,7 @@ class DebitNoteController extends Controller
                 'tax_invoice_date'      => $request->tax_invoice_date,
                 'wht_no'                => $request->wht_no,
                 'wht_date'              => $request->wht_date,
+                'validator_id'          => $request->validator,
             ]);
 
             if ($debit) {
@@ -229,20 +230,33 @@ class DebitNoteController extends Controller
             'tax_invoice_date'      => 'required|date_format:Y-m-d',
             'for'                   => 'required|max:120',
             'currency'              => 'required|in:idrtoidr,idrtosgd,idrtousd,usdtousd',
-            'vat'                   => 'required|gte:0',
+            // 'vat'                   => 'required|gte:0',
             'wht'                   => 'nullable|integer|exists:whts,id',
-            'bank_charge'           => 'required|integer|gte:0',
+            'vat'                   => 'nullable|integer|exists:vats,id',
+            'bank_charge'           => 'required|gte:0',
             'received_from'         => 'required|max:100',
             'description'           => 'required|array|min:1',
             'price'                 => 'required|array|min:1',
             'description.*'         => 'required|max:120',
-            'price.*'               => 'required|integer',
+            'price.*'               => 'required',
             'description_add'       => 'nullable|array|min:1',
             'price_add'             => 'nullable|array|min:1',
             'description_add.*'     => 'required|max:120',
-            'price_add.*'           => 'required|integer',
+            'price_add.*'           => 'required',
             'wht_no'                => 'required',
             'wht_date'              => 'required|date_format:Y-m-d',
+            'validator'             => 'required|integer|exists:validators,id',
+
+            'vat_add'           => 'nullable|array|min:1',
+            'wht_add'           => 'nullable|array|min:1',
+            'vat_add.*'         => 'nullable|exists:vats,id',
+            'wht_add.*'         => 'nullable|exists:whts,id',
+
+            'pr_serial'         => 'nullable|array|min:1',
+            'tax_date'          => 'nullable|array|min:1',
+            'pr_serial.*'       => 'required|max:200',
+            'tax_date.*'        => 'required|date_format:Y-m-d',
+
         ]);
 
         foreach ($debit->desc as $item) {
@@ -264,9 +278,12 @@ class DebitNoteController extends Controller
                 'value'         => $request->description_add[$i],
                 'price'         => $request->price_add[$i],
                 'type'          => 'add',
+                'vat_id'        => $request->vat_add[$i],
+                'wht_id'        => $request->wht_add[$i],
+                'pr_serial'     => $request->pr_serial[$i],
+                'tax_date'      => $request->tax_date[$i],
             ]);
         }
-
 
         $debit = $debit->update([
             'no_invoice'            => $request->no_invoice,
@@ -277,12 +294,13 @@ class DebitNoteController extends Controller
             'for'                   => $request->for,
             'currency'              => $request->currency,
             'wht_id'                => $request->wht,
-            'vat'                   => $request->vat,
+            'vat_id'                => $request->vat,
             'bank_charge'           => $request->bank_charge,
             'received_from'         => $request->received_from,
             'wht_no'                => $request->wht_no,
             'wht_date'              => $request->wht_date,
             'status_id'             => $debit->status_id == 3 ? 1 : $debit->status_id,
+            'validator_id'          => $request->validator,
         ]);
 
         if ($debit) {
@@ -294,9 +312,6 @@ class DebitNoteController extends Controller
 
     public function download(DebitNoteModel $debit)
     {
-        if (!$debit) {
-            abort(404);
-        }
         if ($debit->status_id != 4) {
             return redirect()->route('debit.index')->with(['error' => $this->title . ' ' .  __('lang.belum_approve')]);
         }
@@ -324,7 +339,7 @@ class DebitNoteController extends Controller
             return redirect()->route('debit.index')->with(['error' =>  __('lang.status_unavailable')]);
         }
 
-        if (auth()->user()->role != 'supervisor' && ($request->status == 2 || $request->status == 3)) {
+        if ($request->status == 2 || $request->status == 3) {
             return redirect()->route('debit.index')->with(['error' => __('lang.no_action')]);
         }
 

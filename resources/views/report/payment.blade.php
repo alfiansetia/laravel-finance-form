@@ -56,14 +56,16 @@
                                                 $wht_value = 0;
                                                 $total = 0;
                                                 $grand_total = 0;
-                                                if ($item->vat > 0) {
-                                                    $vat_value = ($item->totalreg * $item->vat) / 100;
+                                                $vat = $item->vat->value ?? 0;
+                                                $wht = $item->wht->value ?? 0;
+                                                if ($vat > 0) {
+                                                    $vat_value = round(($item->totalreg * $vat) / 100, 2);
                                                 }
-                                                if ($item->wht) {
-                                                    $wht_value = ($item->totalreg * $item->wht->value) / 100;
+                                                if ($wht > 0) {
+                                                    $wht_value = round(($item->totalreg * $wht) / 100, 2);
                                                 }
-                                                $total = $item->total + $vat_value - $wht_value;
-                                                $grand_total = $item->total + $item->bank_charge + $vat_value - $wht_value;
+                                                $total = $item->totalreg + $vat_value - $wht_value;
+                                                $super_total = $total + $item->totaladd;
                                             @endphp
 
                                             <tr>
@@ -80,12 +82,14 @@
                                                 <td class="text-center">{{ substr($item->vendor->bank, 0, 30) }}</td>
                                                 <td class="text-center">{{ $item->for }}</td>
                                                 <td class="text-center">
-                                                    {{ $grand_total > 0 ? number_format($grand_total, 0, ',', ',') : 0 }}
+                                                    {{ $super_total > 0 ? number_format($super_total, 0, ',', ',') : 0 }}
                                                 </td>
                                                 <td class="text-center">
-                                                    {{ $vat_value > 0 ? number_format($vat_value, 0, ',', ',') : 0 }}</td>
+                                                    {{ $vat_value > 0 ? number_format($vat_value + $item->totalvatadd, 0, ',', ',') : 0 }}
+                                                </td>
                                                 <td class="text-center">
-                                                    {{ $wht_value > 0 ? number_format($wht_value, 0, ',', ',') : 0 }}</td>
+                                                    {{ $wht_value > 0 ? number_format($wht_value + $item->totalwhtadd, 0, ',', ',') : 0 }}
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -154,9 +158,9 @@
                     locale: {
                         format: 'YYYY-MM-DD'
                     },
-                    maxSpan: {
-                        days: 31
-                    },
+                    //maxSpan: {
+                    //    days: 31
+                    //},
                     ranges: {
                         'Today': [moment(), moment()],
                         'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],

@@ -12,4 +12,19 @@ class DescriptionModel extends Model
     public $table = "description";
 
     protected $guarded = ['id'];
+
+    public function payment()
+    {
+        return $this->belongsTo(PaymentRequestModel::class, 'id_payment_request');
+    }
+
+    public function vat()
+    {
+        return $this->belongsTo(Vat::class);
+    }
+
+    public function wht()
+    {
+        return $this->belongsTo(Wht::class);
+    }
 }

@@ -221,7 +221,7 @@
             });
 
             $('#btn1').click(function() {
-                table.column(7).search('Pending Approval').draw();
+                table.column(7).search('Pending').draw();
             });
 
             $('#btn3').click(function() {

@@ -9,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentRequestController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ValidatorController;
 use App\Http\Controllers\VatController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\WhtController;
@@ -53,7 +54,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('vendor', VendorController::class);
 
-    Route::resource('vat', VatController::class)->only(['index', 'update', 'show']);
+    Route::resource('validator', ValidatorController::class);
+
+    Route::resource('vat', VatController::class);
 
     Route::resource('payment', PaymentRequestController::class);
     Route::get('payment/{payment}/download', [PaymentRequestController::class, 'download'])->name('payment.download');

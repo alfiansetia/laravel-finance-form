@@ -14,7 +14,7 @@ class DescriptionModelFactory extends Factory
     public function definition()
     {
         return [
-            'value' => $this->faker->title(),
+            'value' => $this->faker->title() . ' ' . $this->faker->name(),
             'price' => $this->faker->numberBetween(100000, 1000000),
         ];
     }

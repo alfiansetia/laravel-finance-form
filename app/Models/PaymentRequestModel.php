@@ -42,12 +42,68 @@ class PaymentRequestModel extends Model
     public function getTotalregAttribute()
     {
         $total = 0;
-        foreach ($this->desc as $item) {
+        foreach ($this->desc ?? [] as $item) {
             if ($item->type == 'reg') {
                 $total = $total + $item->price;
             }
         }
         return $total;
+    }
+
+    public function getTotalvataddAttribute()
+    {
+        $grand_total = 0;
+        foreach ($this->desc ?? [] as $item) {
+            if ($item->type == 'add') {
+                $vat_value = 0;
+                $total = $item->price ?? 0;
+                $vat = $item->vat->value ?? 0;
+                if ($vat > 0) {
+                    $vat_value = round(($total * $vat) / 100, 2);
+                }
+                $grand_total += $vat_value;
+            }
+        }
+        return $grand_total;
+    }
+
+    public function getTotalwhtaddAttribute()
+    {
+        $grand_total = 0;
+        foreach ($this->desc ?? [] as $item) {
+            if ($item->type == 'add') {
+                $wht_value = 0;
+                $total = $item->price ?? 0;
+                $wht = $item->wht->value ?? 0;
+                if ($wht > 0) {
+                    $wht_value = round(($total * $wht) / 100, 2);
+                }
+                $grand_total += $wht_value;
+            }
+        }
+        return $grand_total;
+    }
+
+    public function getTotaladdAttribute()
+    {
+        $grand_total = 0;
+        foreach ($this->desc ?? [] as $item) {
+            if ($item->type == 'add') {
+                $vat_value = 0;
+                $wht_value = 0;
+                $total = $item->price ?? 0;
+                $vat = $item->vat->value ?? 0;
+                $wht = $item->wht->value ?? 0;
+                if ($vat > 0) {
+                    $vat_value = round(($total * $vat) / 100, 2);
+                }
+                if ($wht > 0) {
+                    $wht_value = round(($total * $wht) / 100, 2);
+                }
+                $grand_total += ($total + $vat_value - $wht_value);
+            }
+        }
+        return $grand_total;
     }
 
     public function division()
@@ -83,5 +139,15 @@ class PaymentRequestModel extends Model
     public function filepr()
     {
         return $this->hasMany(Filepr::class, 'payment_id');
+    }
+
+    public function validator()
+    {
+        return $this->belongsTo(Validator::class, 'validator_id');
+    }
+
+    public function vat()
+    {
+        return $this->belongsTo(Vat::class);
     }
 }

@@ -17,4 +17,14 @@ class DescriptionDebitModel extends Model
     {
         return $this->belongsTo(DebitNoteModel::class);
     }
+
+    public function vat()
+    {
+        return $this->belongsTo(Vat::class);
+    }
+
+    public function wht()
+    {
+        return $this->belongsTo(Wht::class);
+    }
 }

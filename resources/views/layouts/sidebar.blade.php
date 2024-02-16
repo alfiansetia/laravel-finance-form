@@ -97,6 +97,12 @@
                             <p>Vendor</p>
                         </a>
                     </li>
+                    <li class="nav-item {{ $title == 'Validator' ? 'active' : '' }}">
+                        <a href="{{ route('validator.index') }}">
+                            <i class="fas fa-user-tie"></i>
+                            <p>Validator</p>
+                        </a>
+                    </li>
                     <li class="nav-item {{ $title == 'Role Management' ? 'active' : '' }}">
                         <a href="{{ route('user.index') }}">
                             <i class="fas fa-user-alt"></i>

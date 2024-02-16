@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             StatusSeeder::class,
             WhtSeeder::class,
             VatSeeder::class,
+            ValidatorSeeder::class,
             PaymentRequestSeeder::class,
         ]);
     }

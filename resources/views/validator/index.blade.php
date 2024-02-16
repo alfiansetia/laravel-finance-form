@@ -8,7 +8,7 @@
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <h4 class="card-title">{{ $title }}</h4>
-                            <a href="{{ route('vat.create') }}" class="btn btn-primary btn-round ml-auto">
+                            <a href="{{ route('validator.create') }}" class="btn btn-primary btn-round ml-auto">
                                 <i class="fa fa-plus mr-2"></i>Add
                             </a>
                         </div>
@@ -19,8 +19,9 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center" style="width: 30px;">No.</th>
-                                        <th class="text-center">Name</th>
-                                        <th class="text-center">Value</th>
+                                        <th class="text-center">Prepared</th>
+                                        <th class="text-center">Checked</th>
+                                        <th class="text-center">Approved</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -28,15 +29,16 @@
                                     @foreach ($data as $key => $item)
                                         <tr>
                                             <td class="text-center"> {{ $key + 1 }} </td>
-                                            <td class="text-center">{{ $item->name }}</td>
-                                            <td class="text-center">{{ $item->value }}%</td>
+                                            <td class="text-center">{{ $item->prepared_by }}</td>
+                                            <td class="text-center">{{ $item->checked_by }}</td>
+                                            <td class="text-center">{{ $item->approved_by }}</td>
                                             <td class="text-center">
                                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                                    <a href="{{ route('vat.edit', $item->id) }}"
+                                                    <a href="{{ route('validator.edit', $item->id) }}"
                                                         class="btn btn-sm btn-warning" title="Edit"><i
                                                             class="fas fa-edit"></i></a>
                                                     <form id="form{{ $item->id }}"
-                                                        action="{{ route('vat.destroy', $item->id) }}" method="POST">
+                                                        action="{{ route('validator.destroy', $item->id) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button" onclick="deleteData('{{ $item->id }}');"
@@ -64,11 +66,11 @@
             $('#table').DataTable({
                 "columnDefs": [{
                         "orderable": false,
-                        "targets": [3]
+                        "targets": [4]
                     },
                     {
                         "searchable": false,
-                        "targets": [3]
+                        "targets": [4]
                     },
                 ]
             });

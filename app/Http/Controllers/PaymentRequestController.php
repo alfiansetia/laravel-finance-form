@@ -7,6 +7,7 @@ use App\Models\DescriptionModel;
 use App\Models\DivisionModel;
 use App\Models\PaymentRequestModel;
 use App\Models\Status;
+use App\Models\Validator;
 use App\Models\Vat;
 use App\Models\Vendor;
 use App\Models\Wht;
@@ -34,15 +35,14 @@ class PaymentRequestController extends Controller
 
     public function create()
     {
-        if (auth()->user()->role == 'supervisor') {
-            abort(403, 'Unauthorize!');
-        }
         $bank = Bank::all();
         $wht = Wht::all();
+        $vat = Vat::all();
         $vendor = Vendor::all();
         $division = DivisionModel::all();
         $status = Status::all();
-        return view('payment_request.add', compact('division', 'wht', 'bank', 'vendor', 'status'))->with(['title' => $this->title]);
+        $validators = Validator::all();
+        return view('payment_request.add', compact('division', 'wht', 'bank', 'vendor', 'status', 'validators', 'vat'))->with(['title' => $this->title]);
     }
 
     public function show(PaymentRequestModel $payment)
@@ -64,14 +64,16 @@ class PaymentRequestController extends Controller
         if (!$payment) {
             abort(404);
         }
-        if (auth()->user()->role == 'supervisor' || $payment->status_id == 4) {
+        if ($payment->status_id == 4) {
             abort(403, 'Unauthorize!');
         }
         $bank = Bank::where('division_id', $payment->id_division)->get();
         $wht = Wht::all();
+        $vat = Vat::all();
         $vendor = Vendor::all();
         $data = $payment->load('desc');
-        return view('payment_request.edit', compact(['data', 'wht', 'bank', 'vendor']))->with(['title' => $this->title]);
+        $validators = Validator::all();
+        return view('payment_request.edit', compact(['data', 'wht', 'bank', 'vendor', 'validators', 'vat']))->with(['title' => $this->title]);
     }
 
     public function update(Request $request, PaymentRequestModel $payment)
@@ -79,7 +81,7 @@ class PaymentRequestController extends Controller
         if (!$payment) {
             abort(404);
         }
-        if (auth()->user()->role == 'supervisor' || $payment->status_id == 4) {
+        if ($payment->status_id == 4) {
             abort(403, 'Unauthorize!');
         }
         $this->validate($request, [
@@ -89,18 +91,31 @@ class PaymentRequestController extends Controller
             'beneficiary'       => 'required|integer|exists:vendors,id',
             'for'               => 'required|max:120',
             'currency'          => 'required|in:idrtoidr,idrtosgd,idrtousd,usdtousd',
-            'vat'               => 'required|integer|gte:0',
+            // 'vat'               => 'required|integer|gte:0',
+            'vat'               => 'nullable|integer|exists:vats,id',
             'wht'               => 'nullable|integer|exists:whts,id',
             'due_date'          => 'required|integer|gte:0',
-            'bank_charge'       => 'required|integer|gte:0',
+            'bank_charge'       => 'required|gte:0',
             'description'       => 'required|array|min:1',
             'price'             => 'required|array|min:1',
             'description.*'     => 'required|max:120',
-            'price.*'           => 'required|integer',
+            'price.*'           => 'required',
             'description_add'   => 'nullable|array|min:1',
             'price_add'         => 'nullable|array|min:1',
             'description_add.*' => 'required|max:120',
-            'price_add.*'       => 'required|integer',
+            'price_add.*'       => 'required',
+            'validator'         => 'required|integer|exists:validators,id',
+
+            'vat_add'           => 'nullable|array|min:1',
+            'wht_add'           => 'nullable|array|min:1',
+            'vat_add.*'         => 'nullable|exists:vats,id',
+            'wht_add.*'         => 'nullable|exists:whts,id',
+
+            'pr_serial'         => 'nullable|array|min:1',
+            'tax_date'          => 'nullable|array|min:1',
+            'pr_serial.*'       => 'required|max:200',
+            'tax_date.*'        => 'required|date_format:Y-m-d',
+
         ]);
 
         $descData  = $payment->desc;
@@ -123,6 +138,10 @@ class PaymentRequestController extends Controller
                 'value'                 => $request->description_add[$i],
                 'price'                 => $request->price_add[$i],
                 'type'                  => 'add',
+                'vat_id'                => $request->vat_add[$i],
+                'wht_id'                => $request->wht_add[$i],
+                'pr_serial'             => $request->pr_serial[$i],
+                'tax_date'              => $request->tax_date[$i],
             ]);
         }
 
@@ -134,11 +153,13 @@ class PaymentRequestController extends Controller
             'for'               => $request->for,
             'contract'          => $request->contract,
             'currency'          => $request->currency,
-            'vat'               => $request->vat,
+            // 'vat'               => $request->vat,
+            'vat_id'            => $request->vat,
             'wht_id'            => $request->wht,
             'due_date'          => $request->due_date,
             'bank_charge'       => $request->bank_charge,
-            'status_id'         => $payment->status_id == 3 ? 1 : $payment->status_id
+            'status_id'         => $payment->status_id == 3 ? 1 : $payment->status_id,
+            'validator_id'      => $request->validator,
         ]);
 
         if ($payment) {
@@ -150,9 +171,6 @@ class PaymentRequestController extends Controller
 
     public function store(Request $request)
     {
-        if (auth()->user()->role == 'supervisor') {
-            abort(403, 'Unauthorize!');
-        }
         $this->validate($request, [
             'id_division'       => 'required|integer|exists:division,id',
             'beneficiary_bank'  => 'required|integer|exists:banks,id,division_id,' . $request->id_division,
@@ -162,19 +180,34 @@ class PaymentRequestController extends Controller
             'beneficiary'       => 'required|integer|exists:vendors,id',
             'for'               => 'required|max:120',
             'currency'          => 'required|in:idrtoidr,idrtosgd,idrtousd,usdtousd',
-            'vat'               => 'required|in:yes,no',
+            // 'vat'               => 'required|in:yes,no',
+            'vat'               => 'nullable|integer|exists:vats,id',
             'wht'               => 'nullable|integer|exists:whts,id',
             'due_date'          => 'required|integer|gte:0',
-            'bank_charge'       => 'required|integer|gte:0',
+            'bank_charge'       => 'required|gte:0',
             'description'       => 'required|array|min:1',
             'price'             => 'required|array|min:1',
             'description.*'     => 'required|max:120',
-            'price.*'           => 'required|integer',
+            'price.*'           => 'required',
             'description_add'   => 'nullable|array|min:1',
             'price_add'         => 'nullable|array|min:1',
             'description_add.*' => 'required|max:120',
-            'price_add.*'       => 'required|integer',
+            'price_add.*'       => 'required',
+            'validator'         => 'required|integer|exists:validators,id',
+
+            'vat_add'           => 'nullable|array|min:1',
+            'wht_add'           => 'nullable|array|min:1',
+            'vat_add.*'         => 'nullable|exists:vats,id',
+            'wht_add.*'         => 'nullable|exists:whts,id',
+
+            'pr_serial'         => 'nullable|array|min:1',
+            'tax_date'          => 'nullable|array|min:1',
+            'pr_serial.*'       => 'required|max:200',
+            'tax_date.*'        => 'required|date_format:Y-m-d',
+
         ]);
+
+        // dd($request->all());
 
         $dateTime = new DateTime($request->date_pr);
 
@@ -207,11 +240,11 @@ class PaymentRequestController extends Controller
             $counti = ($count->getRawOriginal('no_pr') ?? 0) + 1;
         }
 
-        $vat_value = 0;
-        if ($request->vat == 'yes') {
-            $vat = Vat::first();
-            $vat_value = $vat->value ?? 0;
-        }
+        // $vat_value = 0;
+        // if ($request->vat == 'yes') {
+        //     $vat = Vat::first();
+        //     $vat_value = $vat->value ?? 0;
+        // }
 
         $payment = PaymentRequestModel::create([
             'no_pr'             => $counti,
@@ -225,10 +258,12 @@ class PaymentRequestController extends Controller
             'contract'          => $request->contract,
             'currency'          => $request->currency,
             'wht_id'            => $request->wht,
+            'vat_id'            => $request->vat,
             'due_date'          => $request->due_date,
             'bank_charge'       => $request->bank_charge,
-            'vat'               => $vat_value,
+            // 'vat'               => $vat_value,
             'status_id'         => 1,
+            'validator_id'      => $request->validator,
         ]);
 
         for ($i = 0; $i < count($request->description ?? []); $i++) {
@@ -245,6 +280,10 @@ class PaymentRequestController extends Controller
                 'value'                 => $request->description_add[$i],
                 'price'                 => $request->price_add[$i],
                 'type'                  => 'add',
+                'vat_id'                => $request->vat_add[$i],
+                'wht_id'                => $request->wht_add[$i],
+                'pr_serial'             => $request->pr_serial[$i],
+                'tax_date'              => $request->tax_date[$i],
             ]);
         }
 
@@ -259,9 +298,6 @@ class PaymentRequestController extends Controller
     {
         if (!$payment) {
             abort(404);
-        }
-        if (auth()->user()->role == 'supervisor') {
-            abort(403, 'Unauthorize!');
         }
         if ($payment->status_id == 4 && auth()->user()->role != 'admin') {
             abort(403, 'Unauthorize!');
@@ -307,9 +343,9 @@ class PaymentRequestController extends Controller
             return redirect()->route('payment.index')->with(['error' =>  __('lang.status_unavailable')]);
         }
 
-        if (auth()->user()->role != 'supervisor' && ($request->status == 2 || $request->status == 3)) {
-            return redirect()->route('payment.index')->with(['error' => __('lang.no_action')]);
-        }
+        // if ($request->status == 2 || $request->status == 3) {
+        //     return redirect()->route('payment.index')->with(['error' => __('lang.no_action')]);
+        // }
 
         $payment = $payment->update([
             'status_id' => $request->status,
@@ -333,7 +369,7 @@ class PaymentRequestController extends Controller
             return redirect()->route('payment.index')->with(['error' =>  __('lang.status_unavailable')]);
         }
 
-        if (auth()->user()->role != 'supervisor' && ($request->status == 2 || $request->status == 3)) {
+        if ($request->status == 2 || $request->status == 3) {
             return redirect()->route('payment.index')->with(['error' => __('lang.no_action')]);
         }
 

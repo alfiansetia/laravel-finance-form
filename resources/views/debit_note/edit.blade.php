@@ -1,20 +1,45 @@
 @extends('components.template')
-
+@push('css')
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endpush
 @section('content')
-    <div class="page-inner">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="d-flex align-items-center">
-                            <h4 class="card-title">Edit {{ $title }}</h4>
+
+    <form action="{{ route('debit.update', $data->id) }}" method="POST">
+        @csrf
+        <div class="page-inner">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex align-items-center">
+                                <h4 class="card-title">Edit {{ $title }}</h4>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('debit.update', $data->id) }}" method="POST">
-                            @csrf
+                        <div class="card-body">
                             @method('PUT')
                             @if ($data->status_id == 4)
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="validator">Validator <font style="color: red;">*</font></label>
+                                        <select class="form-control select2 @error('validator') is-invalid @enderror"
+                                            id="validator" name="validator" style="width: 100%;" required>
+                                            <option value="">Select Validator</option>
+                                            @foreach ($validators as $item)
+                                                <option {{ $data->validator_id == $item->id ? 'selected' : '' }}
+                                                    value="{{ $item->id }}">Prepared By : {{ $item->prepared_by }},
+                                                    Checked
+                                                    By : {{ $item->checked_by }}, Approved By : {{ $item->approved_by }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('validator')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="no_invoice">No Invoice <font style="color: red;">*</font></label>
@@ -96,7 +121,8 @@
                                         <label for="id_division">Name Division <font style="color: red;">*</font></label>
                                         <select class="form-control @error('id_division') is-invalid @enderror"
                                             id="id_division" name="id_division" readonly disabled>
-                                            <option value="{{ $data->division->id }}">{{ $data->division->name }}</option>
+                                            <option value="{{ $data->division->id }}">{{ $data->division->name }}
+                                            </option>
                                         </select>
                                         @error('id_division')
                                             <div class="invalid-feedback">
@@ -268,67 +294,112 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="form-row" id="add_desc_form">
-                                    @foreach ($data->desc as $item)
-                                        @if ($item->type == 'reg')
-                                            <div class="form-group col-md-6 desc_form">
-                                                <label>Description <font style="color: red;">*</font></label>
-                                                <input type="text" name="description[]" class="form-control"
-                                                    maxlength="120" value="{{ $item->value }}" required>
-                                            </div>
-                                            <div class="form-group col-md-6 price_form">
-                                                <label>Price <font style="color: red;">*</font></label>
-                                                <input type="text" name="price[]" class="form-control mask-angka"
-                                                    value="{{ $item->price }}" required>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                    <div class="form-group col-md-12" id="before">
-                                        <a id="add_form_desc" onclick="addDesc()"
-                                            class="btn btn-sm btn-success float-right mt-2" style="color: white;">Add
-                                            Description</a>
-                                        <a id="remove_form_desc" onclick="removeDesc()"
-                                            class="btn btn-sm btn-danger float-right mt-2 mr-1"
-                                            style="color: white;">Remove
-                                            Description</a>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="vat">VAT <font style="color: red;">
-                                                <font style="color: red;">*</font>
-                                            </font></label>
-                                        <div class="input-group">
-                                            <input type="number" id="vat" name="vat"
-                                                class="form-control @error('vat') is-invalid @enderror" min="0"
-                                                value="{{ $data->vat ?? 0 }}" required>
-                                            <div class="input-group-append">
-                                                <div class="input-group-text">%</div>
-                                            </div>
-                                            @error('vat')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
+                            @endif
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-row" id="add_desc_form">
+                                @foreach ($data->desc as $item)
+                                    @if ($item->type == 'reg')
+                                        <div class="form-group col-md-6 desc_form">
+                                            <label>Description <font style="color: red;">*</font></label>
+                                            <input type="text" name="description[]" class="form-control"
+                                                maxlength="120" value="{{ $item->value }}" required>
                                         </div>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="wht">WHT</label>
-                                        <select class="custom-select @error('wht') is-invalid @enderror" id="wht"
-                                            name="wht">
-                                            <option value="">Select WHT</option>
-                                            @foreach ($wht as $item)
-                                                <option {{ $data->wht_id == $item->id ? 'selected' : '' }}
-                                                    value="{{ $item->id }}">{{ $item->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('wht')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
+                                        <div class="form-group col-md-6 price_form">
+                                            <label>Price <font style="color: red;">*</font></label>
+                                            <input type="text" name="price[]" class="form-control mask-angka"
+                                                value="{{ $item->price }}" required>
+                                        </div>
+                                    @endif
+                                @endforeach
+                                <div class="form-group col-md-12" id="before">
+                                    <a id="add_form_desc" onclick="addDesc()"
+                                        class="btn btn-sm btn-success float-right mt-2" style="color: white;">Add
+                                        Description</a>
+                                    <a id="remove_form_desc" onclick="removeDesc()"
+                                        class="btn btn-sm btn-danger float-right mt-2 mr-1" style="color: white;">Remove
+                                        Description</a>
                                 </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="vat">VAT</label>
+                                    <select class="custom-select @error('vat') is-invalid @enderror" id="vat"
+                                        name="vat">
+                                        <option value="">Select VAT</option>
+                                        @foreach ($vat as $item)
+                                            <option {{ $data->vat_id == $item->id ? 'selected' : '' }}
+                                                value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('vat')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="wht">WHT</label>
+                                    <select class="custom-select @error('wht') is-invalid @enderror" id="wht"
+                                        name="wht">
+                                        <option value="">Select WHT</option>
+                                        @foreach ($wht as $item)
+                                            <option {{ $data->wht_id == $item->id ? 'selected' : '' }}
+                                                value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('wht')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12" id="add_desc_form_card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-row" id="add_desc_form_add">
+                                @foreach ($data->desc as $item)
+                                    @if ($item->type == 'add')
+                                        <div class="form-group col-md-6 desc_form_add">
+                                            <label>Description <font style="color: red;">*</font></label>
+                                            <input type="text" name="description_add[]" class="form-control"
+                                                maxlength="120" value="{{ $item->value }}" required>
+                                        </div>
+                                        <div class="form-group col-md-6 price_form_add">
+                                            <label>Price <font style="color: red;">*</font></label>
+                                            <input type="text" name="price_add[]" class="form-control mask-angka"
+                                                value="{{ $item->price }}" required>
+                                        </div>
+                                    @endif
+                                @endforeach
+                                <div class="form-group col-md-12" id="before_add">
+                                    <a id="add_form_desc_add" onclick="addDesc_add()"
+                                        class="btn btn-sm btn-success float-right mt-2" style="color: white;">Add
+                                        Description</a>
+                                    <a id="remove_form_desc_add" onclick="removeDesc_add()"
+                                        class="btn btn-sm btn-danger float-right mt-2 mr-1" style="color: white;">Remove
+                                        Description</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            @if ($data->status_id != 4)
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="bank_charge">Bank Charges <font style="color: red;">*</font></label>
@@ -342,55 +413,65 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="form-row" id="add_desc_form_add">
-                                    @foreach ($data->desc as $item)
-                                        @if ($item->type == 'add')
-                                            <div class="form-group col-md-6 desc_form_add">
-                                                <label>Description <font style="color: red;">*</font></label>
-                                                <input type="text" name="description_add[]" class="form-control"
-                                                    maxlength="120" value="{{ $item->value }}" required>
-                                            </div>
-                                            <div class="form-group col-md-6 price_form_add">
-                                                <label>Price <font style="color: red;">*</font></label>
-                                                <input type="text" name="price_add[]" class="form-control mask-angka"
-                                                    value="{{ $item->price }}" required>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                    <div class="form-group col-md-12" id="before_add">
-                                        <a id="add_form_desc_add" onclick="addDesc_add()"
-                                            class="btn btn-sm btn-success float-right mt-2" style="color: white;">Add
-                                            Description</a>
-                                        <a id="remove_form_desc_add" onclick="removeDesc_add()"
-                                            class="btn btn-sm btn-danger float-right mt-2 mr-1"
-                                            style="color: white;">Remove
-                                            Description</a>
-                                    </div>
-                                </div>
                             @endif
-
                             <div class="text-right">
                                 @if ($data->status_id != 4)
-                                    <button type="button" id="btn_add" class="btn btn-primary">Show
-                                        Additional</button>
+                                    <button type="button" id="btn_add" class="btn btn-primary">Add Invoice</button>
                                 @endif
                                 <a href="{{ route('debit.index') }}" class="btn btn-md btn-secondary ml-auto mr-2"><i
                                         class="fas fa-backward mr-1"></i>Back</a>
                                 <button type="submit" class="btn btn-md btn-primary float-right"><i
                                         class="fab fa-telegram-plane mr-1"></i>Save</button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </form>
+
+
+    <div id="vat_wht" style="display: none">
+        <div class="form-group col-md-6 vat_form_add">
+            <label>VAT</label>
+            <select name="vat_add[]" class="form-control">
+                <option value="">Select VAT</option>
+                @foreach ($vat as $item)
+                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="form-group col-md-6 wht_form_add">
+            <label>WHT</label>
+            <select name="wht_add[]" class="form-control">
+                <option value="">Select WHT</option>
+                @foreach ($wht as $item)
+                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-group col-md-6 pr_serial_form_add">
+            <label for="bank_account">PR No Serial Tax <font style="color: red;">*</font></label>
+            <input type="text" name="pr_serial[]" class="form-control" maxlength="120" required>
+        </div>
+        <div class="form-group col-md-6 tax_date_form_add">
+            <label for="for">Tax Date <font style="color: red;">*</font></label>
+            <input type="date" name="tax_date[]" class="form-control" maxlength="120" required>
         </div>
     </div>
 @endsection
 
 @push('js')
+    <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
     <script>
         $(document).ready(function() {
+
+            $('.select2').select2({
+                theme: 'bootstrap4'
+            })
+
             mask_angka();
         });
 
@@ -420,13 +501,15 @@
             if (show) {
                 $('#add_desc_form_add').html('')
                 $('#add_desc_form_add').hide()
+                $('#add_desc_form_card').hide()
                 show = false
-                $('#btn_add').text('Show Additonal')
+                $('#btn_add').text('Add Invoice')
             } else {
                 $('#add_desc_form_add').html(html)
                 $('#add_desc_form_add').show()
+                $('#add_desc_form_card').show()
                 show = true
-                $('#btn_add').text('Hide Additonal')
+                $('#btn_add').text('Hide Invoice')
             }
             mask_angka()
             cek_desc()
@@ -435,19 +518,50 @@
         function element_form() {
             let htm = ''
             if (add > 0) {
-                data.forEach(item => {
-                    if (item.type == 'add') {
-                        htm += `<div class="form-group col-md-6 desc_form_add">
-                        <label>Description <font style="color: red;">*</font></label>
-                        <input type="text" name="description_add[]" class="form-control" maxlength="120"
-                          value="${item.value}" required>
-                    </div>
-                    <div class="form-group col-md-6 price_form">
-                        <label>Price <font style="color: red;">*</font></label>
-                        <input type="text" name="price_add[]" class="form-control mask-angka" value="${item.price}" required>
-                    </div>`
-                    }
-                });
+                htm += `
+                @foreach ($data->desc as $item)
+                    @if ($item->type == 'add')
+                        <div class="form-group col-md-6 desc_form_add">
+                            <label>Description <font style="color: red;">*</font></label>
+                            <input type="text" name="description_add[]" class="form-control" maxlength="120"
+                              value="{{ $item->value }}"  required>
+                        </div>
+                        <div class="form-group col-md-6 price_form">
+                            <label>Price <font style="color: red;">*</font></label>
+                            <input type="text" name="price_add[]" class="form-control mask-angka" value="{{ $item->price }}" required>
+                        </div>
+                        <div class="form-group col-md-6 vat_form_add">
+                            <label>VAT</label>
+                            <select name="vat_add[]" class="form-control">
+                                <option value="">Select VAT</option>
+                                @foreach ($vat as $item_vat)
+                                    <option {{ $item->vat_id == $item_vat->id ? 'selected' : '' }} value="{{ $item_vat->id }}">{{ $item_vat->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6 wht_form_add">
+                            <label>WHT</label>
+                            <select name="wht_add[]" class="form-control">
+                                <option value="">Select WHT</option>
+                                @foreach ($wht as $item_wht)
+                                    <option {{ $item->wht_id == $item_wht->id ? 'selected' : '' }} value="{{ $item_wht->id }}">{{ $item_wht->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        
+                        <div class="form-group col-md-6 pr_serial_form_add">
+                            <label for="bank_account">PR No Serial Tax <font style="color: red;">*</font></label>
+                            <input type="text" name="pr_serial[]" class="form-control" maxlength="120" 
+                            value="{{ $item->pr_serial }}" required>
+                        </div>
+                        <div class="form-group col-md-6 tax_date_form_add">
+                            <label for="for">Tax Date <font style="color: red;">*</font></label>
+                            <input type="date" name="tax_date[]" class="form-control" maxlength="120"
+                            value="{{ $item->tax_date }}" required>
+                        </div>
+                    @endif
+                @endforeach
+                `
                 htm += `<div class="form-group col-md-12" id="before_add">
                         <a id="add_form_desc_add" onclick="addDesc_add()"
                             class="btn btn-sm btn-success float-right mt-2" style="color: white;">Add
@@ -472,6 +586,34 @@
                         <label>Price <font style="color: red;">*</font></label>
                         <input type="text" name="price_add[]" class="form-control mask-angka" required>
                     </div>
+                    <div class="form-group col-md-6 vat_form_add">
+                        <label>VAT</label>
+                        <select name="vat_add[]" class="form-control">
+                            <option value="">Select VAT</option>
+                            @foreach ($vat as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-6 wht_form_add">
+                        <label>WHT</label>
+                        <select name="wht_add[]" class="form-control">
+                            <option value="">Select WHT</option>
+                            @foreach ($wht as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6 pr_serial_form_add">
+                        <label for="bank_account">PR No Serial Tax <font style="color: red;">*</font></label>
+                        <input type="text" name="pr_serial[]" class="form-control" maxlength="120" required>
+                    </div>
+                    <div class="form-group col-md-6 tax_date_form_add">
+                        <label for="for">Tax Date <font style="color: red;">*</font></label>
+                        <input type="date" name="tax_date[]" class="form-control" maxlength="120" required>
+                    </div>
+                    
                     <div class="form-group col-md-12" id="before_add">
                         <a id="add_form_desc_add" onclick="addDesc_add()"
                             class="btn btn-sm btn-success float-right mt-2" style="color: white;">Add
@@ -479,7 +621,8 @@
                         <a id="remove_form_desc_add" onclick="removeDesc_add()"
                             class="btn btn-sm btn-danger float-right mt-2 mr-1" style="color: white;">Remove
                             Description</a>
-                    </div>`
+                    </div>
+                    `
         }
 
         var desc = 0
@@ -526,6 +669,33 @@
                                 <label>Price <font style="color: red;">*</font></label>
                                 <input type="text" name="price_add[]" class="form-control mask-angka" required>
                             </div>
+                            <div class="form-group col-md-6 vat_form_add">
+                                <label>VAT</label>
+                                <select name="vat_add[]" class="form-control">
+                                    <option value="">Select VAT</option>
+                                    @foreach ($vat as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-6 wht_form_add">
+                                <label>WHT</label>
+                                <select name="wht_add[]" class="form-control">
+                                    <option value="">Select WHT</option>
+                                    @foreach ($wht as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6 pr_serial_form_add">
+                                <label for="bank_account">PR No Serial Tax <font style="color: red;">*</font></label>
+                                <input type="text" name="pr_serial[]" class="form-control" maxlength="120" required>
+                            </div>
+                            <div class="form-group col-md-6 tax_date_form_add">
+                                <label for="for">Tax Date <font style="color: red;">*</font></label>
+                                <input type="date" name="tax_date[]" class="form-control" maxlength="120" required>
+                            </div>
                         `);
                 $('#before_add').before(form);
                 mask_angka()
@@ -539,6 +709,10 @@
             if (desc_add > 1) {
                 $('#add_desc_form_add').find('.desc_form_add').last().remove()
                 $('#add_desc_form_add').find('.price_form_add').last().remove()
+                $('#add_desc_form_add').find('.vat_form_add').last().remove()
+                $('#add_desc_form_add').find('.wht_form_add').last().remove()
+                $('#add_desc_form_add').find('.pr_serial_form_add').last().remove()
+                $('#add_desc_form_add').find('.tax_date_form_add').last().remove()
             }
             cek_desc()
         }
@@ -554,7 +728,7 @@
                 alias: 'numeric',
                 groupSeparator: '.',
                 autoGroup: true,
-                digits: 0,
+                digits: 2,
                 rightAlign: false,
                 removeMaskOnSubmit: true,
             });

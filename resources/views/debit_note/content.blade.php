@@ -2,16 +2,17 @@
     $vat_value = 0;
     $wht_value = 0;
     $total = 0;
-    $grand_total = 0;
-    if ($data->vat > 0) {
-        $vat_value = ($data->totalreg * $data->vat) / 100;
+    $vat = $data->vat->value ?? 0;
+    $wht = $data->wht->value ?? 0;
+    if ($vat > 0) {
+        $vat_value = round(($data->totalreg * $vat) / 100, 2);
     }
-    if ($data->wht) {
-        $wht_value = ($data->totalreg * $data->wht->value) / 100;
+    if ($wht > 0) {
+        $wht_value = round(($data->totalreg * $wht) / 100, 2);
     }
     $total = $data->total + $vat_value - $wht_value;
-    $grand_total = $data->total + $data->bank_charge + $vat_value - $wht_value;
-    
+    $super_total = $total;
+
 @endphp
 
 @php
@@ -106,7 +107,7 @@
                 <td
                     style="text-align: right;width: 82pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
                     <span
-                        class="pd-small">{{ $item->price < 0 ? '(' . number_format(abs($item->price), $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') . ')' : number_format($item->price, $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') }}
+                        class="pd-small">{{ $item->price < 0 ? '(' . show_price(abs($item->price), $data->currency) . ')' : show_price($item->price, $data->currency) }}
                     </span>
                 </td>
             </tr>
@@ -119,12 +120,11 @@
         <tr>
             <td colspan="8"
                 style="border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0mm;height: 13pt;vertical-align: middle;">
-                <span class="pd-small">VAT {{ $data->vat }}%</span>
+                <span class="pd-small">{{ $data->vat->name ?? '' }}</span>
             </td>
             <td
                 style="text-align: right;width: 82pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
-                <span
-                    class="pd-small">{{ number_format($vat_value, $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') }}</span>
+                <span class="pd-small">{{ show_price($vat_value, $data->currency) }}</span>
 
             </td>
         </tr>
@@ -136,12 +136,12 @@
         <tr>
             <td colspan="8"
                 style="border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0mm;height: 13pt;vertical-align: middle;">
-                <span class="pd-small">{{ $data->wht->name }}</span>
+                <span class="pd-small">{{ $data->wht->name ?? '' }}</span>
             </td>
             <td
                 style="text-align: right;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
                 <span class="pd-small">(
-                    {{ number_format($wht_value, $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') }}
+                    {{ show_price($wht_value, $data->currency) }}
                     )</span>
 
             </td>
@@ -161,6 +161,7 @@
             <span class="pd-small"></span>
         </td>
     </tr>
+
     @foreach ($data->desc as $item)
         @if ($item->type == 'add')
             <tr>
@@ -171,8 +172,68 @@
                 <td
                     style="text-align: right;width: 82pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
                     <span
-                        class="pd-small">{{ $item->price < 0 ? '(' . number_format(abs($item->price), $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') . ')' : number_format($item->price, $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') }}
+                        class="pd-small">{{ $item->price < 0 ? '(' . show_price(abs($item->price), $data->currency) . ')' : show_price($item->price, $data->currency) }}
                     </span>
+                </td>
+            </tr>
+            @php
+                $vat_value_add = $item->vat->value ?? 0;
+                $wht_value_add = $item->wht->value ?? 0;
+                $vat_value_add_total = 0;
+                $wht_value_add_total = 0;
+                if ($vat_value_add > 0) {
+                    $vat_value_add_total = round(($item->price * $vat_value_add) / 100, 2);
+                }
+                if ($wht_value_add > 0) {
+                    $wht_value_add_total = round(($item->price * $wht_value_add) / 100, 2);
+                }
+                $super_total += $vat_value_add_total - $wht_value_add_total;
+            @endphp
+            @if ($vat_value_add > 0)
+                @php
+                    $sisa = $sisa - 1;
+                @endphp
+                <tr>
+                    <td colspan="8"
+                        style="border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0mm;height: 13pt;vertical-align: middle;">
+                        <span class="pd-small">{{ $item->vat->name }}</span>
+                    </td>
+                    <td
+                        style="text-align: right;width: 82pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
+                        <span class="pd-small">{{ show_price($vat_value_add_total, $data->currency) }}
+                        </span>
+                    </td>
+                </tr>
+            @endif
+            @if ($wht_value_add > 0)
+                @php
+                    $sisa = $sisa - 1;
+                @endphp
+                <tr>
+                    <td colspan="8"
+                        style="border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0mm;height: 13pt;vertical-align: middle;">
+                        <span class="pd-small">{{ $item->wht->name ?? '' }}</span>
+                    </td>
+                    <td
+                        style="text-align: right;width: 82pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
+                        <span class="pd-small">(
+                            {{ show_price($wht_value_add_total, $data->currency) }}
+                            )
+                        </span>
+                    </td>
+                </tr>
+            @endif
+            @php
+                $sisa = $sisa - 1;
+            @endphp
+            <tr>
+                <td colspan="8"
+                    style="border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;padding: 0mm;height: 13pt;vertical-align: middle;">
+                    <span class="pd-small"></span>
+                </td>
+                <td
+                    style="border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0mm;height: 13pt;vertical-align: middle;">
+                    <span class="pd-small"></span>
                 </td>
             </tr>
         @endif
@@ -214,8 +275,7 @@
                 </span></strong>
         </td>
         <td class="bold-border">
-            <strong><span
-                    class="pd-small">{{ number_format($total, $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') }}</span></strong>
+            <strong><span class="pd-small">{{ show_price($super_total, $data->currency) }}</span></strong>
         </td>
     </tr>
     <tr>
@@ -249,7 +309,7 @@
         </td>
         <td class="bold-border">
             <strong><span
-                    class="pd-small">{{ $data->bank_charge > 0 ? number_format($data->bank_charge, $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') : '' }}</span></strong>
+                    class="pd-small">{{ $data->bank_charge > 0 ? show_price($data->bank_charge, $data->currency) : '' }}</span></strong>
         </td>
     </tr>
     <tr>
@@ -268,8 +328,8 @@
         </td>
         <td class="bold-border" style="border-bottom: 3pt solid black">
             <strong><span class="pd-small">
-                    @if ($data->currency == 'idrtoidr')
-                        {{ number_format($grand_total, $data->currency != 'idrtoidr' ? 2 : 0, ',', ',') }}
+                    @if ($data->currency != 'idrtoidr')
+                        {{ show_price($super_total + $data->bank_charge, $data->currency) }}
                     @endif
                 </span></strong>
         </td>
@@ -512,16 +572,16 @@
     <tr>
         <td colspan="2"
             style="text-align: center;border-right: 1pt solid black;border-bottom: 1pt solid black;border-left: 1pt solid black;border-image: initial;border-top: none;vertical-align: middle;">
-            <span class="pd-small">Vivi Lie</span>
+            <span class="pd-small">{{ $data->validator->prepared_by ?? '' }}</span>
         </td>
         <td
             style="text-align: center;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;vertical-align: middle;">
-            <span class="pd-small">Djajadi</span>
+            <span class="pd-small">{{ $data->validator->checked_by ?? '' }}</span>
         </td>
         <td colspan="2" style="border-bottom:  1pt solid black;"></td>
         <td
             style="text-align: center;width: 76.05pt;border-top: none;border-left: 1pt solid black;;border-bottom: 1pt solid black;border-right: 1pt solid black;vertical-align: middle;">
-            <span class="pd-small">Darren Chan</span>
+            <span class="pd-small">{{ $data->validator->approved_by ?? '' }}</span>
         </td>
         <td colspan="3"
             style="border-top: none;border-bottom: 1pt solid black;;border-left: none;border-image: initial;border-right: 1pt solid black;vertical-align: middle;">

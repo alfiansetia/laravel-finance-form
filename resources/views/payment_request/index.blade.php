@@ -48,11 +48,9 @@
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <h4 class="card-title">{{ $title }}</h4>
-                            @if (auth()->user()->role != 'supervisor')
-                                <a href="{{ route('payment.create') }}" class="btn btn-primary btn-round ml-auto">
-                                    <i class="fa fa-plus mr-2"></i>Add
-                                </a>
-                            @endif
+                            <a href="{{ route('payment.create') }}" class="btn btn-primary btn-round ml-auto">
+                                <i class="fa fa-plus mr-2"></i>Add
+                            </a>
                         </div>
                     </div>
                     <div class="card-body">
@@ -234,7 +232,7 @@
             });
 
             $('#btn1').click(function() {
-                table.column(7).search('Pending Approval').draw();
+                table.column(7).search('Pending').draw();
             });
 
             $('#btn2').click(function() {

@@ -95,15 +95,12 @@
                     </div>
                     <div class="card-body text-center">
 
-                        @if ($data->status_id == 1 && auth()->user()->role == 'supervisor')
+                        @if ($data->status_id == 1)
                             <button class="btn btn-warning btn-round" data-toggle="modal" data-target="#exampleModal">
                                 <i class="fas fa-thumbs-up mr-1"></i>Change Status</button>
                         @endif
 
-                        @if (
-                            $data->status_id == 2 &&
-                                $data->status_id != 4 &&
-                                (auth()->user()->role == 'admin' || auth()->user()->role == 'user'))
+                        @if ($data->status_id == 2 && $data->status_id != 4)
                             <button id="set_paid" class="btn btn-success btn-round">
                                 <i class="fas fa-thumbs-up mr-1"></i>Set Paid</button>
                         @endif
@@ -114,7 +111,7 @@
                                 <i class="fas fa-file-pdf mr-1"></i>Download
                             </a>
                         @endif
-                        @if (auth()->user()->role != 'supervisor' && $data->status_id != 4)
+                        @if ($data->status_id != 4)
                             <a href="{{ route('debit.edit', $data->id) }}" class="btn btn-secondary btn-round ml-2">
                                 <i class="fas fa-edit mr-1"></i>Edit
                             </a>
@@ -214,19 +211,17 @@
                                 <label for="exampleInputEmail1">Status</label>
                                 <div class="form-inline">
 
-                                    @if (auth()->user()->role == 'supervisor')
-                                        <div class="form-check mr-3">
-                                            <input class="form-check-input" type="radio" name="status" id="status2"
-                                                value="4" {{ $data->status_id == 4 ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="status2">Accept</label>
-                                        </div>
+                                    <div class="form-check mr-3">
+                                        <input class="form-check-input" type="radio" name="status" id="status2"
+                                            value="4" {{ $data->status_id == 4 ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="status2">Accept</label>
+                                    </div>
 
-                                        <div class="form-check mr-3">
-                                            <input class="form-check-input" type="radio" name="status" id="status3"
-                                                value="3" {{ $data->status_id == 3 ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="status3">Reject</label>
-                                        </div>
-                                    @endif
+                                    <div class="form-check mr-3">
+                                        <input class="form-check-input" type="radio" name="status" id="status3"
+                                            value="3" {{ $data->status_id == 3 ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="status3">Reject</label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">

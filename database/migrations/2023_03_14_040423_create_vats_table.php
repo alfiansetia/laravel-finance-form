@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWhtsTable extends Migration
+class CreateVatsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateWhtsTable extends Migration
      */
     public function up()
     {
-        Schema::create('whts', function (Blueprint $table) {
+        Schema::create('vats', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->default('VAT');
             $table->decimal('value', 15, 2)->default(0);
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ class CreateWhtsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('whts');
+        Schema::dropIfExists('vats');
     }
 }

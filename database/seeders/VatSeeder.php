@@ -15,8 +15,13 @@ class VatSeeder extends Seeder
     public function run()
     {
         Vat::create([
-            'name'  => 'VAT',
+            'name'  => 'VAT 11',
             'value' => 11
+        ]);
+
+        Vat::create([
+            'name'  => 'VAT 12',
+            'value' => 12
         ]);
     }
 }
